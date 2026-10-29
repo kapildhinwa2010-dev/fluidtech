@@ -1,0 +1,14 @@
+include LICENSE
+include CITATION.cff
+include README.md
+include requirements.txt
+include corpus.txt
+recursive-include superfluid *.py
+include superfluid/py.typed
+recursive-include docs *.md *.html
+recursive-include examples *.py
+recursive-include tools *.py
+recursive-include prior *.json
+prune results
+global-exclude __pycache__
+global-exclude *.pyc
