@@ -1,0 +1,37 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip build
+      - name: the checks must pass before a release
+        run: |
+          python -m pip install "numpy>=1.23,<3"
+          python selftest.py
+      - name: build
+        run: python -m build
+      - name: publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: attach the downloadable prior artefact
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            prior/domain_prior.npz
+            prior/manifest.json
+          body: |
+            The downloadable prior artefact: a constant-size domain prior
+            that can be attached to any LLM with one residual-stream insertion.
