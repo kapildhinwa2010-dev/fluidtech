@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+[project]
+name =  "superfluid "
+version =  "1.2.0 "
+description =  "A constant-size, bit-exact memory tier for LLMs, attachable with one residual-stream insertion "
+readme =  "README.md "
+requires-python =  " >=3.9 "
+license = { text =  "MIT " }
+authors = [{ name =  "Superfluid contributors " }]
+keywords = [
+ "llm ",  "memory ",  "long-context ",  "kv-cache ",  "retrieval ",
+ "cellular-sheaves ",  "persistent-homology ",
+]
+classifiers = [
+ "Development Status :: 4 - Beta ",
+ "Intended Audience :: Science/Research ",
+ "Intended Audience :: Developers ",
+ "License :: OSI Approved :: MIT License ",
+ "Programming Language :: Python :: 3 ",
+ "Programming Language :: Python :: 3.9 ",
+ "Programming Language :: Python :: 3.10 ",
+ "Programming Language :: Python :: 3.11 ",
+ "Programming Language :: Python :: 3.12 ",
+ "Topic :: Scientific/Engineering :: Artificial Intelligence ",
+ "Typing :: Typed ",
+]
+dependencies = [ "numpy >=1.23, <3 "]
+[project.optional-dependencies]
+dev = [ "pytest >=7 ",  "ruff >=0.5 ",  "build "]
+gpu = [ "torch >=2.1 ",  "transformers >=4.40 ",  "accelerate >=0.30 "]
+[project.urls]
+Homepage =  "https://github.com/ <your-username >/superfluid "
+Repository =  "https://github.com/ <your-username >/superfluid "
+Issues =  "https://github.com/ <your-username >/superfluid/issues "
+Changelog =  "https://github.com/ <your-username >/superfluid/blob/main/CHANGELOG.md "
+[tool.setuptools]
+packages = ["superfluid"]
+include-package-data = true
+[tool.setuptools.package-data]
+superfluid = ["py.typed"]
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-ra"
+filterwarnings = ["error::RuntimeWarning"]
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+[tool.ruff.lint]
+select = [ "E ",  "F ",  "W ",  "I ",  "UP ",  "B "]
+ignore = [ "E741 ",  "B008 "]
+[tool.ruff.lint.per-file-ignores]
+ "experiments/ .py " = [ "E501 "]
+ "tools/ .py " = [ "E501 "]
+ "superfluid_single.py " = [ "E501 ",  "F401 ",  "F821 "]
