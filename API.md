@@ -60,4 +60,24 @@ array or a framework `Tensor`.  This is the difference between "the
 model was told the answer" and "the model cannot disagree".
 `TinyTransformer.forward_from_h(h, return_hidden=False)`
 Continues the forward pass from a (possibly modified) residual stream.  This
-is the hook a grafted memory layer needs.
+is the hook a grafted memory layer needs.​a value is stored as an int32 — bit-exact, never approximate;  
+​SLOT_BYTES == 20: key uint64 | val int32 | sig uint32 | anchor uint16 | meta uint16;  
+​recall(key, sig) fails loud: if the signature does not match, it
+returns None instead of another fact's value;  
+​promote refuses to overflow (MemoryError) rather than growing —
+a register that silently grows becomes a KV cache;  
+​to_bytes() / from_bytes(blob, capacity) for a durable store.  
+​budget_split(total_bytes, M, r, slot_bytes)
+​Splits a byte budget between the fluid state and the register, never
+over-committing: if the requested M does not fit, M is reduced and
+M_reduced is set.  
+​ctx_key(tokens) / ctx_hash(tokens)
+​A 64-bit FNV-1a hash of a token sequence — the content key of the exact
+store.  
+​logit_override(logits, token_ids)
+​Forces token_ids to win the argmax, deterministically.  Accepts a numpy
+array or a framework Tensor.  This is the difference between "the
+model was told the answer" and "the model cannot disagree".  
+​TinyTransformer.forward_from_h(h, return_hidden=False)
+​Continues the forward pass from a (possibly modified) residual stream.  This
+is the hook a grafted memory layer needs.  
