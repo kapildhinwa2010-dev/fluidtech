@@ -1,0 +1,125 @@
+{
+  "config": {
+    "docs": 40,
+    "train_docs": 200,
+    "steps": 400,
+    "branch_steps": 40,
+    "d": 64,
+    "layers": 2,
+    "ctx": 128,
+    "M": 64,
+    "r": 8,
+    "ctx_len": 12,
+    "seed": 0,
+    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e6_graft.json"
+  },
+  "e6a_attach": {
+    "logits_bit_identical": true,
+    "max_abs_diff": 0.0,
+    "state_bytes": 6316,
+    "M": 64,
+    "r": 8
+  },
+  "e6b_perplexity": {
+    "base_loss": 2.23433060444742,
+    "base_ppl": 9.340227452379759,
+    "graft_loss": 1.9774217324531775,
+    "graft_ppl": 7.224093308231875,
+    "delta": -0.2569088719942425,
+    "repeat_positions": {
+      "base_loss": 2.4206755770948,
+      "graft_loss": 2.1961983608128737,
+      "delta": -0.2244772162819264,
+      "n": 960
+    },
+    "new_positions": {
+      "base_loss": 2.2251472793066833,
+      "graft_loss": 1.9644830375421845,
+      "delta": -0.26066424176449887,
+      "n": 19480
+    },
+    "wo_exact_norm": 7.241136054052566,
+    "wo_lossy_norm": 4.997370077648676
+  },
+  "e6c_value_logit_gap": {
+    "mean": 0.01575675010844262,
+    "max": 0.04027718708913641
+  },
+  "e6c_transform_sweep": {
+    "raw": 0.725,
+    "center": 0.725,
+    "pc1": 0.8,
+    "pc4": 0.775
+  },
+  "e6c_gain_sweep": {
+    "input:1.0": 0.625,
+    "input:3.0": 0.725,
+    "input:10.0": 0.775,
+    "input:30.0": 0.8,
+    "input:100.0": 0.8,
+    "input:300.0": 0.8,
+    "input:1000.0": 0.8,
+    "input:3000.0": 0.8,
+    "out:1.0": 0.05,
+    "out:3.0": 0.1,
+    "out:10.0": 0.575,
+    "out:30.0": 0.725,
+    "out:100.0": 0.775,
+    "out:300.0": 0.8,
+    "out:1000.0": 0.8,
+    "out:3000.0": 0.8
+  },
+  "e6c_capability": {
+    "base_exact_recall": 0.05,
+    "base_value_rate": 0.3,
+    "by_insertion": {
+      "input": {
+        "exact_only_recall": 0.8,
+        "exact_only_value_rate": 0.975,
+        "lossy_only_recall": 0.05,
+        "lossy_only_value_rate": 0.3,
+        "both_recall": 0.8,
+        "both_value_rate": 0.975
+      },
+      "out": {
+        "exact_only_recall": 0.8,
+        "exact_only_value_rate": 0.975,
+        "lossy_only_recall": 0.05,
+        "lossy_only_value_rate": 0.3,
+        "both_recall": 0.8,
+        "both_value_rate": 0.975
+      }
+    },
+    "chance": 0.125,
+    "mean_abs_dev_from_identity": 0.0,
+    "wo_exact_norm": 8.0
+  },
+  "e6d_generation": [
+    {
+      "target": 12,
+      "base": 2,
+      "graft": 13,
+      "store_hits": 506948
+    },
+    {
+      "target": 14,
+      "base": 2,
+      "graft": 14,
+      "store_hits": 507449
+    },
+    {
+      "target": 12,
+      "base": 123,
+      "graft": 13,
+      "store_hits": 507944
+    }
+  ],
+  "e6c_trained_vs_free": {
+    "trained_exact_recall": 0.65,
+    "trained_value_rate": 0.85,
+    "wo_exact_norm": 8.0,
+    "training_free_exact_recall": 0.8
+  },
+  "runtime_sec": 253.63006854057312,
+  "base_params": 131392
+}
