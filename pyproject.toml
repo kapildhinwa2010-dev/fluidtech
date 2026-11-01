@@ -36,7 +36,7 @@ dependencies = ["numpy>=1.23,<3"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "ruff>=0.5", "build"]
-gpu = ["torch>=2.1", "transformers>=4.40", "accelerate>=0.30"]
+gpu = ["torch>=2.14.1", "transformers>=4.40", "accelerate>=0.30"]
 
 [project.urls]
 Homepage = "https://github.com/kapildhinwa2010-dev/fluidtech"
