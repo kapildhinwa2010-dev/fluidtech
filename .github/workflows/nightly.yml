@@ -19,7 +19,7 @@ jobs:
       - name: every experiment, at full size
         run: python experiments/run_all.py --full
       - name: upload the results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: results
           path: results/
