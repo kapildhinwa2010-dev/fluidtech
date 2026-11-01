@@ -1,0 +1,35 @@
+{
+  "name": "superfluid domain prior",
+  "version": "1.0",
+  "created": "2026-10-28T03:03:54",
+  "runtime_state_bytes": 16384,
+  "codebook_bytes": 132096,
+  "artefact_bytes_on_disk": 136165,
+  "budget": {
+    "requested_bytes": 16384,
+    "M": 704,
+    "r": 8,
+    "slots": 256,
+    "landmark_slots_written": 256,
+    "slot_bytes": 20,
+    "fluid_bytes": 11264,
+    "register_bytes": 5120
+  },
+  "contents": {
+    "codebook": "prototypes (M x d) fp16 -- the static geometry",
+    "fluid_state": "anchors (M x r) fp16 -- the constant-size gist",
+    "landmarks": "exact token spans at the persistent structural classes",
+    "register": "append-only exact-fact slots (20 B each)"
+  },
+  "guarantees": [
+    "a frozen slot's value is bit-identical to the source token id",
+    "the register is append-only (audit log, first-write-wins)",
+    "the runtime state is constant size -- it never grows with input"
+  ],
+  "not_guaranteed": [
+    "positional recall",
+    "verbatim recall of text that is not in the landmark table"
+  ],
+  "tokens_streamed": 200000,
+  "runtime_sec": 7.69
+}
