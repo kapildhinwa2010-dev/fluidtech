@@ -317,3 +317,23 @@ The measurements have said three times that this is not the way.
 What is left is smaller and much more defensible:
 
 A constant-size memory tier that is bit-exact for a selected subset, gracefully lossy for the rest, with a certified bound, an append-only audit trail, 50 machine-checked claims, and a published account of the seven places where it did not beat the alternatives.
+
+## author's confession 
+
+> I am kapil this is my like school project if you are reading this so you read the whole repo may be.....
+
+and I tell you honestly 
+this idea is mine only 
+the code is written by ai all the files are created by ai and when I put these all on github there are many options so I somehow but those files is not in order ...
+or there are many lines where written "your name" so the ai said write my name there but I forgot so don't mind 
+I don't know about ai 
+I don't know How to coding 
+but he idea of fluidtech was force information into topological liquid is mine executed by ai 
+
+
+only author's confession written by Me .😭😭
+
+
+so I am write here sorry Ai write here how to connect this layer ---
+but today my credits are spent so I update it tomorrow 
+bye 👋 
