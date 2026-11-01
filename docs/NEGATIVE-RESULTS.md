@@ -3,8 +3,8 @@
 > **Read this before the README.** This file is the reason the rest of the
 > repository is worth trusting.
 >
-> Five results in this project came out **negative or against expectation**.
-> All five are measured, reproducible, and reported here in full.  None of
+> Nine results in this project came out **negative or against expectation**.
+> All nine are measured, reproducible, and reported here in full. None of
 > them is buried in a footnote, and none of them is dressed up.
 >
 > If you only read one file in this repo, read this one.  It is the honest
@@ -94,7 +94,8 @@ is not saturated, and separates cleanly (0.970).
 
 Everything else.  The exactness mechanism is unaffected: `exact | promoted =
 1.000` for every policy that promotes anything.  A 16 KB state with a
-20-byte-per-fact append-only register returns **bit-exact** token ids.  The
+bounded majority-tracking store returns the stored token ID **bit-exactly**.
+Its 20-byte slot figure is a packed-payload estimate. The
 *mechanism* is sound; only the *selection heuristic* was wrong.
 
 ---
@@ -648,7 +649,7 @@ The project's shape after all five:
 
 | tier | status |
 |---|---|
-| the **exact tier** (append-only register, 20 B/fact, bit-exact recall) | ✅ **works, measured** |
+| the **exact tier** (bounded store, bit-exact token-ID recall) | ✅ **works, measured** |
 | the **constant-size state** | ✅ **works, measured** |
 | the **budget law** (spend on pins, not anchors) | ✅ **works, measured** (E2) |
 | the **fluid as an aggregate carrier** | ✅ **works** (97.3 % vs 65–71 % for local) |
@@ -665,7 +666,7 @@ The project's shape after all five:
 
 **The defensible paper is:** *"a constant-size memory tier that is bit-exact
 for a selected subset, gracefully lossy for the rest, with a certified bound
-and an append-only audit trail — plus the first working, self-verifying
+and a bounded, majority-tracking exact store — plus the self-verifying
 implementation of a sheaf-diffusion LLM, and an honest account of the five
 places where it did not beat the alternatives."*
 

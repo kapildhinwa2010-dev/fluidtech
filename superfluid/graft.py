@@ -88,8 +88,8 @@ def _knn_edges(X: np.ndarray, k: int) -> np.ndarray:
 class _ModeStore:
     """A content-keyed store that keeps the MAJORITY value and a confidence.
 
-    The counts fit in the frozen register's existing `meta uint16`, so a
-    packed slot stays 20 bytes.
+    The counts fit in the frozen register's `meta uint16`; the logical
+    packed-slot payload is 20 bytes, excluding Python dictionary overhead.
     """
 
     __slots__ = ("value", "support", "disagree", "order", "capacity")
@@ -268,7 +268,6 @@ class SAABranch:
         # cluster-level precision.  "the fluid answers WHERE, the register
         # answers WHAT" -- made literal.
         self.anchor_store = _ModeStore(capacity=M)
-        self.store_order: list[int] = []               # FIFO eviction order
         self._buf: list[int] = []                      # rolling context window
         self.write_calls = 0
         self.tokens_written = 0
@@ -314,8 +313,9 @@ class SAABranch:
 
     @property
     def state_bytes(self) -> int:
-        """Constant runtime state: the diffusion state + the exact store."""
-        return self.state.size * 8 + len(self.store) * 20
+        """Logical payload estimate; excludes Python object overhead."""
+        return (self.state.size * 8 + len(self.store) * 20
+                + len(self.anchor_store) * 20)
 
     def params(self) -> dict:
         p = {

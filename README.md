@@ -2,12 +2,12 @@
 
 # Superfluid
 
-**A constant-size, bit-exact memory tier for LLMs — attachable with one residual-stream insertion.**
+**A research memory layer for LLMs — attachable with one residual-stream insertion.**
 
-`16 KB` of state instead of `40 GB` of KV cache ·  
+`16 KB` of fluid state instead of `40 GB` of KV cache ·<br>
 exact recall of facts from outside the attention window ·  
 pure NumPy, no GPU, no downloads ·  
-seven measured negative results, published on purpose
+nine measured negative results, published on purpose
 
 [![CI](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)
@@ -43,8 +43,9 @@ h' = h + W_e · E(h)  +  W_l · S(h)
 ```
 
 - The **exact tier** is a bounded, content-keyed store of token ids.  
-  **20 bytes a fact.** A recalled value is an `int32` — bit-exact, not approximate.  
-  Append-only, first-write-wins, and it fails loud on a signature mismatch rather than returning another fact’s value.
+  **20 bytes per packed slot.** A recalled value is an `int32` — bit-exact, not approximate.
+  The attachable store tracks majority continuations and evicts the least-corroborated entries. Bit-exactness describes the stored token ID, not its truth or provenance.
+  The Python reference's memory estimate excludes Python object overhead.
 
 - The **lossy tier** is a sheaf-diffusion aggregate over `M` anchors — `M × r` floats, constant size, whatever you stream through it.
 
@@ -122,7 +123,7 @@ for window in windows:               # stream the session
     logits = model(inputs_embeds=h.unsqueeze(0)).logits
 ```
 
-- **6.3 KB** of state for `M=64, r=8`, plus **20 B** per cached fact.
+- **6.3 KB** of fluid state for `M=64, r=8`, plus a logical **20 B per populated context or anchor slot**; the Python reference has additional object overhead.
 - The base model is frozen the whole time.
 - Attaching it is free and reversible.
 - The NumPy reference implementation is [`superfluid/graft.py`](superfluid/graft.py), and the Torch one mirrors it exactly.
@@ -217,7 +218,7 @@ results/               every number in the README, as JSON
 | [`docs/GRAFT.md`](docs/GRAFT.md) | What the layer does to a base model — measured. |
 | [`docs/TEN-MILLION.md`](docs/TEN-MILLION.md) | What happens at 10M tokens — what it remembers, and the performance delta. |
 | [`docs/MILESTONES.md`](docs/MILESTONES.md) | The twelve milestones, and what is left. |
-| [`docs/NEGATIVE-RESULTS.md`](docs/NEGATIVE-RESULTS.md) | The seven things that did not work. |
+| [`docs/NEGATIVE-RESULTS.md`](docs/NEGATIVE-RESULTS.md) | Nine measured results, including the approaches that did not work. |
 | [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md) | How to use it. |
 | [`docs/API.md`](docs/API.md) | The API reference. |
 | [`docs/REPRODUCING.md`](docs/REPRODUCING.md) | Every command, every number. |
@@ -319,7 +320,7 @@ The measurements have said three times that this is not the way.
 
 What is left is smaller and much more defensible:
 
-A constant-size memory tier that is bit-exact for a selected subset, gracefully lossy for the rest, with a certified bound, an append-only audit trail, 50 machine-checked claims, and a published account of the seven places where it did not beat the alternatives.
+A research memory layer with an operator-level stability bound, a bounded in-memory register that returns retained token IDs bit-exactly, 50 machine-checked claims, and published measurements of its limitations. The register is not tamper-evident, encrypted, or tenant-isolated by default.
 
 ## Origin and acknowledgments
 

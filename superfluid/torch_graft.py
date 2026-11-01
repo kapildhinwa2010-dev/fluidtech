@@ -14,6 +14,8 @@ readout a raw embedding injection boosts the token's embedding-space
 neighbours too;
 causality: the store is written from the pair (context ending at t-1,
 token at t), so a token is never read back before it was written.
+the exact store uses majority tracking and least-corroborated eviction,
+matching the NumPy reference.
 WHAT IS DIFFERENT
 the state lives in a torch tensor (it can be a parameter, a buffer, or
 just an attribute);
@@ -21,15 +23,15 @@ the writes are done under `no_grad` -- the layer is a MEMORY, and the
 exactness of the tier does not depend on differentiating through it;
 the contrast transform is computed once from the model's embedding table
 (on the right device) and can be refreshed after the model is trained.
-NOT EXECUTED IN THIS SANDBOX
-This module has NOT been run here: the development environment has no
-torch, no GPU and 3 GB of RAM.  It is written to be read, reviewed and
-run on a GPU box.  `experiments/gpu_graft.py` is the driver.
+The optional PyTorch parity test runs in CI. `experiments/gpu_graft.py`
+is the driver for GPU-scale experiments.
 """
 from __future__ import annotations
 
 import torch
 import torch.nn as nn
+
+from .graft import _ModeStore
 
 __all__ = ["SAABranchTorch", "ctx_hash"]
 
@@ -59,10 +61,14 @@ class SAABranchTorch(nn.Module):
      """
 
     def __init__(self, M: int = 64, r: int = 8, d: int = 64, emb=None,
-                 ctx_len: int = 1, capacity: int = 8192, read_gain: float = 300.0,
+                 ctx_len: int = 1, capacity: int = 4096, read_gain: float = 300.0,
                  transform: str = "pc1", use_exact: bool = True,
-                 use_lossy: bool = False, seed: int = 0):
+                 use_lossy: bool = False, seed: int = 0,
+                 use_router: bool = True):
         super().__init__()
+        for name, value in (("M", M), ("r", r), ("capacity", capacity)):
+            if int(value) <= 0:
+                raise ValueError(f"{name} must be positive, got {value}")
         g = torch.Generator().manual_seed(seed)
         self.M, self.r, self.d = int(M), int(r), int(d)
         self.ctx_len = int(ctx_len)
@@ -70,6 +76,7 @@ class SAABranchTorch(nn.Module):
         self.read_gain = float(read_gain)
         self.transform = str(transform)
         self.use_exact, self.use_lossy = bool(use_exact), bool(use_lossy)
+        self.use_router = bool(use_router)
         self.protos = nn.Parameter(torch.randn(M, d, generator=g) * d ** -0.5)
         self.Wq = nn.Parameter(torch.randn(d, d, generator=g) * d ** -0.5)
         self.Wk = nn.Parameter(torch.randn(d, d, generator=g) * d ** -0.5)
@@ -80,8 +87,8 @@ class SAABranchTorch(nn.Module):
         self.Wo_lossy = nn.Parameter(torch.zeros(d, d))
         self.emb = emb          # NOT a parameter: it belongs to the model
         self.state = torch.zeros(M, r)
-        self.store: dict[int, int] = {}
-        self.store_order: list[int] = []
+        self.store = _ModeStore(capacity=self.capacity)
+        self.anchor_store = _ModeStore(capacity=self.M)
         self._buf: list[int] = []
         self._contrast = None
 
@@ -89,7 +96,7 @@ class SAABranchTorch(nn.Module):
     def reset(self):
         self.state = torch.zeros_like(self.state)
         self.store.clear()
-        self.store_order.clear()
+        self.anchor_store.clear()
         self._buf.clear()
 
     def refresh_contrast(self):
@@ -114,7 +121,9 @@ class SAABranchTorch(nn.Module):
         return self._contrast
 
     def state_bytes(self) -> int:
-        return self.state.numel() * 4 + len(self.store) * 20
+        """Logical packed-payload estimate; excludes Python/allocator overhead."""
+        return (self.state.numel() * 4 + len(self.store) * 20
+                + len(self.anchor_store) * 20)
 
     # ----------------------------------------------------------------- maths
     def _route(self, content: torch.Tensor):
@@ -139,12 +148,67 @@ class SAABranchTorch(nn.Module):
         return ctx_hash(buf[-self.ctx_len:])
 
     def _put(self, key: int, value: int):
-        if key in self.store:
-            return
-        if len(self.store) >= self.capacity:
-            self.store.pop(self.store_order.pop(0), None)
-        self.store[key] = int(value)
-        self.store_order.append(int(key))
+        self.store.put(key, value)
+
+    def gated_logits(self, logits, info, gain: float = 8.0,
+                     use_support: bool = False, support_scale: float = 1.0,
+                     tau: float | None = None, c_min: float = 2.0,
+                     big: float = 20.0, router_weight: float = 0.3,
+                     gate_space: str = "logit"):
+        """Apply the NumPy reference's uncertainty-gated retrieval boost."""
+        retrieved = info.get("retrieved")
+        if retrieved is None:
+            return logits
+        z = logits
+        retrieved = torch.as_tensor(retrieved, device=z.device, dtype=torch.long)
+        T = z.shape[0]
+        fallback = torch.zeros(T, device=z.device, dtype=torch.bool)
+        rr = info.get("router_retrieved")
+        rconf = info.get("router_confidence")
+        if rr is not None:
+            rr = torch.as_tensor(rr, device=z.device, dtype=torch.long)
+            fallback = (retrieved < 0) & (rr >= 0)
+            retrieved = torch.where(fallback, rr, retrieved)
+
+        probs = torch.softmax(z, dim=1)
+        p_max = probs.max(dim=1).values
+        if str(gate_space) == "logit":
+            uncertainty = -torch.log(p_max.clamp_min(1e-12))
+        else:
+            uncertainty = 1.0 - p_max
+        if tau is None:
+            tau = 20.0 if str(gate_space) == "logit" else 2.0
+        boost = float(gain) * uncertainty
+
+        if rconf is not None:
+            rc = torch.as_tensor(rconf, device=z.device, dtype=z.dtype)
+            boost = torch.where(
+                fallback,
+                boost * float(router_weight) * rc.clamp(0.0, 1.0),
+                boost,
+            )
+        if use_support:
+            support = info.get("support")
+            if support is not None:
+                sup = torch.as_tensor(support, device=z.device, dtype=z.dtype)
+                boost = boost * (sup / float(support_scale)).clamp(max=1.0)
+
+        confidence = info.get("confidence")
+        if confidence is None:
+            conf = torch.zeros(T, device=z.device, dtype=z.dtype)
+        else:
+            conf = torch.as_tensor(confidence, device=z.device, dtype=z.dtype)
+        if rconf is not None:
+            rc = torch.as_tensor(rconf, device=z.device, dtype=z.dtype)
+            conf = torch.where(fallback, rc, conf)
+        decide = (uncertainty >= float(tau)) | (conf >= float(c_min))
+        boost = torch.where(decide, torch.full_like(boost, float(big)), boost)
+
+        out = z.clone()
+        rows = torch.nonzero(retrieved >= 0, as_tuple=False).flatten()
+        if rows.numel():
+            out[rows, retrieved[rows]] += boost[rows]
+        return out
 
     # ---------------------------------------------------------------- forward
     def forward(self, h: torch.Tensor, content: torch.Tensor,
@@ -152,8 +216,13 @@ class SAABranchTorch(nn.Module):
         """h, content: (T, d);  token_ids: (T,) int64."""
         T = token_ids.shape[0]
         ids = token_ids.detach().cpu().tolist()
+        w, am = self._route(content.detach())
         out_e = None
         hits = 0
+        retrieved = torch.full((T,), -1, dtype=torch.long)
+        confidence = torch.zeros(T, dtype=torch.float32)
+        router_retrieved = torch.full((T,), -1, dtype=torch.long)
+        router_confidence = torch.zeros(T, dtype=torch.float32)
         if self.use_exact and self.emb is not None:
             C = self._contrast_table(h.device, h.dtype)
             rows = torch.zeros(T, self.d, device=h.device, dtype=h.dtype)
@@ -164,18 +233,27 @@ class SAABranchTorch(nn.Module):
                 if len(buf) > self.ctx_len:
                     buf = buf[-self.ctx_len:]
                 key = self._key(buf)
+                if self.use_router:
+                    anchor = int(am[t])
+                    value = self.anchor_store.get(anchor, -1)
+                    if value >= 0:
+                        router_retrieved[t] = value
+                        router_confidence[t] = self.anchor_store.confidence(anchor)
                 v = self.store.get(key, -1)
                 if v >= 0:
                     rows[t] = C[v] * self.read_gain
+                    retrieved[t] = v
+                    confidence[t] = self.store.confidence(key)
                     hits += 1
                 if prev_key is not None:
                     self._put(prev_key, int(ids[t]))
+                if t > 0 and self.use_router:
+                    self.anchor_store.put(int(am[t - 1]), int(ids[t]))
             self._buf = buf
             out_e = rows
 
         if self.use_lossy:
             with torch.no_grad():
-                w, _ = self._route(content.detach())
                 self.state = self.state + w.T @ (h.detach() @ self.Wv.detach())
                 self.state = 0.9 * self.state        # a simple decay
             out_l = (w @ self.state) @ self.Wr
@@ -187,4 +265,19 @@ class SAABranchTorch(nn.Module):
             h_out = h_out + out_e @ self.Wo_exact
         if out_l is not None:
             h_out = h_out + out_l @ self.Wo_lossy
-        return h_out, {"hits": hits}
+        support = torch.tensor(
+            [self.store.support.get(int(v), 0) if v >= 0 else 0
+             for v in retrieved],
+            dtype=torch.long,
+        )
+        return h_out, {
+            "route": w,
+            "anchor": am,
+            "hits": hits,
+            "emb_read": out_e,
+            "retrieved": retrieved,
+            "support": support,
+            "confidence": confidence,
+            "router_retrieved": router_retrieved,
+            "router_confidence": router_confidence,
+        }

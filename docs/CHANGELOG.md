@@ -26,7 +26,7 @@ with a `--tokenizer {char,bpe}` switch and a per-tier ablation.
 `experiments/e7_lossy_fix.py` — the fix for the diffusion tier's
 training signal (a layer-local objective and a differentiable state).
 `experiments/gpu_graft.py` — the GPU-scale driver for a real LLM.
-`tools/bpe.py` — a byte-level BPE tokenizer in pure Python (no
+`superfluid/bpe.py` — a byte-level BPE tokenizer in pure Python (no
 downloads), so every measurement can be repeated at a realistic token
 granularity.
 Six self-verification groups covering the frozen register, the logit
@@ -57,7 +57,7 @@ the fix removes the damage (+0.0000) but the tier still has no upside:
 the optimal injection gain is zero.
 [1.1.0]
 the frozen register (20 B per fact, bit-exact, append-only, fail-loud);
-the domain-prior artefact (`tools/pretrain_prior.py`);
+the domain-prior artifact (`experiments/pretrain_prior.py`);
 the E1/E2/E4/E5 experiments.
 [1.0.0]
 the first working framework: a pure-NumPy sheaf-diffusion LM with a

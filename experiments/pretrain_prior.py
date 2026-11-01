@@ -242,7 +242,7 @@ def build(tokens, vocab_size, budget_bytes=16 * 1024, M=1024, r=8, d=64,
         },
         "guarantees": [
             "a frozen slot's value is bit-identical to the source token id",
-            "the register is append-only (audit log, first-write-wins)",
+            "the serialized frozen register is append-only; it is not tamper-evident",
             "the runtime state is constant size -- it never grows with input",
         ],
         "not_guaranteed": [

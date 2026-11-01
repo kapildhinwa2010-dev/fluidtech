@@ -49,10 +49,10 @@ def build_stream(n_tokens, n_facts=6, seed=0, vocab=76):
     ids = rng.integers(0, vocab - 6, size=n_tokens).astype(np.int64)
     facts = []
     # plant the facts at logarithmically increasing depths.
-    # The KEY must be DISTINCTIVE: the store is first-write-wins, so a key
-    # that occurs all over the stream keeps only its FIRST continuation and
-    # the planted fact is invisible.  A token that appears ONLY at the fact
-    # is the honest way to plant a retrievable fact.
+    # The KEY must be DISTINCTIVE: a common key can have many conflicting
+    # continuations, so one planted answer need not become the majority.
+    # A token that appears ONLY at the fact is the honest way to plant a
+    # retrievable fact.
     depths = [int(n_tokens * f) for f in (0.01, 0.1, 0.3, 0.5, 0.7, 0.9)]
     for i, d in enumerate(depths):
         key = vocab - 6 + i        # reserved: occurs NOWHERE else in the stream
@@ -150,8 +150,8 @@ def main():
         common_hits.append(got == f["val"])
     print("    CONTROL -- facts with COMMON keys (the key occurs all over "
           "the stream):")
-    print(f"      recalled {sum(common_hits)}/{len(common_hits)}  -> a key "
-          f"that recurs everywhere cannot carry a fact (first-write-wins)")
+    print(f"      recalled {sum(common_hits)}/{len(common_hits)}  -> a common "
+          f"context does not identify one continuation")
     res["e9b_token_level"] = {
         "common_key_control_recall": float(np.mean(common_hits)),
         "seconds": dt, "tokens_per_sec": args.tokens / dt,

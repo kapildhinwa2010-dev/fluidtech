@@ -12,7 +12,7 @@ SAABranch(M=64, r=8, d=None, emb=None, k=4, cheb_m=8, t=1.0, seed=0,
 | M ,  r|the anchors and their rank.  The lossy tier's state is  M × r  floats —  constant size , whatever you stream through it.|
 | emb|the model's embedding table.  Needed to turn a stored token id back into a vector.  Shared, never copied.|
 | ctx_len|how many trailing tokens form the content key.   1  =  "what followed this token ";  k  = a k-gram memory.|
-| capacity|max entries in the exact store (20 B each).  The oldest is evicted.|
+| capacity|max entries in the exact store (20 B packed-slot payload each; Python object overhead is additional). The least-corroborated entry is evicted.|
 | read_gain|"norm"  (match the residual's scale) or  "raw"  (a fixed scalar, used with  read_scale ).|
 | read_transform|"raw" ,  "center"  or  "pc1"  — how selective the injection is.   "pc1"  is the one that works  with a tied readout.|
 | state_mode|"persistent"  (a numpy accumulator, not differentiable) or  "rebuild"  (rebuilt inside the graph from the last  hist_len  windows — differentiable).|
@@ -25,7 +25,7 @@ Methods
 | reset()|clears the memory (a new session).|
 | refresh_contrast()|recompute the transformed embedding table.   Call it after the model is trained , or after the embeddings change.|
 | layer_logits(info)|the layer's own next-token prediction (the layer-local objective).|
-| state_bytes|the size of the persistent state.|
+| state_bytes|logical payload estimate for the persistent state; excludes Python/allocator overhead.|
 | params()|the trainable parameters (for the layer-local training).|
 Properties
 Attaching is a no-op.`Wo_exact` and `Wo_lossy` start at zero, so
@@ -34,9 +34,10 @@ Causality.  The store is written from the pair (context ending at
 t-1, token at t), which is complete only at time t.  A token can never
 be read back before it was written, and the model can never "copy the
 current token" through the store.
-First-write-wins.  A context that is seen twice keeps its first value.
-The memory is an append-only audit trail.
-`FrozenRegister` — the exact store on its own
+Majority tracking. Repeated observations update support for a context's
+continuation; conflicting continuations are tracked as disagreement. The
+bounded store evicts the least-corroborated entry and is not tamper-evident.
+`FrozenRegister` — a lower-level append-only exact store
 reg = FrozenRegister(capacity=1024)
 reg.promote(value_token_id, key, sig=0, anchor=0, doc_id=0, trust=0)
 slot, value = reg.recall(key, sig=None)
@@ -44,7 +45,8 @@ a value is stored as an int32 — bit-exact, never approximate;
 `SLOT_BYTES == 20`: `key uint64 | val int32 | sig uint32 | anchor uint16 | meta uint16`;
 `recall(key, sig)`fails loud: if the signature does not match, it
 returns `None` instead of another fact's value;
-`promote`refuses to overflow (`MemoryError`) rather than growing —
+`promote` appends a slot; the latest slot for a key is returned by recall.
+It refuses to overflow (`MemoryError`) rather than growing —
 a register that silently grows becomes a KV cache;
 `to_bytes()` / `from_bytes(blob, capacity)` for a durable store.
 `budget_split(total_bytes, M, r, slot_bytes)`

@@ -41,11 +41,7 @@ import os
 import sys
 import time
 
-import torch
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from superfluid.torch_graft import SAABranchTorch  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -90,6 +86,13 @@ def main():
     ap.add_argument("--dry-run", action="store_true",
                     help="check the environment and the model id, run nothing")
     args = ap.parse_args()
+    global torch
+    try:
+        import torch
+    except ImportError as error:
+        ap.error(f"PyTorch is required; install the optional GPU dependencies: {error}")
+
+    from superfluid.torch_graft import SAABranchTorch
 
     t0 = time.time()
     device = "cuda" if torch.cuda.is_available() else "cpu"

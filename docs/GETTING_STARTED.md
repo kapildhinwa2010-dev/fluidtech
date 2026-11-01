@@ -4,7 +4,7 @@ pip install .            # from a checkout
 pip install -e ".[dev]"  # for the tests
 The only runtime dependency is numpy.  There is no torch, no GPU and no
 download: the whole project runs on a laptop.
-python selftest.py                 # 38 machine-checked claims
+python selftest.py                 # 50 machine-checked claims
 python examples/quickstart.py      # the 60-second tour
 python examples/graft_demo.py      # the capability, end to end
 Attaching the layer to a model
@@ -41,12 +41,12 @@ for window in windows:              # 128-token windows, in order
     ...                              # run the model on h
 `branch.reset()` starts a new session.  Do this per user / per session:
 one branch instance = one memory.
-The store is bounded (`capacity`, 20 B per cached fact) and evicts the
-oldest entry when it is full.  The register refuses to overflow rather
-than growing without limit.
-The store is first-write-wins: a fact that is written twice keeps its
-first value, and a later write of the same context is ignored.  That
-makes the memory an append-only audit trail.
+The attachable store is bounded (`capacity`, 20 B packed-slot payload per
+cached context; the Python reference has additional object overhead). It
+tracks the majority continuation and evicts the least-corroborated entry
+when full. The separate `FrozenRegister` helper appends versioned slots and
+refuses overflow. Neither component is a tamper-evident or cryptographically
+authenticated audit log.
 What it will and will not do
 Read `docs/GRAFT.md` before you build on it.  In one line:
 it will let a frozen model quote something it saw earlier, even

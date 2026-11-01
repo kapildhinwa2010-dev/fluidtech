@@ -6,8 +6,8 @@ Supported versions
 | 1.1.x|✅ (security fixes only)|
 | < 1.1|❌|
 Reporting a vulnerability
-Do not open a public issue.  Use GitHub's private vulnerability
-reporting (`Security` → `Report a vulnerability`) or email the maintainers.
+Do not open a public issue. Use GitHub's private vulnerability
+reporting (`Security` → `Report a vulnerability`).
 Please include: the affected version, a minimal reproduction, and the impact
 you believe it has.
 Threat model — read this before using it

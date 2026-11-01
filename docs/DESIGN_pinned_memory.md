@@ -1,7 +1,8 @@
 DESIGN — Frozen Register: making the memory layer exact where it matters
-Status: design + theory. No code. Every number below is computed in
+Status: historical design + theory notes; not a description of current
+behavior. Every number below is computed in
 `calc` blocks and re-derivable.
-Parent docs:`docs/PLAN-memory-graft.md` (the graft), `docs/LAUNCH.md` (the release).
+The original parent design notes predate the current repository layout.
 One-line thesis:A frozen token is not a value in a fluid — it is an
 identity promoted from a lossy tier to an exact one. Exactness does not
 come from a bigger state; it comes from addressing, and the topology tells
@@ -299,7 +300,7 @@ survives. Publish fast.
 | ---|---|---|
 | P0 (2 days)|superfluid/memory.py :  FrozenRegister  (append-only, ctx-key, verify, trust bit) +  promote()  /  recall()  + logit override|unit-tested, in the 21-check harness|
 | P1 (2 days)|SAA mode in  blocks.py : dual-role anchor (address + gist),  r_addr:r_gist  split|E5a sweep|
-| P2 (3 days)|tools/pretrain_prior.py  → domain prior with a  landmark codebook  (exact spans)|86 KB → new artifact, E5 harness|
+| P2 (3 days)|experiments/pretrain_prior.py  → domain prior with a  landmark codebook  (exact spans)|86 KB → new artifact, E5 harness|
 | P3 (3 days)|persistence-based landmark selection over the corpus|E5b, E5c|
 | P4 (3 days)|HF forward-hook: graft onto a real 7B, measure exact extraction|E5 — the money result|
 | P5 (2 days)|poison/quorum experiments, writeup|E5d + 2-page note|

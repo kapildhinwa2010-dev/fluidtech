@@ -20,11 +20,12 @@ Measured limits
 | the cross-window recall ceiling|0.800 , not 1.0 — the injection is not perfectly selective with a tied readout|
 | the diffusion tier's effect on a frozen model|+0.81 nats  if trained through the base model's loss;  0.0000  after the fix; and  no upside  either way|
 | the domain prior's benefit|−0.0059 nats  on a well-trained model (it shrinks as the model improves)|
-| the layer's memory|6.3 KB for  M=64, r=8 , plus 20 B per cached fact|
+| the layer's logical payload|4 KB fluid state for  M=64, r=8 , plus 20 B per populated context or anchor slot; Python object overhead is additional|
 | the exact tier's training-free ceiling|a  scalar  gain, calibrated; past ~30 it saturates|
 The design limits that are known and accepted
-The store is a cache, not a database.  Bounded, first-write-wins,
-FIFO eviction.  It quotes; it does not query.
+The store is a cache, not a database. It is bounded, tracks majority
+continuations, and evicts the least-corroborated entry. It quotes; it does
+not query.
 The injection is not selective by default.  With a tied readout,
 injecting a token's embedding boosts its embedding-space neighbours too.
 The `pc1` transform projects out the dominant shared direction and buys

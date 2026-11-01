@@ -42,12 +42,12 @@ def test_the_exact_tier_returns_the_stored_id(model):
     assert br.store[int(seq[-2])] == int(seq[-1])
 
 
-def test_the_store_is_first_write_wins(model):
+def test_the_store_tracks_the_majority_continuation(model):
     br = SAABranch(M=16, r=4, d=32, emb=model.emb, ctx_len=1, seed=0)
     br.reset()
-    seq = np.array([9, 3, 9, 7], dtype=np.int64)
+    seq = np.array([9, 3, 9, 7, 9, 7], dtype=np.int64)
     br.forward(model.emb[seq] + model.pos[:len(seq)], model.emb[seq], seq)
-    assert br.store[9] == 3          # the FIRST occurrence wins
+    assert br.store[9] == 7
 
 
 def test_a_reset_clears_the_memory(model):

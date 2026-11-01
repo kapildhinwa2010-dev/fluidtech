@@ -1,4 +1,6 @@
-Superfluid Framework v1.0 — Specification
+Superfluid Framework v1.0 — Historical Specification
+This is a design document, not a current implementation contract. For
+current behavior and limitations, see `docs/API.md` and `docs/LIMITATION.md`.
 A topological fluid architecture for sequence models: replace the
 transformer's quadratic attention with a cellular-sheaf diffusion whose
 spectrum does the work, and whose geometry is recomputed in every forward pass.
@@ -350,7 +352,8 @@ recall returns a value that is equal, not approximately equal.
 Fail-loud — the recall verifies the 64-bit key and the 4-byte
 signature; on a mismatch it returns `None` rather than another fact's value.
 Versioning — promoting the same key twice appends a second slot and the
-latest wins; the register doubles as an append-only audit log.
+the attachable store tracks the majority continuation and evicts the
+least-corroborated entry. This is not a tamper-evident audit log.
 `SheafMemoryAdapter` — the geometry-addressed tier
 ad = SheafMemoryAdapter(M=1024, r=8, d=64, capacity=819)
 ad.set_prototypes(protos)            # (M, d) codebook

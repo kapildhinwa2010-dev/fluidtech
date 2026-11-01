@@ -74,12 +74,14 @@ def main():
         ("selftest", [PY, "selftest.py"]),
         ("bundle", [PY, "superfluid_single.py", "--selftest"]),
         ("e1", [PY, "experiments/e1_prior_perplexity.py",
-                "--steps", "2" if args.quick else "250",
-                "--d", "32" if args.quick else "64",
+                "--steps", "1" if args.quick else "250",
+                "--d", "8" if args.quick else "64",
                 "--layers", "1" if args.quick else "2",
-                "--ctx", "32" if args.quick else "64",
-                "--batch", "4" if args.quick else "16",
-                "--windows", "12" if args.quick else "1000"]),
+                "--ctx", "8" if args.quick else "64",
+                "--batch", "1" if args.quick else "16",
+                "--M", "16" if args.quick else "1024",
+                "--r", "2" if args.quick else "8",
+                "--windows", "4" if args.quick else "1000"]),
         ("e6", [PY, "experiments/e6_graft.py",
                 "--steps", "2" if args.quick else "400",
                 "--branch-steps", "2" if args.quick else "40",
@@ -101,8 +103,10 @@ def main():
                  "--ctx", "32" if args.quick else "128",
                  "--max-chars", "4096" if args.quick else "120000"]),
         ("e5", [PY, "experiments/e5_graft.py",
-                "--tokens", "10000" if args.quick else ("1000000" if args.full else "200000"),
-                "--budget", "40" if args.quick else "100"]),
+                "--tokens", "1000" if args.quick else ("1000000" if args.full else "200000"),
+                "--M", "128" if args.quick else "1024",
+                "--r", "4" if args.quick else "8",
+                "--budget", "10" if args.quick else "100"]),
         ("e2", [PY, "experiments/e2_scaling.py",
                 "--tokens", "10000" if args.quick else "200000"]),
         ("e4", [PY, "experiments/e4_gbalance.py", "--trials", "3" if args.quick else "30"]),
@@ -110,6 +114,9 @@ def main():
                    "--tokens", "10000" if args.quick else "200000"]),
     ]
     for name, cmd in steps:
+        if args.quick and name == "e2":
+            print("\n(skipping e2: the full scaling sweep is not a quick smoke test)")
+            continue
         if name in skip:
             print(f"\n(skipping {name})")
             continue

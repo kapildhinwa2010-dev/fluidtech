@@ -13,12 +13,11 @@ not, and the numbers for both.
 The idea: stop storing, start addressing
 Attention remembers by position. Every token keeps a copy of itself, and
 the copy is kept forever. That is why the cost is linear and why the cost is
-unavoidable.
-A different architecture remembers by geometry. Tokens are routed to a
-fixed set of cells; the cell holds a diffusion of what was written there;
-and the routing — not the storage — is what carries the association. The
-state is `M × r` floats. For `M = 1024, r = 8` that is 16 KB, and it
-never grows, no matter how much text you stream through it.
+unavoidable during a sequence, until that context is discarded.
+A different architecture routes tokens to a fixed set of cells; the cell
+holds a diffusion of what was written there; and the routing — not the
+storage — carries the association. The fluid state is `M × r` floats. For
+`M = 1024, r = 8` that is 16 KB, independent of stream length.
 The mathematics is a cellular-sheaf Laplacian: `X(t) = exp(-t L_F) X(0)`.
 The field converges exponentially to `ker(L_F)` — the Hodge limit — and the
 contraction is certified: `‖e^{-tL}‖ ≤ e^{-tλ₂}`. A multi-scale band filter
@@ -32,21 +31,21 @@ its neighbours and is provably no longer exact.
 So the exact value must never live inside the fluid. I split the memory:
 | tier|holds|size|exact?|
 | ---|---|---|---|
-| frozen register|token ids as  integers|20 B / fact|✅ bit-exact|
+| attachable exact store|token IDs|20 B packed-slot estimate / context|✅ bit-exact ID|
 | superfluid state|the aggregate|16 KB, constant|❌ lossy|
 | external source|a pointer|6 B / fact|✅ exact|
-A recalled fact is an `int32`. It is not "approximately" the right token — it
-is the right token, and the register is append-only, so a value that was
-written never changes. That also makes it an audit log, and makes poisoning
-partly preventable: the first write wins, so corroboration (a second,
-independent mention) is a promotion to trusted.
+A recalled token ID is an `int32`, so the stored ID is exact. The attachable
+store tracks majority continuations and evicts the least-corroborated entries.
+This bounded in-memory store is not a tamper-evident audit log, and support
+counts do not establish that a fact is true or prevent poisoning.
 The extraction is a logit override, not a suggestion. The tool does not
 return a token and hope the model uses it; it sets the recalled token's
 logit to `+∞`, so the argmax is provably that token.
 What the numbers say
 The fluid carries the local aggregate well: cosine 0.968 against the
 true per-anchor mean.
-When a fact is promoted, the recall is 100 % bit-exact, at 20 B/fact
+When a token ID is retrieved, it is bit-exact; the packed-slot estimate is
+20 B/context, excluding Python object overhead,
 versus the KV cache's 131,072 B/token — 6,554× cheaper.
 More anchors buy almost nothing (16× the anchors: +0.013 aggregate quality,
 256× the compute) while more exact slots buy a lot (64× the slots: +0.69
@@ -55,7 +54,7 @@ A training-free 2.4 KB domain prior improves a frozen model's
 perplexity — by 0.048 nats on a weak model, but only 0.0059 nats on a
 better one, and a plain 23 KB unigram table beats it 6×. The prior's
 value lives where the model is weakest, not where it is good.
-Seven things that did not work
+What the measurements ruled out
 This is the part I care about most, because it is the part nobody else
 publishes.
 The topological selection criterion lost. I built the whole selection

@@ -28,13 +28,7 @@ import os
 import sys
 import time
 
-import torch
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from superfluid.gpt2_model import GPT2Model  # noqa: E402
-from superfluid.gpt2_tokenizer import GPT2Tokenizer  # noqa: E402
-from superfluid.torch_graft import SAABranchTorch  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -55,6 +49,16 @@ def main():
     ap.add_argument("--read-gain", type=float, default=300.0)
     ap.add_argument("--out", default=os.path.join(RESULTS, "e14_real_gpt2.json"))
     args = ap.parse_args()
+    global torch
+    try:
+        import torch
+    except ImportError as error:
+        ap.error(f"PyTorch is required; install the optional GPU dependencies: {error}")
+
+    from superfluid.gpt2_model import GPT2Model
+    from superfluid.gpt2_tokenizer import GPT2Tokenizer
+    from superfluid.torch_graft import SAABranchTorch
+
     t0 = time.time()
     res = {"model": args.model, "config": vars(args)}
 

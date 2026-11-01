@@ -1,9 +1,9 @@
 """
 superfluid.memory — the FROZEN REGISTER and the geometry-addressed memory graft.
 This module implements the two ideas that make the fluid trustworthy:
-A frozen register (L1): an append-only, write-once table of EXACT
-facts.  A fact's value is stored as an INTEGER token id, so a retrieved
-value is bit-identical to the source -- not float-approximate.  The
+A frozen register (L1): a bounded append-only table of token IDs. A value
+is stored as an INTEGER token id, so a retrieved value is bit-identical to
+the stored ID -- not float-approximate. The
 register is never diffused, so the fluid's smoothing cannot destroy it.
 A sheaf memory adapter (L2, the "graft"): a constant-size state
 S in R^{M x r} plus a static prototype codebook.  The adapter routes
@@ -134,8 +134,8 @@ class FrozenRegister:
         """Append a NEW slot.  Returns the slot index.
 
         Append-only means a fact that is promoted twice gets two slots and
-        the *latest* wins on recall: that is the versioning mechanism, and it
-        is also what makes the register an append-only audit log.
+        the *latest* wins on recall. The register is not a tamper-evident
+        audit log.
         """
         if self.n >= self.capacity:
             raise MemoryError(

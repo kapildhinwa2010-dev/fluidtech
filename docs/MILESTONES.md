@@ -34,12 +34,12 @@ frozen state.
 
 ### 4. The exact tier: bit-exact memory for 20 bytes a fact
 
-An append-only, content-keyed register.  A value is stored as an **int32**,
-so a recalled token is *provably* the right one — not approximately.  It
-refuses to overflow rather than growing, it fails loud on a signature
-mismatch instead of returning another fact's value, and it keeps the first
-write so the memory doubles as an **audit trail**.  **819 facts per 16 KB.**
-→ `superfluid/memory.py`
+The low-level `FrozenRegister` uses a fixed 20-byte, content-keyed slot and
+refuses overflow. The attachable branch uses a bounded majority-tracking
+store; both return the stored token ID exactly, but neither establishes that
+the token is true. **819 packed slots per 16 KB**, before Python object
+overhead; this is not a tamper-evident audit trail.
+→ `superfluid/memory.py`, `superfluid/graft.py`
 
 ### 5. The budget law, measured
 
@@ -89,7 +89,7 @@ layer's own objective now **converges** (4.34 → 3.81).
   workflow, issue and PR templates, a Docker image, `Makefile` targets,
   `CHANGELOG`, `CONTRIBUTING`, `CODE_OF_CONDUCT`, `SECURITY` with a threat
   model.
-→ `tools/bpe.py`, `tests/`, `.github/`, `Makefile`
+→ `superfluid/bpe.py`, `tests/`, `.github/`, `Makefile`
 
 ### 10. The byte economics that motivate the whole thing
 
@@ -192,7 +192,7 @@ can run.
 
 ## Where it stands
 
-A **research prototype with a production-shaped skeleton**: the code is
+A **research prototype, not production-ready software**: the code is
 tested, documented, installable and CI-verified; the measurements are
 honest; and the claims are the ones the evidence supports.
 

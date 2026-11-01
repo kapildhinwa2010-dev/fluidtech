@@ -1,6 +1,9 @@
 POSITIONING — the honest novelty audit
-Written before publication, on purpose. Written after publication it
-would be marketing; before, it is a survival document.
+Historical pre-publication strategy memo. Proposed claims and forecasts
+below are not current project guidance; implementation measurements
+supersede them. Topology-based selection did not work, and the register is
+not tamper-evident or poisoning-bounded. See `docs/NEGATIVE-RESULTS.md` and
+`SECURITY.md` for current evidence and limitations.
 Question answered here: "is this revolutionary?" → No. Here is what it
 actually is, and here is what would make it more.
 1. The verdict

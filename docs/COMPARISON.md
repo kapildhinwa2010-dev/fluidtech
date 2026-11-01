@@ -5,17 +5,21 @@ facts, not estimates. Section 9 marks exactly which claims are measured
 in our sandbox, which are facts by arithmetic, and which are projected.
 Bottom line first: the win is not "more context". It is "context that
 physically fits".
+The 20 B/fact figures are packed-slot payload estimates and exclude the
+bounded anchor store. The Python reference uses dictionaries and has
+additional per-entry object overhead; these figures are not measured
+process-RAM usage.
 0. The verdict in one table
 |  |full KV cache|sliding window / StreamingLLM|KV quant (int4)|MLA (DeepSeek-V2)|Infini-attention|Titans|Memory Layers (Meta)|RAG|Ours: fluid + register|
 | ---|---|---|---|---|---|---|---|---|---|
-| memory @128K (8B)|16.0 GB|0.25 GB|4.0 GB|~0.3 GB|16 KB|~16 KB|128B  trainable  params|external DB|16 KB + 14 B/fact|
+| memory @128K (8B)|16.0 GB|0.25 GB|4.0 GB|~0.3 GB|16 KB|~16 KB|128B  trainable  params|external DB|16 KB + 20 B/fact|
 | growth with context|linear|constant|linear|linear|constant|constant|constant|n/a|constant|
 | exact token recall|✅|✅ (recent only)|✅|❌|❌|❌|❌|✅|✅ (pinned) / ✅ (L3) / ❌ (fluid)|
 | global gist|✅|❌|✅|✅|✅|✅|❌|❌|✅ (harmonic branch)|
 | infinite stream|❌|✅|❌|❌|✅|✅|n/a|✅|✅|
 | needs training|–|–|–|yes (full)|yes (full)|yes (full)|yes (pretrain)|–|no (G0 protocol)|
 | 70B @128K on 2×H100|0 sessions|260|~10|~40|45|45|n/a|n/a|45|
-| append-only audit|❌|❌|❌|❌|❌|❌|❌|❌|✅|
+| retained exact token IDs|❌|❌|❌|❌|❌|❌|❌|❌|✅ (bounded register)|
 | attach to existing LLM|❌|❌|❌|❌|~|~|❌|✅|✅ (one residual insert)|
 0b. The comparison that was MISSING: kNN-LM
 This project never compared itself against its closest prior art.  A
@@ -24,9 +28,10 @@ a datastore of (context → next token) plus an LM, combined by interpolating
 their next-token distributions:
 p(v) = λ · p_LM(v) + (1 − λ) · p_knn(v)
 Functionally that is this project's layer, with three differences: the
-datastore is constant-size here, the combination is a gated override
+datastore is bounded here, the combination is a gated override
 (the model's own uncertainty scales the retrieval) instead of a flat
-interpolation, and the store is an append-only audit trail.
+interpolation, and retained token IDs are stored exactly. The register is
+not a tamper-evident audit trail.
 `experiments/e13_knn_baseline.py` measures both, on the same corpus, the same
 datastore and the same base model:
 |  |val loss|ppl|Δ vs base|token accuracy|
@@ -90,7 +95,7 @@ channel that sits beside attention.
 | ---|---|---|---|
 | full KV|up to trained ctx|–|128K|
 | sliding window|2–8K|16 KB (gist of everything)|2–8K exact + everything lossy|
-| ours (P+G)|2K exact window|16 KB fluid + register|2K exact + all-of-it gist + 1,170 exact facts|
+| ours (P+G)|2K exact window|16 KB fluid + register|2K exact + all-of-it gist + 819 exact facts|
 The win, stated correctly:
 With a 2K local window + a 16 KB fluid, a 70B serves 128K-context
 sessions on hardware where the full KV cache cannot hold a single one.
@@ -99,7 +104,7 @@ hardware, at 45 concurrent sessions instead of 0.
 The two-memory split is the honest form of the claim:
 P-memory (small sliding window of K,V) → recent context, exact
 G-memory (fluid, 16 KB) → everything else, lossy gist
-Register (frozen, 14 B/fact) → the chosen facts, bit-exact
+Register (frozen, 20 B/fact) → the chosen facts, bit-exact
 3. Prefill: the quadratic tax
 Llama-3.1-8B, H100 bf16 (~400 TFLOPs). `attn ≈ 2n²d`, `linear ≈ 2nP`.
 | ctx|attn TFLOP|linear TFLOP|attn share|prefill|fluid-only|
@@ -155,20 +160,20 @@ what makes per-user persistent memory economically possible at all.
 | capability|full KV|sliding win|quant|MLA|Infini|Titans|Mem-Layers|RAG|ours|
 | ---|---|---|---|---|---|---|---|---|---|
 | exact needle at a position|✅|✅ recent|✅|❌|❌|❌|❌|✅|✅ pinned / L3|
-| exact  specific  fact|✅|✅ recent|✅|❌|❌|❌|❌|✅|✅ pinned (14 B)|
+| exact  specific  fact|✅|✅ recent|✅|❌|❌|❌|❌|✅|✅ pinned (20 B)|
 | global gist / aggregate|✅|❌|✅|✅|✅|✅|❌|❌|✅ 97.3 % meas.|
 | positional recall ( "3rd paragraph ")|✅|✅|✅|✅|❌|❌|❌|❌|❌|
 | infinite stream / never re-encode|❌|✅|❌|❌|✅|✅|n/a|✅|✅|
 | no  "lost in the middle "|❌|❌|❌|❌|~ (no positions)|~|n/a|~|✅ (no positional decay)|
 | per-user memory at 10k scale|❌|❌|❌|❌|✅|✅|❌|✅|✅ 153 MB total|
 | training-free attach|n/a|✅|✅|❌|❌|❌|❌|✅|✅ (G0 protocol)|
-| append-only / auditable|❌|❌|❌|❌|❌|❌|❌|❌|✅|
-| poisoning blast-radius bound|❌|❌|❌|❌|~|~|❌|❌|✅ λ₂ + quorum|
-| inspectable memory|❌|❌|❌|❌|❌|❌|❌|❌|✅ persistence diagram|
+| tamper-evident audit log|❌|❌|❌|❌|❌|❌|❌|❌|❌|
+| poisoning blast-radius bound|❌|❌|❌|❌|~|~|❌|❌|❌ (not provided)|
+| inspectable memory|❌|❌|❌|❌|❌|❌|❌|❌|✅ bounded register contents|
 | raw perplexity at scale|✅ best|❌|~|~|❌|✅|✅|✅|❌ (transformer wins — measured)|
 The one thing only the full-KV system does better: raw fidelity over
 everything, and positional recall. Everything else is a trade.
-7. The 2,176 B/fact problem — and the 14 B answer
+7. The 2,176 B/fact problem — and the 20 B answer
 | system|bytes per exactly-retrievable fact|capacity in 16 KB|
 | ---|---|---|
 | KV cache (8B, GQA)|131,072|0.12 facts|
@@ -178,7 +183,7 @@ everything, and positional recall. Everything else is a trade.
 | Frozen register (ours)|20|819 facts|
 | Landmark codebook (ours, exact spans)|64|256 spans|
 Larimar's own number: 100 % recall at N ≤ K = 1000, 82 % at N = 1024 — a
-hard cliff. Ours: pinned facts stay 100 % exact forever (append-only), and
+hard cliff. Ours: retained token IDs stay bit-exact in the bounded register, and
 the unpinned remainder degrades continuously instead of falling off a
 cliff. Cliff → knee.
 Measured (v1.1, 1M tokens,  `results/e5_graft.json` ):  when a fact is
@@ -201,12 +206,13 @@ while every global-topological criterion reaches 0.000 (see
 | LLMLingua/TokenGate|token importance via perplexity/MI|deletes  tokens; no exact tier; shrinks the  input , not a state|
 Our claim: a fixed-size state that is exact for a chosen subset,
 gracefully lossy for the rest, with a certified bound and an
-append-only audit trail — and the subset is chosen by topology.
+bounded majority-tracking exact store — and selection by global topology did not work;
+the measured semantic/local-geometric policy performed better.
 9. FACT vs PROJECTED — read this before quoting any number
 ✅ FACT — arithmetic on published configs, or measured in our sandbox
 KV bytes/token, KV @ctx, sessions that fit in VRAM, prefill FLOPs, crossover point
 fluid read cost 16 KB = 0.009 µs; fluid compute = 384 flops/token/layer
-our `selftest.py` → 21/21
+our `selftest.py` → 50/50
 mechanism test: fluid 97.3 % sign acc vs local R=4 65.6 %, R=8 71.0 %
 LM A/B: transformer wins — 2.6331 vs 2.7397 final val (fewer params on our side)
 param-matched FLOPs: 1.10× cheaper @8K → 2.54× @128K
@@ -226,9 +232,9 @@ fact, the second half is conditional.
 | single user, ≤32K ctx, quality is everything|full KV  (transformer wins — we measured it)|
 | multi-tenant SaaS, 10k+ users|fluid + register  (153 MB vs 40 TB)|
 | 70B @128K on 2×80GB|fluid + register  (45 sessions vs 0)|
-| long legal/medical docs, need exact clause text|fluid + register + L3 tool  (14 B/fact, exact spans)|
+| long legal/medical docs, need exact clause text|fluid + register + L3 tool  (20 B/fact, exact token ids)|
 | infinite stream / live agent|fluid  (state never grows)|
-| you want a memory you can audit|fluid + register  (append-only)|
+| you want to inspect the current cached entries|fluid + bounded exact store (not an audit log)|
 | you can afford training|MLA / Memory Layers / Titans  (they are trained; we are not)|
 | you need raw perplexity SOTA|transformer  — do not use us|
 11. The verdict
@@ -238,7 +244,8 @@ tier, and the comparison is not "superfluid vs transformer" but
 The honest, defensible, arithmetic-backed claim:
 KV cache is the binding constraint on long-context serving from 32K
 upward. A 70B model cannot hold a single 128K session on 2×80GB. A
-16 KB sheaf state — plus a 14-byte-per-fact append-only register for the
+16 KB sheaf state — plus a bounded exact store with a 20-byte packed-slot
+payload estimate for the
 facts that must stay exact — replaces that constraint with a constant,
 and costs 0.009 microseconds and 384 flops per token.
 The unproven half: whether the fluid carries its share of the information
