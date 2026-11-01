@@ -331,9 +331,9 @@ or there are many lines where written "your name" so the ai said write my name t
 >but he idea of fluidtech was force information into topological liquid is mine executed by ai 
 
 
-only author's confession written by Me .😭😭
+only author's confession written by Me .🤗🤫
 
 
->so I am write here sorry Ai write here how to connect this layer ---
+>so I am write here ,sorry Ai write here how to connect this layer ---
 but today my credits are spent so I update it tomorrow 
 bye 👋 
