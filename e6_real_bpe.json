@@ -1,0 +1,80 @@
+{
+  "variants": {
+    "lossy_only": {
+      "loss": 4.535166269886533,
+      "ppl": 93.23901685642065,
+      "delta_vs_base": 0.9830621527386718,
+      "wo_exact_norm": 0.0,
+      "wo_lossy_norm": 0.771485244219348,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 4.953133003798271
+    },
+    "lossy_only_lr1e-4": {
+      "loss": 3.7420606435774615,
+      "ppl": 42.184828558815546,
+      "delta_vs_base": 0.18995652642960037,
+      "wo_exact_norm": 0.0,
+      "wo_lossy_norm": 0.03475263292074025,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 3.797589336386558
+    },
+    "lossy_only_lr1e-5": {
+      "loss": 3.5555722565121846,
+      "ppl": 35.007847705472365,
+      "delta_vs_base": 0.0034681393643234415,
+      "wo_exact_norm": 0.0,
+      "wo_lossy_norm": 0.006187216587267281,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 3.3752368550208844
+    },
+    "exact_only": {
+      "loss": 3.550437772867251,
+      "ppl": 34.8285611498045,
+      "delta_vs_base": -0.001666344280609966,
+      "wo_exact_norm": 0.4622293665520179,
+      "wo_lossy_norm": 0.0,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 3.363241323495399
+    },
+    "exact_only_lr1e-4": {
+      "loss": 3.551916114961939,
+      "ppl": 34.88008775544046,
+      "delta_vs_base": -0.00018800218592218698,
+      "wo_exact_norm": 0.04857488564817089,
+      "wo_lossy_norm": 0.0,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 3.363241323495399
+    },
+    "both": {
+      "loss": 4.5328144733664475,
+      "ppl": 93.0199953090477,
+      "delta_vs_base": 0.9807103562185864,
+      "wo_exact_norm": 0.520013348731574,
+      "wo_lossy_norm": 0.7714515534905787,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 4.953188535844832
+    },
+    "both_lr3e-3": {
+      "loss": 5.917339124060876,
+      "ppl": 371.4220897247277,
+      "delta_vs_base": 2.3652350069130152,
+      "wo_exact_norm": 1.5635407137565802,
+      "wo_lossy_norm": 2.6682661891967716,
+      "train_loss_first": 3.5133797716267026,
+      "train_loss_last": 5.9382776876611025
+    }
+  },
+  "tokenizer": "bpe",
+  "corpus": "corpus.txt (Alice in Wonderland, bpe level)",
+  "vocab": 512,
+  "chars": 69367,
+  "base_loss": 3.552104117147861,
+  "base_ppl": 34.88664590463751,
+  "graft_loss": 5.917339124060876,
+  "graft_ppl": 371.4220897247277,
+  "delta": 2.3652350069130152,
+  "wo_exact_norm": 1.5635407137565802,
+  "wo_lossy_norm": 2.6682661891967716,
+  "state_bytes": 86016,
+  "runtime_sec": 251.51383113861084
+}
