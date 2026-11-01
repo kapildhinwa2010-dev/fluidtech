@@ -3,6 +3,7 @@ superfluid.optim — Adam, implemented locally (no torch in this environment).
 """
 
 from __future__ import annotations
+
 import numpy as np
 
 

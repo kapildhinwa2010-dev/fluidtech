@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from .autodiff import Tensor, softmax_rows, concat
-from .blocks import SuperfluidBlock, RMSNorm
+from .autodiff import Tensor, concat, softmax_rows
+from .blocks import RMSNorm, SuperfluidBlock
 
 __all__ = ["SuperfluidLM", "TinyTransformer"]
 

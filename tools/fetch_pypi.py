@@ -48,7 +48,6 @@ def fetch(pkg: str) -> str | None:
     url = f"https://pypi.org/pypi/{pkg}/json"
     with urllib.request.urlopen(url, timeout=60) as r:
         meta = json.load(r)
-    ver = meta["info"]["version"]
     best = None
     for f in meta["urls"]:
         if f["packagetype"] != "bdist_wheel":

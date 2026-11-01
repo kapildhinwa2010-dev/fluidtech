@@ -32,6 +32,7 @@ an *unbalanced* one decays to zero (it "evaporates" instead of freezing).
 """
 
 from __future__ import annotations
+
 import numpy as np
 
 __all__ = [
@@ -74,7 +75,9 @@ def laplacian_from_dense_A(A: np.ndarray) -> np.ndarray:
     return D - A
 
 
-def signed_laplacian_from_edges(n: int, edges: np.ndarray, alpha: np.ndarray) -> np.ndarray:
+def signed_laplacian_from_edges(
+    n: int, edges: np.ndarray, alpha: np.ndarray
+) -> np.ndarray:
     """Alias kept for readability at call sites."""
     return build_laplacian(n, edges, alpha)
 

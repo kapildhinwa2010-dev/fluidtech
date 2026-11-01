@@ -45,7 +45,7 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid.torch_graft import SAABranchTorch          # noqa: E402
+from superfluid.torch_graft import SAABranchTorch  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -56,7 +56,7 @@ def log(*a):
 
 
 def load_text(path: str) -> str:
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+    with open(path, encoding="utf-8", errors="ignore") as f:
         return f.read()
 
 
@@ -164,7 +164,7 @@ def main():
     # ------------------------------------------------------------ footprint
     log("\n[memory] the layer vs the KV cache, for the same context")
     kv = 0
-    for l in model.config.num_hidden_layers:
+    for _ in range(model.config.num_hidden_layers):
         kv += 2 * args.ctx * model.config.hidden_size * 2      # fp16, K and V
     log(f"    layer state: {branch.state_bytes():,} B "
         f"({args.M} anchors x r={args.r} + the store)")

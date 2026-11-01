@@ -32,6 +32,7 @@ Usage
 """
 
 from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -44,9 +45,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.sheaf import build_laplacian, balance_residual, component_balance
-from superfluid.diffusion import spectral_summary, exact_exp_action, jam_time
-from superfluid.topology import connected_components
+from superfluid.diffusion import exact_exp_action, jam_time, spectral_summary
+from superfluid.sheaf import balance_residual, build_laplacian
 
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -217,12 +217,10 @@ def run(n_cells=64, n_trials=40, seed=0, verbose=True):
     # ---- Q3: the contractivity certificate -------------------------------
     log("[3/3] contraction certificate on the same graphs ...")
     cert = []
-    for r in corr_rows[:12]:
-        pass
     rng = np.random.default_rng(seed)
     ok = 0
     tot = 0
-    for trial in range(12):
+    for _ in range(12):
         n = n_cells
         edges = np.unique(np.sort(rng.integers(0, n, size=(n * 2, 2)), axis=1), axis=0)
         edges = edges[edges[:, 0] != edges[:, 1]]

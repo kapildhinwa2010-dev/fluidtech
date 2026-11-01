@@ -28,14 +28,13 @@ import os
 import sys
 import time
 
-import numpy as np
 import torch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid.gpt2_model import GPT2Model                      # noqa: E402
-from superfluid.gpt2_tokenizer import GPT2Tokenizer              # noqa: E402
-from superfluid.torch_graft import SAABranchTorch                # noqa: E402
+from superfluid.gpt2_model import GPT2Model  # noqa: E402
+from superfluid.gpt2_tokenizer import GPT2Tokenizer  # noqa: E402
+from superfluid.torch_graft import SAABranchTorch  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")

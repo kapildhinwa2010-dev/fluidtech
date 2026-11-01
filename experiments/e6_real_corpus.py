@@ -29,8 +29,8 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from superfluid import TinyTransformer, cross_entropy, cross_entropy_tensor  # noqa: E402
-from superfluid.graft import SAABranch                                           # noqa: E402
-from superfluid.optim import Adam                                                # noqa: E402
+from superfluid.graft import SAABranch  # noqa: E402
+from superfluid.optim import Adam  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -49,7 +49,7 @@ def load_chars(max_chars=120_000, tokenizer="char", bpe_path=None):
     character level corpus has is gone.
     """
     path = os.path.join(ROOT, "corpus.txt")
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+    with open(path, encoding="utf-8", errors="ignore") as f:
         text = f.read()
     if tokenizer == "bpe":
         from tools.bpe import BPETokenizer

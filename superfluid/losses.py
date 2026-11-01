@@ -12,6 +12,7 @@ decision is a hard top-k selection and carries no gradient path.
 """
 
 from __future__ import annotations
+
 import numpy as np
 
 __all__ = ["cross_entropy", "sheaf_energy_loss", "band_decorrelation", "gap_bonus"]

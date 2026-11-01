@@ -12,8 +12,8 @@ torch = pytest.importorskip("torch")
 
 def _make_pair(seed=0, M=16, d=32, r=4):
     from superfluid import SAABranch
-    from superfluid.torch_graft import SAABranchTorch
     from superfluid.model import TinyTransformer
+    from superfluid.torch_graft import SAABranchTorch
     m = TinyTransformer(32, d=d, n_layers=2, n_ctx=32, seed=seed)
     np_br = SAABranch(M=M, r=r, d=d, emb=m.emb, ctx_len=1, seed=seed)
     th_br = SAABranchTorch(M=M, r=r, d=d, emb=torch.nn.Parameter(

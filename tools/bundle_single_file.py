@@ -25,10 +25,10 @@ def main():
     parts = []
     for name in MODULES:
         path = os.path.join(ROOT, "superfluid", name + ".py")
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             parts.append(f"#--- FILE: superfluid/{name}.py ---")
             parts.append(f.read())
-    with open(os.path.join(ROOT, "selftest.py"), "r", encoding="utf-8") as f:
+    with open(os.path.join(ROOT, "selftest.py"), encoding="utf-8") as f:
         parts.append("#--- FILE: selftest.py ---")
         parts.append(f.read())
     body = "\n".join(parts)
@@ -39,7 +39,7 @@ def main():
         raise SystemExit("a source file contains a triple single quote; "
                          "the single-file bundle cannot be generated safely")
 
-    with open(TEMPLATE, "r", encoding="utf-8") as f:
+    with open(TEMPLATE, encoding="utf-8") as f:
         tpl = f.read()
     if PLACEHOLDER not in tpl:
         raise SystemExit(f"template is missing the {PLACEHOLDER} placeholder")

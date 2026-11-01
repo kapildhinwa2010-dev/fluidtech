@@ -55,7 +55,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import SAABranch, Tensor, TinyTransformer, cross_entropy    # noqa: E402
+from superfluid import SAABranch, Tensor, TinyTransformer, cross_entropy  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -93,11 +93,11 @@ def train_base(docs, d=64, layers=2, ctx=128, steps=400, batch=16, lr=3e-3,
                seed=0):
     rng = np.random.default_rng(seed)
     model = TinyTransformer(V, d=d, n_layers=layers, n_ctx=ctx, seed=0)
-    from superfluid.optim import Adam
     from superfluid.losses import cross_entropy_tensor
+    from superfluid.optim import Adam
     opt = Adam(model.params(), lr=lr, betas=(0.9, 0.95), weight_decay=0.01)
     toks = np.concatenate([doc["tokens"] for doc in docs])
-    for step in range(steps):
+    for _ in range(steps):
         starts = rng.integers(0, len(toks) - ctx - 1, size=batch)
         x = np.stack([toks[s:s + ctx] for s in starts])
         y = np.stack([toks[s + 1:s + ctx + 1] for s in starts])
@@ -180,7 +180,8 @@ def main():
     # ------------------------------------------------------------- E10b
     print("\n[3/5] E10b -- the GENERATION task: does the gate keep the "
           "base model's loss intact?")
-    from experiments.e6_real_corpus import load_chars, train_base as tb_real
+    from experiments.e6_real_corpus import load_chars
+    from experiments.e6_real_corpus import train_base as tb_real
     ids_c, Vr = load_chars()
     n_tr = int(len(ids_c) * 0.9)
     tr, va = ids_c[:n_tr], ids_c[n_tr:]
@@ -235,8 +236,8 @@ def main():
         gated[str(g)] = {"loss": float(l), "delta": float(l - base_l)}
         print(f"    GATED   gain {g:>6.1f} -> {l:.4f}  "
               f"delta {l - base_l:+.4f}")
-    print(f"    (the ungated numbers are in the JSON; the gated ones are "
-          f"printed above)")
+    print("    (the ungated numbers are in the JSON; the gated ones are "
+          "printed above)")
     res["e10b_generation"] = {"base_loss": float(base_l),
                               "gated": gated, "ungated_flat": ungated}
 

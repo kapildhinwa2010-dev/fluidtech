@@ -36,6 +36,7 @@ def _gelu(x):
 
 
 import torch  # noqa: E402  (deliberately after the helpers, so the numpy
+
                          #  package never imports torch)
 
 

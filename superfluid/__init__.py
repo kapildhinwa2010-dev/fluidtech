@@ -20,27 +20,64 @@ The two tiers are separate on purpose: the fluid answers WHERE, the register
 answers WHAT.
 """
 from .autodiff import Tensor, concat, softmax_rows, softplus
-from .sheaf import (build_laplacian, sheaf_energy, balance_residual,
-                    is_balanced, laplacian_from_dense_A, component_balance)
-from .diffusion import (power_iteration_lmax, cheb_coeffs_exp, cheb_basis,
-                        apply_bands, band_energies, spectral_gap, jam_time,
-                        cheb_degree, exact_exp_action, spectral_summary,
-                        band_times)
-from .topology import (route_topk, edges_from_topk, chain_edges, unique_edges,
-                       kruskal_barcode, betti_numbers, topo_descriptor,
-                       connected_components, hodge_relevance, hodge_embedding,
-                       hodge_edge_participation, local_density,
-                       persistence_landmarks)
-from .blocks import SuperfluidBlock, RMSNorm
+from .blocks import RMSNorm, SuperfluidBlock
+from .diffusion import (
+                    apply_bands,
+                    band_energies,
+                    band_times,
+                    cheb_basis,
+                    cheb_coeffs_exp,
+                    cheb_degree,
+                    exact_exp_action,
+                    jam_time,
+                    power_iteration_lmax,
+                    spectral_gap,
+                    spectral_summary,
+)
+from .graft import GRAFT_STATE_BYTES, SAABranch, ctx_hash
+from .losses import (
+                    band_decorrelation,
+                    cross_entropy,
+                    cross_entropy_grad,
+                    cross_entropy_tensor,
+)
+from .memory import (
+                    SLOT_BYTES,
+                    FrozenRegister,
+                    SheafMemoryAdapter,
+                    budget_split,
+                    ctx_key,
+                    embedding_signature,
+                    fnv1a64,
+                    logit_override,
+)
 from .model import SuperfluidLM, TinyTransformer
-from .losses import (cross_entropy, cross_entropy_grad, cross_entropy_tensor,
-                     band_decorrelation)
-from .graft import SAABranch, GRAFT_STATE_BYTES, ctx_hash
-from .memory import (FrozenRegister, SheafMemoryAdapter, logit_override,
-                     budget_split, ctx_key, fnv1a64, embedding_signature,
-                     SLOT_BYTES)
+from .sheaf import (
+                    balance_residual,
+                    build_laplacian,
+                    component_balance,
+                    is_balanced,
+                    laplacian_from_dense_A,
+                    sheaf_energy,
+)
+from .topology import (
+                    betti_numbers,
+                    chain_edges,
+                    connected_components,
+                    edges_from_topk,
+                    hodge_edge_participation,
+                    hodge_embedding,
+                    hodge_relevance,
+                    kruskal_barcode,
+                    local_density,
+                    persistence_landmarks,
+                    route_topk,
+                    topo_descriptor,
+                    unique_edges,
+)
 
-version = "1.2.0"
+__version__ = "1.2.0"
+version = __version__
 
 __all__ = [
     "SAABranch", "GRAFT_STATE_BYTES", "ctx_hash",

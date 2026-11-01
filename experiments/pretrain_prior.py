@@ -34,6 +34,7 @@ Usage
 """
 
 from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -46,18 +47,26 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.memory import (SheafMemoryAdapter, FrozenRegister, SLOT_BYTES,
-                               embedding_signature, ctx_key, budget_split)
-from superfluid.topology import (hodge_relevance, hodge_embedding,
-                                 hodge_edge_participation, persistence_landmarks,
-                                 local_density)
+from superfluid.memory import (
+    SLOT_BYTES,
+    FrozenRegister,
+    SheafMemoryAdapter,
+    budget_split,
+    ctx_key,
+    embedding_signature,
+)
+from superfluid.topology import (
+    hodge_relevance,
+    local_density,
+    persistence_landmarks,
+)
 
 DEFAULT_OUT = os.path.join(ROOT, "prior")
 
 
 # ------------------------------------------------------------------ corpus
 def load_text(path):
-    with open(path, "r", encoding="utf-8", errors="replace") as f:
+    with open(path, encoding="utf-8", errors="replace") as f:
         return f.read()
 
 
@@ -166,7 +175,6 @@ def build(tokens, vocab_size, budget_bytes=16 * 1024, M=1024, r=8, d=64,
     # --- landmark table: the EXACT spans at the structural landmarks ------
     # a landmark is an anchor; the span is the most frequent token window
     # that routed to it.  We keep the span's exact token ids.
-    from superfluid.topology import route_topk
     q = emb[tokens]
     Pn = protos / (np.linalg.norm(protos, axis=1, keepdims=True) + 1e-12)
     qn = q / (np.linalg.norm(q, axis=1, keepdims=True) + 1e-12)

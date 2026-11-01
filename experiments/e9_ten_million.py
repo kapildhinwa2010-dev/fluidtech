@@ -36,8 +36,8 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import SAABranch, TinyTransformer, cross_entropy          # noqa: E402
-from superfluid.memory import SLOT_BYTES                                   # noqa: E402
+from superfluid import SAABranch, cross_entropy  # noqa: E402
+from superfluid.memory import SLOT_BYTES  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -62,7 +62,7 @@ def build_stream(n_tokens, n_facts=6, seed=0, vocab=76):
         facts.append({"depth": d, "key": key, "val": val})
     # a second set of facts with COMMON keys -- the control
     common = []
-    for i, d in enumerate(depths[:3]):
+    for _, d in enumerate(depths[:3]):
         key = int(rng.integers(0, vocab - 6))  # occurs everywhere
         val = int(rng.integers(0, vocab))
         ids[d + 2] = key
@@ -83,7 +83,6 @@ def stream_through(branch, ids, chunk=4096):
             branch._buf.append(int(w[t]))
             if len(branch._buf) > branch.ctx_len:
                 branch._buf = branch._buf[-branch.ctx_len:]
-            key = branch._key(branch._buf)
             if prev_key is not None:
                 branch._put(prev_key, int(w[t]))
     return time.time() - t0
@@ -149,8 +148,8 @@ def main():
     for f in common:
         got = recall_fact(br, f["key"])
         common_hits.append(got == f["val"])
-    print(f"    CONTROL -- facts with COMMON keys (the key occurs all over "
-          f"the stream):")
+    print("    CONTROL -- facts with COMMON keys (the key occurs all over "
+          "the stream):")
     print(f"      recalled {sum(common_hits)}/{len(common_hits)}  -> a key "
           f"that recurs everywhere cannot carry a fact (first-write-wins)")
     res["e9b_token_level"] = {

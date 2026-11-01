@@ -54,7 +54,7 @@ def main():
         ok_graft += (graft_pred == VAL)
 
     print(f"the fact ({KEY} -> {VAL}) is planted 40 tokens before the query,")
-    print(f"outside the model's 32-token attention window.\n")
+    print("outside the model's 32-token attention window.\n")
     print(f"   base model        : {ok_base}/{trials} correct  "
           f"(it never saw the fact)")
     print(f"   base + the layer  : {ok_graft}/{trials} correct  "

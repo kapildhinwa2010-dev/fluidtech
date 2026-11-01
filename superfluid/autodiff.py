@@ -12,6 +12,7 @@ traversal (zero them between steps).
 """
 
 from __future__ import annotations
+
 import numpy as np
 
 _SQRT_PI = np.sqrt(np.pi)
@@ -163,7 +164,6 @@ class Tensor:
         return self.transpose()
 
     def transpose(self):
-        old = self.data.shape
         out = self._apply(self.data.T, "T", (self,), lambda: None)
 
         def bw():
@@ -191,10 +191,10 @@ class Tensor:
                 if not has_arr:
                     src[k] += g                      # pure basic indexing
                 else:
-                    arrs = [(ax, kk) for ax, kk in enumerate(k) if isinstance(kk, np.ndarray)]
-                    bshape = np.broadcast_shapes(*[kk.shape for _, kk in arrs])
+                    arrs = [kk for kk in k if isinstance(kk, np.ndarray)]
+                    bshape = np.broadcast_shapes(*[kk.shape for kk in arrs])
                     idx_arrays = []
-                    for ax, kk in enumerate(k):
+                    for _, kk in enumerate(k):
                         if isinstance(kk, np.ndarray):
                             idx_arrays.append(np.broadcast_to(kk, bshape))
                         else:
@@ -212,7 +212,9 @@ class Tensor:
 
     def gather_rows(self, idx):
         """out[i, j] = self[idx[i, j]]   (self is (n, d), idx is (n, k) -> (n, k, d))"""
-        out = self._apply(self.data[idx], "gather_rows", (self,), lambda: None)
+        out = self._apply(
+            self.data[idx], "gather_rows", (self,), lambda: None
+        )
 
         def bw():
             np.add.at(self.grad, idx, out.grad)
@@ -221,7 +223,12 @@ class Tensor:
 
     # ------------------------------------------------------------ reductions
     def sum(self, axis=None, keepdims=False):
-        out = self._apply(self.data.sum(axis=axis, keepdims=keepdims), "sum", (self,), lambda: None)
+        out = self._apply(
+            self.data.sum(axis=axis, keepdims=keepdims),
+            "sum",
+            (self,),
+            lambda: None,
+        )
 
         def bw():
             g = out.grad
@@ -233,7 +240,12 @@ class Tensor:
 
     def max(self, axis=None, keepdims=False):
         am = np.argmax(self.data, axis=axis, keepdims=True)
-        out = self._apply(np.max(self.data, axis=axis, keepdims=keepdims), "max", (self,), lambda: None)
+        out = self._apply(
+            np.max(self.data, axis=axis, keepdims=keepdims),
+            "max",
+            (self,),
+            lambda: None,
+        )
         mask = np.zeros_like(self.data, dtype=bool)
         np.put_along_axis(mask, am, True, axis=axis)
 
@@ -311,8 +323,12 @@ class Tensor:
         return out
 
     def gelu(self):
-        c = np.sqrt(2.0 / np.pi)
-        out = self._apply(0.5 * self.data * (1 + _erf_np(self.data / np.sqrt(2.0))), "gelu", (self,), lambda: None)
+        out = self._apply(
+            0.5 * self.data * (1 + _erf_np(self.data / np.sqrt(2.0))),
+            "gelu",
+            (self,),
+            lambda: None,
+        )
 
         def bw():
             x = self.data
@@ -386,7 +402,7 @@ class Tensor:
         self.grad = np.zeros_like(self.data)
 
 
-def softplus(t: "Tensor") -> "Tensor":
+def softplus(t: Tensor) -> Tensor:
     """log(1 + exp(t)), numerically stable for large |t|."""
     return (1.0 + t.exp()).log()
 
@@ -396,7 +412,13 @@ def _erf_np(x: np.ndarray) -> np.ndarray:
     sign = np.sign(x)
     ax = np.abs(x)
     p = 0.3275911
-    a1, a2, a3, a4, a5 = 0.254829592, -0.284496736, 1.421413741, -1.453152027, 1.061405429
+    a1, a2, a3, a4, a5 = (
+        0.254829592,
+        -0.284496736,
+        1.421413741,
+        -1.453152027,
+        1.061405429,
+    )
     t = 1.0 / (1.0 + p * ax)
     y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * np.exp(-ax * ax)
     return sign * y

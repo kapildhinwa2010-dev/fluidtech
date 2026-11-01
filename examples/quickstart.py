@@ -31,7 +31,6 @@ def hr(title):
 
 def main():
     hr("0. a base model (a small transformer, 131k params)")
-    rng = np.random.default_rng(0)
     model = TinyTransformer(vocab=32, d=32, n_layers=2, n_ctx=32, seed=0)
     print(f"   params: {sum(p.data.size for p in model.params().values()):,}")
 
@@ -51,7 +50,6 @@ def main():
     hr("2. the exact tier: recall a fact from OUTSIDE the window")
     # the model sees 8 tokens; the fact was 5 tokens ago
     fact = np.array([21, 17, 4, 30, 25], dtype=np.int64)   # 21 -> 17
-    query = np.array([30, 25, 8, 13], dtype=np.int64)      # ends with the key 25
     branch2 = SAABranch(M=16, r=4, d=32, emb=model.emb, ctx_len=1, seed=0)
     branch2.Wo_exact.data = np.eye(32)
     branch2.read_gain = "raw"
@@ -74,7 +72,10 @@ def main():
                      model.emb[fact], fact)
     print(f"   the lossy tier's state: {branch3.state.shape} "
           f"(a diffused aggregate -- no token ids in it)")
-    print(f"   its state is NOT exact: {not np.array_equal(branch3.state, branch3.state.astype(int))}")
+    print(
+        "   its state is NOT exact: "
+        f"{not np.array_equal(branch3.state, branch3.state.astype(int))}"
+    )
 
     hr("what to read next")
     print("   docs/GRAFT.md            what the layer does to a base model (measured)")

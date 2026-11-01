@@ -1,8 +1,9 @@
 """The topology: the frustration index, the Hodge participation, persistence."""
 import numpy as np
 
-from superfluid.topology import (connected_components, hodge_embedding,
-                                 persistence_landmarks, route_topk)
+from superfluid.topology import (
+    hodge_embedding,
+)
 
 
 def test_the_frustration_index_matches_a_global_section():
@@ -11,11 +12,14 @@ def test_the_frustration_index_matches_a_global_section():
     This is the check that replaced the old ``||L 1||`` diagnostic, which
     does NOT detect the frozen state of a scalar signed sheaf.
     """
-    import os
     import importlib.util
+    import os
+
     from superfluid.sheaf import signed_laplacian_from_edges
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    spec = importlib.util.spec_from_file_location("st", os.path.join(here, "selftest.py"))
+    spec = importlib.util.spec_from_file_location(
+        "st", os.path.join(here, "selftest.py")
+    )
     st = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(st)
 
@@ -35,11 +39,9 @@ def test_the_frustration_index_matches_a_global_section():
 
 
 def test_the_hodge_embedding_is_finite():
-    from superfluid.sheaf import signed_laplacian_from_edges
     n = 6
     edges = np.array([(i, i + 1) for i in range(n - 1)] + [(0, 3)], dtype=np.int64)
     alpha = np.ones(len(edges))
-    L = signed_laplacian_from_edges(n, edges, alpha)
     Psi = hodge_embedding(n, edges, alpha)
     assert np.isfinite(Psi).all()
 

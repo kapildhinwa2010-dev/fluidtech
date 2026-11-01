@@ -7,6 +7,7 @@ that the A/B training run is always reproducible.
 """
 
 from __future__ import annotations
+
 import os
 import urllib.request
 
@@ -24,7 +25,7 @@ def get_corpus(max_chars: int = 120_000, cache: str | None = None) -> str:
     """Return a text corpus (>= max_chars if possible)."""
     cache = cache or os.path.join(os.path.dirname(__file__), "..", "corpus.txt")
     if os.path.exists(cache):
-        with open(cache, "r", encoding="utf-8", errors="ignore") as f:
+        with open(cache, encoding="utf-8", errors="ignore") as f:
             t = f.read()
         if len(t) >= 1000:
             return t[:max_chars]

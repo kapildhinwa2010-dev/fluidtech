@@ -24,14 +24,23 @@ Stage notes
 """
 
 from __future__ import annotations
+
 import numpy as np
 
 from .autodiff import Tensor, concat, softmax_rows, softplus
-from .diffusion import (cheb_coeffs_exp, power_iteration_lmax, band_times,
-                        power_iteration_lmax_autodiff, cheb_coeffs_exp_autodiff,
-                        spectral_bound_autodiff)
-from .topology import (route_topk, edges_from_topk, chain_edges, topo_descriptor,
-                      connected_components)
+from .diffusion import (
+    band_times,
+    cheb_coeffs_exp,
+    cheb_coeffs_exp_autodiff,
+    power_iteration_lmax,
+    spectral_bound_autodiff,
+)
+from .topology import (
+    chain_edges,
+    connected_components,
+    edges_from_topk,
+    topo_descriptor,
+)
 
 __all__ = ["SuperfluidBlock", "RMSNorm", "softplus"]
 
@@ -219,8 +228,11 @@ class SuperfluidBlock:
         # bank only carries the transient, so without this branch the block
         # cannot represent a global aggregate at all (measured: sign acc =
         # chance on the global-mean task).  Cost: O(n + m) via union-find.
-        all_edges = np.concatenate([sem, chain], axis=0) if sem.shape[0] or chain.shape[0] \
+        all_edges = (
+            np.concatenate([sem, chain], axis=0)
+            if sem.shape[0] or chain.shape[0]
             else np.zeros((0, 2), dtype=np.int64)
+        )
         harmonic = self._harmonic(xn, all_edges)
         _, diag_ncomp = connected_components(n, all_edges)
         z = z + self.harm_g * harmonic
@@ -245,12 +257,18 @@ class SuperfluidBlock:
             desc = np.zeros(9)
         self.diag = {
             "n_edges": int(sem.shape[0]),
-            "n_components": int(self._harmonic(xn, all_edges).shape[0]) if False else int(diag_ncomp),
+            "n_components": int(diag_ncomp),
             "lam_max": float(lam_max),
             "lam_est": float(lam_est),
-            "alpha_abs_mean": float(np.abs(alpha.data).mean()) if alpha.data.size else 0.0,
-            "alpha_neg_frac": float((alpha.data < 0).mean()) if alpha.data.size else 0.0,
-            "band_energy": np.array([float((b.data ** 2).sum()) for b in bands]),
+            "alpha_abs_mean": (
+                float(np.abs(alpha.data).mean()) if alpha.data.size else 0.0
+            ),
+            "alpha_neg_frac": (
+                float((alpha.data < 0).mean()) if alpha.data.size else 0.0
+            ),
+            "band_energy": np.array(
+                [float((band.data**2).sum()) for band in bands]
+            ),
             "topo": desc,
             "balance_res": float(np.max(np.abs(L.data.sum(axis=1)))),
         }

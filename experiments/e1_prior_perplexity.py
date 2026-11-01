@@ -36,6 +36,7 @@ Usage
 """
 
 from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -48,11 +49,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid import SuperfluidLM, cross_entropy
+from superfluid import SuperfluidLM
+from superfluid.data import CharTokenizer, get_corpus
 from superfluid.losses import cross_entropy_tensor
-from superfluid.data import get_corpus, CharTokenizer
-from superfluid.optim import Adam
 from superfluid.memory import SheafMemoryAdapter
+from superfluid.optim import Adam
 
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -262,7 +263,6 @@ def run(steps=300, d=64, layers=2, ctx=64, batch=16, lr=3e-3, seed=0,
     # ---- 5. fit + evaluate ----------------------------------------------
     log("[5/7] fitting the corrections in closed form ...")
     results = {"base": {"fit_nll": base_tr, "val_nll": base_va,
-                        "val_ppl": float(np.exp(base_va)),
                         "val_ppl": float(np.exp(base_va))}}
 
     # The gradient of the cross-entropy w.r.t. the logits is (p - onehot),

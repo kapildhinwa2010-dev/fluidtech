@@ -40,6 +40,7 @@ Usage
 """
 
 from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -52,12 +53,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.memory import (SheafMemoryAdapter, FrozenRegister, SLOT_BYTES,
-                               embedding_signature, ctx_key, budget_split)
-from superfluid.topology import hodge_relevance
+from superfluid.memory import (
+    SLOT_BYTES,
+    FrozenRegister,
+    SheafMemoryAdapter,
+    budget_split,
+    ctx_key,
+    embedding_signature,
+)
 
 sys.path.insert(0, HERE)
-from e5_graft import Corpus, kmeans, route_all, cos_mean, CTX
+from e5_graft import CTX, Corpus, cos_mean, kmeans
 
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -70,7 +76,6 @@ def one_budget(corp, protos, anchor_of_symbol, budget, r=8, d=64, budget_slots=6
                n_test=150, seed=0, chunk=8192, cheb_m=12, M_override=None,
                verbose=True):
     """Run the whole pipeline for ONE runtime budget and return the metrics."""
-    log = print if verbose else (lambda *a: None)
     M_req = 1024 if M_override is None else int(M_override)
     split = budget_split(budget, M=M_req, r=r, slot_bytes=SLOT_BYTES)
     M = split["M_used"] if M_override is None else M_req

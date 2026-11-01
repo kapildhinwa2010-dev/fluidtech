@@ -35,10 +35,9 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import (TinyTransformer, Tensor, cross_entropy,               # noqa: E402
-                        cross_entropy_tensor)
-from superfluid.graft import SAABranch                                      # noqa: E402
-from superfluid.optim import Adam                                           # noqa: E402
+from superfluid import TinyTransformer, cross_entropy, cross_entropy_tensor  # noqa: E402
+from superfluid.graft import SAABranch  # noqa: E402
+from superfluid.optim import Adam  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -274,11 +273,11 @@ def main():
 
     g_rep, g_nrep, g_new, g_nnew = loss_split(b2, test_docs)
     b_rep, b_nrep, b_new, b_nnew = loss_split(None, test_docs)
-    print(f"    positions whose context occurred BEFORE (the repeated block):")
+    print("    positions whose context occurred BEFORE (the repeated block):")
     print(f"      base        {b_rep:.4f}  (n={b_nrep})")
     print(f"      base+layer  {g_rep:.4f}  (n={g_nrep})   "
           f"delta {g_rep - b_rep:+.4f}")
-    print(f"    positions whose context is NEW:")
+    print("    positions whose context is NEW:")
     print(f"      base        {b_new:.4f}  (n={b_nnew})")
     print(f"      base+layer  {g_new:.4f}  (n={g_nnew})   "
           f"delta {g_new - b_new:+.4f}")

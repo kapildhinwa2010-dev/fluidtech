@@ -60,6 +60,7 @@ Usage
 """
 
 from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -72,11 +73,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.memory import (SheafMemoryAdapter, FrozenRegister, SLOT_BYTES,
-                               embedding_signature, logit_override, ctx_key)
-from superfluid.topology import (hodge_relevance, local_density,
-                                hodge_embedding, hodge_edge_participation,
-                                persistence_landmarks)
+from superfluid.memory import (
+    SLOT_BYTES,
+    FrozenRegister,
+    SheafMemoryAdapter,
+    ctx_key,
+    embedding_signature,
+    logit_override,
+)
+from superfluid.topology import (
+    hodge_edge_participation,
+    hodge_embedding,
+    hodge_relevance,
+    local_density,
+    persistence_landmarks,
+)
 
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -169,7 +180,7 @@ class Corpus:
         n = self.n_tokens
         # per-topic transition tables over that topic's symbol pool
         tables = []
-        for t in range(self.n_topics):
+        for _ in range(self.n_topics):
             tab = np.zeros((self.symbols_per_topic, 6), dtype=np.int64)
             for s in range(self.symbols_per_topic):
                 # no self-loops: a token repeated twice is not a new
@@ -224,7 +235,7 @@ def kmeans(X: np.ndarray, k: int, iters: int = 25, seed: int = 0):
         p = d2 / max(d2.sum(), 1e-12)
         C[i] = X[rng.choice(n, p=p)]
         d2 = np.minimum(d2, ((X - C[i]) ** 2).sum(1))
-    for it in range(iters):
+    for _ in range(iters):
         lab = np.empty(n, dtype=np.int64)
         for s in range(0, n, 4096):
             blk = X[s:s + 4096]
@@ -300,7 +311,6 @@ def run(n_tokens=1_000_000, d=64, M=1024, r=8, budget=100, seed=0, cheb_m=12,
     sample_idx = np.random.default_rng(seed).choice(corp.n_symbols, size=4096,
                                                      replace=False)
     protos = kmeans(corp.emb[sample_idx].astype(np.float64), M, iters=25, seed=seed)
-    anchor_of_symbol = route_all(corp.emb, protos)
     ad = SheafMemoryAdapter(M=M, r=r, d=d, capacity=max(budget * 4, 64), seed=seed)
     ad.set_prototypes(protos)
     log(f"      done in {time.time() - t0:.1f}s")
@@ -319,7 +329,6 @@ def run(n_tokens=1_000_000, d=64, M=1024, r=8, budget=100, seed=0, cheb_m=12,
         np.add.at(hist, a, 1)
         np.add.at(sum_proj, a, blk @ W_in)
     fact_positions = set(int(p) for p in corp.fact_pos)
-    fact_anchor = np.array([tok_anchor[int(p)] for p in corp.fact_pos], dtype=np.int64)
 
     log("[4/8] anchor geometry: Hodge relevance + local density ...")
     edges, alpha, _ = ad.anchor_graph(k=8)
@@ -351,8 +360,7 @@ def run(n_tokens=1_000_000, d=64, M=1024, r=8, budget=100, seed=0, cheb_m=12,
     rng = np.random.default_rng(seed + 1)
     perm = rng.permutation(corp.n_facts)
     n_train = max(corp.n_facts // 3, 1)
-    tr, te = perm[:n_train], perm[n_train:]
-    te = te[:n_facts_test]
+    te = perm[n_train:n_train + n_facts_test]
     log(f"      Q2 test facts: {len(te)}   budget: {budget} slots "
         f"({budget * SLOT_BYTES / 1024:.1f} KB register)")
 

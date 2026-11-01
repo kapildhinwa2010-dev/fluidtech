@@ -98,8 +98,8 @@ class BPETokenizer:
             }, f)
 
     @staticmethod
-    def load(path: str) -> "BPETokenizer":
-        with open(path, "r", encoding="utf-8") as f:
+    def load(path: str) -> BPETokenizer:
+        with open(path, encoding="utf-8") as f:
             d = json.load(f)
         merges = {tuple(m[0]): m[1] for m in d["merges"]}
         id_bytes = {int(k): bytes(v) for k, v in d["id_bytes"].items()}
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     ap.add_argument("--vocab", type=int, default=1024)
     ap.add_argument("--out", default="prior/bpe_1024.json")
     args = ap.parse_args()
-    with open(args.corpus, "r", encoding="utf-8", errors="ignore") as f:
+    with open(args.corpus, encoding="utf-8", errors="ignore") as f:
         text = f.read()
     tok = train_bpe(text, args.vocab)
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)

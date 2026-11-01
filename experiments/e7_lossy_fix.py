@@ -49,15 +49,15 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from superfluid import TinyTransformer, cross_entropy, cross_entropy_tensor  # noqa: E402
-from superfluid.graft import SAABranch                                        # noqa: E402
-from superfluid.optim import Adam                                             # noqa: E402
+from superfluid.graft import SAABranch  # noqa: E402
+from superfluid.optim import Adam  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
 
 
 def load_chars(max_chars=120_000):
-    with open(os.path.join(ROOT, "corpus.txt"), "r", encoding="utf-8",
+    with open(os.path.join(ROOT, "corpus.txt"), encoding="utf-8",
               errors="ignore") as f:
         text = f.read()
     chars = sorted(set(text))
@@ -180,7 +180,7 @@ def main():
         opt = Adam(br.params(), lr=args.lr, betas=(0.9, 0.95))
         rng = np.random.default_rng(0)
         hist = []
-        for step in range(args.layer_steps):
+        for _ in range(args.layer_steps):
             s = int(rng.integers(0, len(tr) - args.ctx - 1))
             w = tr[s:s + args.ctx + 1]
             # --- the LAYER-LOCAL loss: the base model is not in this loop
@@ -218,7 +218,7 @@ def main():
     optp = Adam(brp.params(), lr=args.lr, betas=(0.9, 0.95))
     rngp = np.random.default_rng(0)
     hp = []
-    for step in range(args.layer_steps):
+    for _ in range(args.layer_steps):
         s2 = int(rngp.integers(0, len(tr) - args.ctx - 1))
         w2 = tr[s2:s2 + args.ctx + 1]
         h0 = model.emb[w2[:-1]] + model.pos[:len(w2) - 1]

@@ -42,7 +42,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 import time
@@ -51,7 +50,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import SAABranch, Tensor, TinyTransformer, cross_entropy    # noqa: E402
+from superfluid import SAABranch  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -142,7 +141,8 @@ def main():
 
     # ---------------------------------------------------------- E12c
     print("\n[2/4] E12c -- the real test: the HARD contexts")
-    from experiments.e6_real_corpus import load_chars, train_base as tb_real
+    from experiments.e6_real_corpus import load_chars
+    from experiments.e6_real_corpus import train_base as tb_real
     ids_c, Vr = load_chars()
     n_tr = int(len(ids_c) * 0.9)
     tr, va = ids_c[:n_tr], ids_c[n_tr:]

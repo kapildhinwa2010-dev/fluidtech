@@ -16,7 +16,9 @@ Cost model (per layer, per token):
 """
 
 from __future__ import annotations
+
 import math
+
 import numpy as np
 
 __all__ = [
@@ -112,8 +114,10 @@ def cheb_coeffs_exp(t: float, lam_max: float, m: int) -> np.ndarray:
         # exp(+alpha) would overflow; beyond this the truncated expansion is
         # meaningless anyway -- see band_times() for the safe regime.
         raise ValueError(
-            f"Chebyshev expansion of exp(-tL) unstable for alpha=t*lam_max/2={alpha:.1f} "
-            f"(>500). Use band_times() to place bands in spectral time units.")
+            "Chebyshev expansion of exp(-tL) unstable for "
+            f"alpha=t*lam_max/2={alpha:.1f} "
+            f"(>500). Use band_times() to place bands in spectral time units."
+        )
     j = np.arange(m + 1)
     x = np.cos(np.pi * (j + 0.5) / (m + 1))
     g = np.exp(-alpha * x)

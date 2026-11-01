@@ -246,7 +246,7 @@ class FrozenRegister:
                 self.used.tobytes())
 
     @classmethod
-    def from_bytes(cls, blob: bytes, capacity: int) -> "FrozenRegister":
+    def from_bytes(cls, blob: bytes, capacity: int) -> FrozenRegister:
         r = cls(capacity=capacity)
         n = capacity
         p = 0

@@ -1,7 +1,6 @@
 """The frozen register: exactness, append-only, fail-loud, constant size."""
-import numpy as np
 
-from superfluid import FrozenRegister, SLOT_BYTES, budget_split, ctx_key
+from superfluid import SLOT_BYTES, FrozenRegister, budget_split, ctx_key
 
 
 def test_the_slot_is_20_bytes():

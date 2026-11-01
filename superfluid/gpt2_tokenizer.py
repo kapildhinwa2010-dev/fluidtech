@@ -59,7 +59,7 @@ class GPT2Tokenizer:
         self.cache: dict = {}
 
     @classmethod
-    def from_pretrained(cls, path: str) -> "GPT2Tokenizer":
+    def from_pretrained(cls, path: str) -> GPT2Tokenizer:
         with open(os.path.join(path, "vocab.json"), encoding="utf-8") as f:
             vocab = json.load(f)
         merges = []
