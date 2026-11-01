@@ -32,7 +32,7 @@
 
 ### The claim we set out to test
 
-`docs/DESIGN-pinned-memory.md` §4 proposed **S4: topology selects the facts.**
+`docs/DESIGN_pinned_memory.md` §4 proposed **S4: topology selects the facts.**
 Build a Vietoris–Rips filtration over the corpus, take the longest bars
 (the structurally important classes), and spend the exactness budget there.
 The argument was appealing: the criterion is computable **once per document**
@@ -85,7 +85,7 @@ is not saturated, and separates cleanly (0.970).
 * The claim in the docs was narrowed from *"topology selects the facts"* to
   *"geometry selects the facts"*.  The sheaf machinery is still what the
   **diffusion** uses; for **selection**, the fine geometry wins.
-* `docs/DESIGN-pinned-memory.md` §9.5.2 records the table, the mechanism, and the
+* `docs/DESIGN_pinned_memory.md` §9.5.2 records the table, the mechanism, and the
   consequence.
 * `docs/POSITIONING.md` §4's "Gate 3" (topology vs learned gating) is
   **answered — and the answer is no.**

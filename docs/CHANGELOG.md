@@ -2,6 +2,13 @@ Changelog
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+[Unreleased]
+Repository maintenance
+Correct project links and documentation paths, synchronize package metadata,
+remove duplicate and obsolete single-file examples, and restore reproducible
+generation of the standalone bundle.
+
 [1.2.0] — 2026-10-29
 Added
 `superfluid/graft.py` — the attachable memory layer.  One residual-stream

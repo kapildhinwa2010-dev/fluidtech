@@ -385,7 +385,7 @@ Selection on Point Clouds", arXiv 2610.00019, which scores points by
 harmonic participation to choose PH landmarks.  What is new here is the
 application: allocating the exact slots of a constant-size neural memory.
 And the measured result is that it does not work (0.000 precision vs
-0.970 for the plain geometric affinity) — see `docs/DESIGN-pinned-memory.md`
+0.970 for the plain geometric affinity) — see `docs/DESIGN_pinned_memory.md`
 §9.5.2.
 The corrected balance diagnostic
 `balance_residual(L) = ‖L·1‖∞` does not detect the frozen state of a

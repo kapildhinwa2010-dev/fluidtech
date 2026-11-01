@@ -2,13 +2,18 @@ include LICENSE
 include CITATION.cff
 include README.md
 include requirements.txt
-include corpus.txt
+include Makefile
+include selftest.py
+include run_without_pytest.py
+include superfluid_single.py
 recursive-include superfluid *.py
 include superfluid/py.typed
 recursive-include docs *.md *.html
 recursive-include examples *.py
+recursive-include experiments *.py
+recursive-include tests *.py
 recursive-include tools *.py
-recursive-include prior *.json
+include tools/_bundle_template.py
 prune results
 global-exclude __pycache__
 global-exclude *.pyc

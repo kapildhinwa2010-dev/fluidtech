@@ -48,7 +48,7 @@ The synthetic corpus flatters the layer.  It is a Markov chain with
 than in real text.  The real-corpus numbers are the ones to quote.
 Known bugs this project found in its own code
 Ten of them, all found by running the code, all fixed, all documented in
-`docs/NEGATIVE-RESULTS.md` and `CHANGELOG.md`.  Among them: a Chebyshev
+`docs/NEGATIVE-RESULTS.md` and `docs/CHANGELOG.md`.  Among them: a Chebyshev
 recurrence missing a factor of two, a scatter operation that never
 scattered, a gradient that was zeroed after the backward pass, an `exp(+α)`
 overflow, a balance diagnostic that did not detect the frozen state, a

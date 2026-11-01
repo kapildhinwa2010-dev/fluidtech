@@ -12,7 +12,7 @@ after:
 command:
 ## The self-verification
 
-- [ ] `python selftest.py` passes (38 checks)
+- [ ] `python selftest.py` passes
 - [ ] `python superfluid_single.py --selftest` passes
 - [ ] `python -m pytest -q tests` passes
 - [ ] a new check exists for any new behaviour
@@ -21,9 +21,8 @@ command:
 
 - [ ] the number in `docs/` was updated
 - [ ] `docs/NEGATIVE-RESULTS.md` was updated if a result got worse
-- [ ] `CHANGELOG.md` has an entry
+- [ ] `docs/CHANGELOG.md` has an entry
 
 ## Dependencies
 
 - [ ] no new runtime dependency (numpy only)
-

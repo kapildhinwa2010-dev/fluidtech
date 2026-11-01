@@ -8,7 +8,8 @@ with `python experiments/run_all.py --full`, it does not go in the docs.
 Negative results are first-class.`docs/NEGATIVE-RESULTS.md` is not
 an apology section; it is the reason the project can be believed.  If your
 change makes something worse, add it there with the numbers.
-The self-verification must stay green.`make test` runs 38 checks.
+The self-verification must stay green.`make test` runs the self-verification
+suite, bundled self-test, and unit tests.
 A new feature ships with its check.
 Pure NumPy, no new runtime dependencies.  The whole point is that the
 thing runs on a laptop, on CPU, with no downloads.  `torch` appears only
@@ -20,8 +21,8 @@ a signature mismatch.  Keep that spirit.
 Getting set up
 git clone <your-fork>
 cd <your-fork>
-pip install -r requirements.txt
-make test          # the 38 checks
+python -m pip install -e ".[dev]"
+make test          # self-verification and unit tests
 make quick         # a fast smoke run of every experiment
 A good first change
 Add a check to `selftest.py` for a property you believe in.

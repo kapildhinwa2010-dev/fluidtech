@@ -9,10 +9,10 @@ exact recall of facts from outside the attention window ·
 pure NumPy, no GPU, no downloads ·  
 seven measured negative results, published on purpose
 
-[![CI](https://github.com/<kapildhinwa2010-dev>/superfluid/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-username>/superfluid/actions/workflows/ci.yml)
+[![CI](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)
-![Self-verification](https://img.shields.io/badge/self--verification-38%2F38-brightgreen.svg)
+![Self-verification](https://img.shields.io/badge/self--verification-50%2F50-brightgreen.svg)
 
 </div>
 
@@ -76,7 +76,8 @@ The recipe is in [`docs/GRAFT.md`](docs/GRAFT.md).
 ## Try it, in 60 seconds
 
 ```bash
-git clone https://github.com/<your-username>/superfluid && cd superfluid
+git clone https://github.com/kapildhinwa2010-dev/fluidtech.git
+cd fluidtech
 pip install -r requirements.txt
 
 python selftest.py              # 50 machine-checked claims
@@ -126,7 +127,7 @@ for window in windows:               # stream the session
 - Attaching it is free and reversible.
 - The NumPy reference implementation is [`superfluid/graft.py`](superfluid/graft.py), and the Torch one mirrors it exactly.
 
-Full instructions: [`docs/GETTING-STARTED.md`](docs/GETTING-STARTED.md)  
+Full instructions: [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md)
 API: [`docs/API.md`](docs/API.md)
 
 ---
@@ -140,7 +141,7 @@ Being explicit, because this is where grafts usually oversell:
 - It does **not** compose, infer, or answer questions about what it holds.
 - The diffusion tier has **no measurable upside** on real text and used to damage the model it was attached to (`+0.81 nats`) until its training signal was fixed — keep it off.
 
-The full list, with numbers: [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)
+The full list, with numbers: [`docs/LIMITATION.md`](docs/LIMITATION.md)
 
 ---
 
@@ -194,8 +195,9 @@ experiments/           every measurement; each writes a JSON into results/
   e14_real_gpt2.py     the graft on a REAL pretrained GPT-2 (124M)
   e13_knn_baseline.py  the layer vs. the closest prior art (kNN-LM)
 
-tools/                 the artefact builder, the BPE tokenizer, the bundler,
-                       the checkpoint downloader, a PyPI fetcher
+tools/                 the artifact checker, bundler, checkpoint downloader,
+                       and PyPI fetcher
+superfluid/bpe.py      the byte-level BPE tokenizer
 
 tests/                 the unit tests (pytest, or run them without it)
 
@@ -216,12 +218,12 @@ results/               every number in the README, as JSON
 | [`docs/TEN-MILLION.md`](docs/TEN-MILLION.md) | What happens at 10M tokens — what it remembers, and the performance delta. |
 | [`docs/MILESTONES.md`](docs/MILESTONES.md) | The twelve milestones, and what is left. |
 | [`docs/NEGATIVE-RESULTS.md`](docs/NEGATIVE-RESULTS.md) | The seven things that did not work. |
-| [`docs/GETTING-STARTED.md`](docs/GETTING-STARTED.md) | How to use it. |
+| [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md) | How to use it. |
 | [`docs/API.md`](docs/API.md) | The API reference. |
 | [`docs/REPRODUCING.md`](docs/REPRODUCING.md) | Every command, every number. |
-| [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md) | The honest list. |
+| [`docs/LIMITATION.md`](docs/LIMITATION.md) | The honest list. |
 | [`docs/FRAMEWORK.md`](docs/FRAMEWORK.md) | The mathematics. |
-| [`docs/DESIGN-pinned-memory.md`](docs/DESIGN-pinned-memory.md) | The design of the frozen register. |
+| [`docs/DESIGN_pinned_memory.md`](docs/DESIGN_pinned_memory.md) | The design of the frozen register. |
 | [`docs/COMPARISON.md`](docs/COMPARISON.md) | vs. KV cache, sliding window, RAG, Titans, Infini, MLA. |
 | [`docs/POSITIONING.md`](docs/POSITIONING.md) | The prior-art audit — this is not revolutionary, and here is why. |
 | [`docs/index.html`](docs/index.html) | The theory report (propositions, cost tables, citations). |
@@ -290,10 +292,8 @@ The details and expected outputs: [`docs/REPRODUCING.md`](docs/REPRODUCING.md)
 
 ---
 ### 🤝 Contributions & Corrections
-Suggestions, bug reports, and corrections are highly welcome! Feel free to open an **Issue** or submit a **Pull Request**.
-
-
-Issues and pull requests are welcome — especially measurement disagreements.
+Suggestions, bug reports, and corrections are welcome, especially measurement
+disagreements. Please open an issue or submit a pull request.
 
 If a number in the docs does not match what you get, that is a bug in the code or in the documentation, and it is the most valuable report you can file.
 
@@ -321,22 +321,10 @@ What is left is smaller and much more defensible:
 
 A constant-size memory tier that is bit-exact for a selected subset, gracefully lossy for the rest, with a certified bound, an append-only audit trail, 50 machine-checked claims, and a published account of the seven places where it did not beat the alternatives.
 
-## author's confession 
+## Origin and acknowledgments
 
-> I am kapil this is my like school project if you are reading this so you read the whole repo may be.....
-
-and I tell you honestly 
-this idea is mine only,
-the code is written by ai all the files are created by ai and when I put these all on github there are many options so I somehow but those files is not in order ...
-or there are many lines where written "your name" so the ai said write my name there but I forgot so don't mind.
->I don't know about ai 
->I don't know How to coding 
->but he idea of fluidtech was force information into topological liquid is mine executed by ai 
-
-
-only author's confession written by Me .🤗🤫
-
-
->so I am write here ,sorry Ai write here how to connect this layer ---
-but today my credits are spent so I update it tomorrow 
-bye 👋 
+The project began with the author's idea of flowing information through a
+topological structure. The implementation and repository organization were
+developed with AI assistance. The measurements, limitations, and research
+decisions are documented alongside the code so the work can be evaluated and
+reproduced.

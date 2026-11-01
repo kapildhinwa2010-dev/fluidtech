@@ -27,5 +27,6 @@ htmlcov/
 # local artefacts
 *.log
 results/*.tmp
+results/selftest.json
 .ipynb
 .env

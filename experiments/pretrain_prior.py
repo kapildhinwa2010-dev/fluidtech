@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-tools/pretrain_prior.py — build the downloadable DOMAIN PRIOR artefact.
+experiments/pretrain_prior.py — build the downloadable DOMAIN PRIOR artifact.
 
 The prior is the thing a user actually downloads:
 
@@ -20,7 +20,7 @@ It contains FOUR parts, and each one is paid for separately:
   4. REGISTER     (K x 20 B)    the append-only exact-fact slots: the frozen
                                register.  20 bytes per fact.
 
-The budget law (see DESIGN-pinned-memory.md): naming one anchor out of M
+The budget law (see docs/DESIGN_pinned_memory.md): naming one anchor out of M
 needs log2(M) bits while an anchor holds r*16 bits, so r is grossly
 over-provisioned for ADDRESSING.  A bigger budget should therefore buy MORE
 PINS, not more anchors -- the fluid's per-token compute is linear in M, while
@@ -28,9 +28,9 @@ the register costs nothing at inference.
 
 Usage
 -----
-    python3 tools/pretrain_prior.py --text corpus.txt
-    python3 tools/pretrain_prior.py --synthetic --tokens 200000
-    python3 tools/pretrain_prior.py --synthetic --tokens 200000 --budget 5MB
+    python3 experiments/pretrain_prior.py --text corpus.txt
+    python3 experiments/pretrain_prior.py --synthetic --tokens 200000
+    python3 experiments/pretrain_prior.py --synthetic --tokens 200000 --budget 5MB
 """
 
 from __future__ import annotations

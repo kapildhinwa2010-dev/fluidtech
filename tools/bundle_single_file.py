@@ -15,8 +15,22 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
-MODULES = ["__init__", "autodiff", "sheaf", "diffusion", "topology", "blocks",
-           "memory", "model", "losses", "optim", "data", "graft"]
+MODULES = [
+    "__init__",
+    "autodiff",
+    "sheaf",
+    "diffusion",
+    "topology",
+    "blocks",
+    "memory",
+    "model",
+    "losses",
+    "optim",
+    "data",
+    "graft",
+    "gpt2_tokenizer",
+    "bpe",
+]
 TEMPLATE = os.path.join(HERE, "_bundle_template.py")
 PLACEHOLDER = "%%SOURCES%%"
 
@@ -25,9 +39,11 @@ def main():
     parts = []
     for name in MODULES:
         path = os.path.join(ROOT, "superfluid", name + ".py")
-        with open(path, encoding="utf-8") as f:
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"bundle source module does not exist: {path}")
+        with open(path, encoding="utf-8") as source_file:
             parts.append(f"#--- FILE: superfluid/{name}.py ---")
-            parts.append(f.read())
+            parts.append(source_file.read())
     with open(os.path.join(ROOT, "selftest.py"), encoding="utf-8") as f:
         parts.append("#--- FILE: selftest.py ---")
         parts.append(f.read())
@@ -39,8 +55,8 @@ def main():
         raise SystemExit("a source file contains a triple single quote; "
                          "the single-file bundle cannot be generated safely")
 
-    with open(TEMPLATE, encoding="utf-8") as f:
-        tpl = f.read()
+    with open(TEMPLATE, encoding="utf-8") as template_file:
+        tpl = template_file.read()
     if PLACEHOLDER not in tpl:
         raise SystemExit(f"template is missing the {PLACEHOLDER} placeholder")
     out = tpl.replace(PLACEHOLDER, body)

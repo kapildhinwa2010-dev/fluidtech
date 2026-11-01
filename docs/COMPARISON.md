@@ -187,7 +187,7 @@ at  20 B/fact  —  6,554×  cheaper per exactly-retrievable fact than the
 8B GQA KV cache.  The  selection  criterion is a separate story and an
 honest negative: the plain geometric affinity reaches 0.970 pin precision
 while every global-topological criterion reaches 0.000 (see
- `docs/DESIGN-pinned-memory.md`  §9.5.2).
+ `docs/DESIGN_pinned_memory.md`  §9.5.2).
 8. Honest prior-art positioning (short version)
 | work|closest thing to ours|the gap we claim|
 | ---|---|---|

@@ -101,7 +101,7 @@ makes sense for small, on-device models, not good ones. I will not
 pretend otherwise.
 Why publish this?
 Because the repository runs its own checks. `python selftest.py` prints
-38/38 — pure NumPy, no GPU, no downloads — and every number above comes
+50/50 — pure NumPy, no GPU, no downloads — and every number above comes
 from a file in `results/` that the same command regenerates. It found ten
 real bugs in my own code, including a Chebyshev recurrence missing a factor
 of two and a scatter operation that never scattered.

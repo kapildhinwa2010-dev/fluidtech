@@ -1,6 +1,6 @@
 # Superfluid -- a constant-size exact memory tier for LLMs.
 #
-#   make test        the 38 self-verification checks (the thing CI runs)
+#   make test        self-verification and unit tests
 #   make quick       a fast smoke run of every experiment
 #   make full        every experiment, at full size (slow: ~40 min, CPU)
 #   make bundle      rebuild the single-file bundle
@@ -32,10 +32,10 @@ bundle: ## rebuild the single-file bundle
 
 lint: ## compile check + ruff (if installed)
 	$(PY) -m compileall -q superfluid experiments tools tests examples
-	-$(PY) -m ruff check superfluid experiments tools tests examples
+	$(PY) -m ruff check superfluid experiments tools tests examples
 
-artifacts: ## rebuild the downloadable prior artefact
-	$(PY) tools/pretrain_prior.py --synthetic --tokens 200000
+artifacts: ## rebuild the downloadable prior artifact
+	$(PY) experiments/pretrain_prior.py --synthetic --tokens 200000
 
 release: ## build the sdist and the wheel
 	$(PY) -m build

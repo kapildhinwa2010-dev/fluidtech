@@ -19,7 +19,7 @@ val     int32    4 B   the exact token id
 sig     uint32   4 B   4 x uint8 embedding signature (collision detector)
 anchor  uint16   2 B   the anchor the fact was routed to when promoted
 meta    uint16   2 B   doc_id (12 bits) | trust (2 bits) | reserved (2)
-Why 20 bytes and not the 14 quoted in DESIGN-pinned-memory.md: the 4-byte
+Why 20 bytes and not the 14 quoted in docs/DESIGN_pinned_memory.md: the 4-byte
 embedding signature was added so that a 64-bit hash collision is DETECTABLE
 rather than silent ("fail loud, never silently wrong").  The cost of that
 guarantee is 6 bytes/fact, i.e. 819 facts in 16 KB instead of 1,170.
@@ -314,7 +314,7 @@ def budget_split(total_bytes: int, M: int, r: int, slot_bytes: int = SLOT_BYTES,
     `codebook_bytes` is the STATIC artefact (prototypes + value projection),
     which is shared across tenants and therefore reported, not subtracted.
 
-    The design law from DESIGN-pinned-memory.md: **naming one anchor out of M
+    The design law from docs/DESIGN_pinned_memory.md: **naming one anchor out of M
     needs log2(M) bits, while an anchor holds r*16 bits.**  So r is grossly
     over-provisioned for addressing, and a bigger budget should be spent on
     MORE PINS, not on more anchors.  Growing the fluid raises the per-token

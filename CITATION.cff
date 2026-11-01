@@ -4,10 +4,10 @@ title: "Superfluid: a constant-size exact memory tier for LLMs, on a cellular-sh
 abstract: >-
   A pure-NumPy implementation of a sheaf-diffusion sequence architecture
   together with a frozen register: an append-only, 20-bytes-per-fact store
-  that returns bit-exact token ids. Includes 34 self-verification checks and
-  five reported negative results.
+  that returns bit-exact token ids. Includes a 50-check self-verification
+  suite and documented negative results.
 type: software
-version: "1.1.0"
+version: "1.2.0"
 license: MIT
 keywords:
   - large language models
@@ -17,10 +17,4 @@ keywords:
   - KV cache
 authors:
   - name: "Superfluid contributors"
-repository-code: "https://github.com/<kapildhinwa2010-dev>/superfluid"
-preferred-citation:
-  type: article
-  title: "Superfluid: exact-where-it-matters memory on a topological diffusion"
-  journal: "arXiv"
-  year: 2026
-  note: "Preprint — replace this with the final citation before submitting"
+repository-code: "https://github.com/kapildhinwa2010-dev/fluidtech"
