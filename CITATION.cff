@@ -17,10 +17,10 @@ keywords:
   - KV cache
 authors:
   - name: "Superfluid contributors"
-repository-code: "https://github.com/<your-username>/superfluid"
+repository-code: "https://github.com/<kapildhinwa2010-dev>/superfluid"
 preferred-citation:
   type: article
   title: "Superfluid: exact-where-it-matters memory on a topological diffusion"
   journal: "arXiv"
   year: 2026
-  note: "Preprint — replace this with the final citation before submitting."
+  note: "Preprint — replace this with the final citation before submitting"
