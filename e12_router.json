@@ -1,0 +1,82 @@
+{
+  "config": {
+    "tokens": 1000000,
+    "capacity": 64,
+    "d": 64,
+    "ctx": 128,
+    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e12_router.json"
+  },
+  "e12ab_reach_and_precision": {
+    "16": {
+      "exact_tier_recall": 0.0,
+      "router_tier_recall": 0.0,
+      "hybrid_recall": 0.0,
+      "exact_store_entries": 64,
+      "router_entries": 16
+    },
+    "64": {
+      "exact_tier_recall": 0.0,
+      "router_tier_recall": 0.0,
+      "hybrid_recall": 0.0,
+      "exact_store_entries": 64,
+      "router_entries": 43
+    },
+    "256": {
+      "exact_tier_recall": 0.0,
+      "router_tier_recall": 0.0,
+      "hybrid_recall": 0.0,
+      "exact_store_entries": 64,
+      "router_entries": 71
+    },
+    "1024": {
+      "exact_tier_recall": 0.0,
+      "router_tier_recall": 0.0,
+      "hybrid_recall": 0.0,
+      "exact_store_entries": 64,
+      "router_entries": 76
+    }
+  },
+  "e12c_without_router": {
+    "loss": 2.435454725297928,
+    "base_loss": 2.6110783595284124,
+    "delta": -0.17562363423048444,
+    "hard_loss": 3.668593143510098,
+    "hard_base_loss": 3.6151834128157336,
+    "hard_delta": 0.05340973069436439,
+    "hard_positions": 238
+  },
+  "e12c_with_router": {
+    "loss": 2.453829028460069,
+    "base_loss": 2.6110783595284124,
+    "delta": -0.1572493310683436,
+    "hard_loss": 3.54448423196419,
+    "hard_base_loss": 3.6151834128157336,
+    "hard_delta": -0.07069918085154381,
+    "hard_positions": 238
+  },
+  "e12d_cost": {
+    "64": {
+      "flops_per_token": 8192,
+      "percent_of_a_layer": 0.00047080459770114944
+    },
+    "256": {
+      "flops_per_token": 32768,
+      "percent_of_a_layer": 0.0018832183908045978
+    },
+    "1024": {
+      "flops_per_token": 131072,
+      "percent_of_a_layer": 0.007532873563218391
+    }
+  },
+  "e12e_fact_task": {
+    "exact_only": {
+      "recall": 0.1,
+      "base_recall": 0.0
+    },
+    "with_router": {
+      "recall": 0.625,
+      "base_recall": 0.0
+    }
+  },
+  "runtime_sec": 729.2781262397766
+}

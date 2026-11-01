@@ -1,39 +1,42 @@
 #!/usr/bin/env python3
 """
 selftest.py — numerical verification of every claim the Superfluid proposal makes.
+
 Each check either PASSES (numerically confirmed) or FAILS.  Results are written
 to results/selftest.json so the report quotes measured numbers, not claims.
-1  P1  jamming bound            ||e^{-tL}u|| <= e^{-lam2 t} ||u||
-2  P1  predicted jam time        t_jam = log(1/eps)/lam2  matches empirical
-3  P2  Chebyshev degree          m = O(sqrt(kappa) log(1/eps)) suffices
-4  P3  linear collapse           pure-linear model cannot fit XOR
-5  P3  the fix                   one pointwise nonlinearity can fit XOR
-6  W2  rank-c trap               frozen state has rank = #components
-7  W2  band bank recovers info   band readout restores the transient
-8  G-balance phase transition    balanced -> non-trivial frozen state
-9  contraction certificate       ||e^{-tL}|| on ker^perp = e^{-t lam2}
-10  frame property                sum of bands == I - exp(-t_B L)
-11  autodiff gradient check       finite-difference vs analytic gradient
-12  autodiff ops                  every op gradient-checked
-13  persistence descriptor        triangle -> beta0=1, beta1=1, 2 finite bars
-14  block Laplacian               == numpy reference, and the fluid is not inert
-15  filter-bank stability         no exp(+alpha) blow-up
-16  M1  register invariance       a promoted value NEVER changes
-17  M1  integer exactness         the recalled value == the promoted value
-18  M1  fail-loud                 a signature mismatch returns None, not a
-wrong value
-19  M1  append-only semantics     promoting twice appends, latest wins
-20  M1  serialisation round-trip  the register survives to_bytes/from_bytes
-21  M2  logit override            argmax(next token) IS the recalled token
-22  M2  budget law                the split respects the budget and reduces
-M rather than over-committing
-23  M3  constant-size state       the state size does not depend on how much
-was written
-24  M3  frustration index         frustration == 0  <=>  a global section
-exists  (the right balance diagnostic for
-scalar signed sheaves)
-25  M3  Hodge edge participation  = 1 on the diagonal, <= 1 elsewhere
+
+  1  P1  jamming bound            ||e^{-tL}u|| <= e^{-lam2 t} ||u||
+  2  P1  predicted jam time        t_jam = log(1/eps)/lam2  matches empirical
+  3  P2  Chebyshev degree          m = O(sqrt(kappa) log(1/eps)) suffices
+  4  P3  linear collapse           pure-linear model cannot fit XOR
+  5  P3  the fix                   one pointwise nonlinearity can fit XOR
+  6  W2  rank-c trap               frozen state has rank = #components
+  7  W2  band bank recovers info   band readout restores the transient
+  8  G-balance phase transition    balanced -> non-trivial frozen state
+  9  contraction certificate       ||e^{-tL}|| on ker^perp = e^{-t lam2}
+ 10  frame property                sum of bands == I - exp(-t_B L)
+ 11  autodiff gradient check       finite-difference vs analytic gradient
+ 12  autodiff ops                  every op gradient-checked
+ 13  persistence descriptor        triangle -> beta0=1, beta1=1, 2 finite bars
+ 14  block Laplacian               == numpy reference, and the fluid is not inert
+ 15  filter-bank stability         no exp(+alpha) blow-up
+ 16  M1  register invariance       a promoted value NEVER changes
+ 17  M1  integer exactness         the recalled value == the promoted value
+ 18  M1  fail-loud                 a signature mismatch returns None, not a
+                                    wrong value
+ 19  M1  append-only semantics     promoting twice appends, latest wins
+ 20  M1  serialisation round-trip  the register survives to_bytes/from_bytes
+ 21  M2  logit override            argmax(next token) IS the recalled token
+ 22  M2  budget law                the split respects the budget and reduces
+                                    M rather than over-committing
+ 23  M3  constant-size state       the state size does not depend on how much
+                                    was written
+ 24  M3  frustration index         frustration == 0  <=>  a global section
+                                    exists  (the right balance diagnostic for
+                                    scalar signed sheaves)
+ 25  M3  Hodge edge participation  = 1 on the diagonal, <= 1 elsewhere
 """
+
 import json
 import os
 import sys
@@ -53,7 +56,6 @@ from superfluid.autodiff import Tensor
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 os.makedirs(OUT, exist_ok=True)
-
 RESULTS = []
 
 
@@ -347,6 +349,7 @@ def test_autodiff():
     params = m.params()
     idx = np.array([1, 2, 3, 4, 5, 6], dtype=np.int64)
     tgt = np.array([2, 3, 4, 5, 6, 7], dtype=np.int64)
+
     from superfluid.losses import cross_entropy_tensor
 
     def model_loss_t():
@@ -368,6 +371,7 @@ def test_autodiff():
     e = float(np.max(np.abs(g_analytic - fd)) / (np.max(np.abs(fd)) + 1e-12))
     check("autodiff  SuperfluidLM end-to-end gradient matches finite differences",
           e < 1e-3, f"relative max error on {key} = {e:.2e}  (loss={val:.4f})")
+
     # (b) the restriction-map path goes through |alpha| in the degree term,
     #     which has a kink at alpha = 0 -- so the finite difference is only
     #     accurate to first order.  We require agreement in DIRECTION.
@@ -380,7 +384,7 @@ def test_autodiff():
     rel2 = float(np.max(np.abs(a - b)) / (np.max(np.abs(b)) + 1e-12))
     check("autodiff  restriction-map gradient points the same way as finite differences",
           corr > 0.8, f"correlation = {corr:.4f}  (magnitude rel.err {rel2:.2e}; "
-          f"the |alpha| degree term is piecewise-linear)")
+                       f"the |alpha| degree term is piecewise-linear)")
 
 
 # ------------------------------------------------------------------- 13
@@ -405,6 +409,7 @@ def test_block_laplacian():
     from superfluid.blocks import SuperfluidBlock
     from superfluid.sheaf import build_laplacian as np_build_laplacian
     from superfluid.autodiff import Tensor as _T
+
     rng = _np.random.default_rng(5)
     n, d = 16, 8
     edges = _np.array([[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [2, 5], [7, 9]])
@@ -415,12 +420,14 @@ def test_block_laplacian():
     err = float(_np.abs(Lblk.data - Lref).max())
     check("block Laplacian matches the numpy reference", err < 1e-10,
           f"max abs diff = {err:.2e}")
+
     # the fluid must change the field
     x = _T(rng.normal(0, 1, (n, d)))
     bands = blk._bands(Lblk, float(_np.abs(Lblk.data).max()), x)
     moved = sum(float(_np.abs(b.data - x.data).max()) for b in bands)
     check("the fluid actually moves the field (bands are not identity)",
           moved > 1e-8, f"total band displacement = {moved:.3e}")
+
     # the harmonic branch must be the per-component mean
     comp = _np.array([0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
     from superfluid.topology import connected_components as _cc
@@ -440,6 +447,7 @@ def test_block_laplacian():
 # ------------------------------------------------------------------- 15
 def test_band_stability():
     """The filter bank must be numerically STABLE: band energies may not blow up.
+
     Regression test: an earlier version used exp(+alpha) instead of exp(-alpha)
     in the Chebyshev coefficients, which multiplied the bands by e^(2 alpha)
     (~1e6) and made the whole model diverge.
@@ -475,27 +483,32 @@ def test_register():
     sig = embedding_signature(np.array([1.0, 0.0, 0.0, 0.0]))
     s0 = reg.promote(4242, key, sig=sig, anchor=3, doc_id=0)
     val0 = int(reg.val[s0])
+
     # (16) INVARIANCE: writing more slots must not touch an existing one.
     for k in range(20):
         reg.promote(1000 + k, ctx_key([k]), sig=0, anchor=k, doc_id=1)
     check("M1  a promoted value NEVER changes (append-only invariance)",
           int(reg.val[s0]) == val0 and reg.key[s0] == np.uint64(key),
           f"slot {s0} still holds {int(reg.val[s0])} after 20 further writes")
+
     # (17) INTEGER EXACTNESS: the recalled value is EQUAL, not approximate.
     got = reg.recall(key, sig=sig)
     ok = got is not None and int(got[1]) == 4242 and isinstance(int(got[1]), int)
     check("M1  the recalled value is bit-exact (integer token id)", ok,
           f"recalled {None if got is None else int(got[1])} (expected 4242)")
+
     # (18) FAIL LOUD: a signature mismatch must return None, NOT a wrong value.
     bad = reg.recall(key, sig=embedding_signature(np.array([0.0, 1.0, 0.0, 0.0])))
     check("M1  a signature mismatch FAILS LOUD (returns None, never a wrong value)",
           bad is None, f"mismatched signature returned {bad}")
+
     # (19) APPEND-ONLY: promoting the same key twice appends, latest wins.
     s1 = reg.promote(777, key, sig=sig, anchor=3, doc_id=2)
     latest = reg.recall(key, sig=sig)
     check("M1  promoting the same key appends a slot; the latest wins",
           s1 != s0 and reg.n == s0 + 22 and int(latest[1]) == 777,
           f"slots {s0} and {s1} coexist; latest value = {int(latest[1])}")
+
     # (20) SERIALISATION ROUND-TRIP.
     blob = reg.to_bytes()
     back = FrozenRegister.from_bytes(blob, 64)
@@ -521,6 +534,7 @@ def test_override_and_budget():
     check("M2  the batched override forces every row",
           list(o2.argmax(axis=1)) == [1, 5, 9, 31],
           f"argmax per row = {list(o2.argmax(axis=1))}")
+
     # the override must also accept a framework Tensor (that is how the
     # model actually hands you its logits)
     from superfluid.autodiff import Tensor
@@ -529,6 +543,7 @@ def test_override_and_budget():
     check("M2  the logit override accepts a framework Tensor as well as an ndarray",
           int(o3.argmax()) == want,
           f"Tensor input -> argmax {int(o3.argmax())} (forced {want})")
+
     # budget law: the split must never exceed the budget
     b = budget_split(16 * 1024, M=1024, r=8, slot_bytes=SLOT_BYTES)
     fits = (b["fluid_bytes"] + b["register_bytes"]) <= 16 * 1024
@@ -556,6 +571,7 @@ def test_constant_state():
           before == after == M * r * 2 + 64 * SLOT_BYTES,
           f"state {before} B before, {after} B after 5,120 tokens "
           f"(anchors {M}x{r} fp16 + register 64 x {SLOT_BYTES} B)")
+
     # and the fluid really did absorb the writes
     moved = float(np.abs(ad.anchors).sum())
     check("M3  the fluid actually absorbed the writes (not inert)",
@@ -614,6 +630,7 @@ def test_frustration():
         agree += int((fr == 0) == has_section)
     check("M3  frustration == 0  <=>  a non-trivial global section exists",
           agree == trials, f"{agree}/{trials} random signed cycles agree")
+
     # the contrast with the framework's ||L 1|| residual: they are NOT the
     # same property, and only the frustration index tracks the kernel.
     edges = np.stack([np.arange(n), (np.arange(n) + 1) % n], axis=1)
@@ -642,6 +659,8 @@ def test_hodge_edge_participation():
           f"diagonal in [{d.min():.4f}, {d.max():.4f}], off-diagonal max {o.max():.4f}")
 
 
+
+
 # ==================================================================== 26
 def test_graft():
     """The attachable memory layer: attaching it must change NOTHING, and
@@ -651,6 +670,7 @@ def test_graft():
     from superfluid.model import TinyTransformer
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
+
     tok = np.array([3, 7, 11, 5, 9, 2, 8, 13], dtype=np.int64)
     lg0 = m.forward(tok)
     h0 = m.emb[tok] + m.pos[:len(tok)]
@@ -659,12 +679,14 @@ def test_graft():
     same = np.array_equal(lg0.data, lg1.data)
     check("M3  attaching the layer leaves the logits BIT-IDENTICAL",
           same, f"max abs diff {float(np.abs(lg0.data - lg1.data).max()):.3e}")
+
     n_state = br.state_bytes
     for _ in range(5):
         br.forward(h0, m.emb[tok], tok)
     check("M3  the layer's state stays bounded while it is used",
           br.state_bytes <= n_state + 4096,
           f"state {n_state} B -> {br.state_bytes} B after 5 writes")
+
     br2 = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
     br2.Wo_exact.data = np.eye(32)
     br2.read_gain = "raw"
@@ -679,6 +701,179 @@ def test_graft():
     check("M3  the exact tier stores a token id and returns it bit-exactly",
           stored == int(seq[-1]) and isinstance(stored, int),
           f"store[{seq[-2]}] = {stored} (expected {int(seq[-1])})")
+
+
+
+# ==================================================================== 27
+def test_gate():
+    """The gate: the base model's OWN uncertainty decides how much the
+    retrieval speaks.
+
+    This is what makes one knob serve both use cases.  A hard override
+    strong enough to win the argmax (needed for recall) also forces a wrong
+    retrieval into the model (which cost +1.08 nats in E9).  Scaling the
+    override by the model's uncertainty fixes that without a second knob.
+    """
+    print("\n[27] The gate: the model's own uncertainty")
+    from superfluid.graft import SAABranch
+    from superfluid.model import TinyTransformer
+    m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
+    br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
+    br.Wo_exact.data = np.eye(32)
+    br.read_gain = "raw"
+    br.read_scale = 300.0
+    br.read_transform = "pc1"
+    br.refresh_contrast()
+
+    # plant a fact: the pair (2 -> 25)
+    seq = np.array([4, 21, 6, 30, 12, 17, 2, 25], dtype=np.int64)
+    br.reset()
+    br.forward(m.emb[seq] + m.pos[:len(seq)], m.emb[seq], seq)
+    assert br.store.get(2) == 25, "the fact was not stored"
+
+    # query: a window that ENDS with the key 2
+    q = np.array([7, 19, 2], dtype=np.int64)
+    h0 = m.emb[q] + m.pos[:len(q)]
+    _, info = br.forward(h0, m.emb[q], q)
+    hit = int(info["retrieved"][-1])
+    check("M3  the layer reports WHAT it retrieved for the query position",
+          hit == 25, f"retrieved {hit} (expected 25)")
+
+    # a CONFIDENT base model: the gate must NOT move the argmax
+    conf = np.full((3, 32), -10.0)
+    conf[2, 5] = 10.0
+    g1 = br.gated_logits(conf, info, gain=20.0)
+    # an UNSURE base model (uniform logits): the gate must let the
+    # retrieval win, because the model has nothing better to say
+    uns = np.zeros((3, 32))
+    g2 = br.gated_logits(uns, info, gain=20.0)
+    check("M3  the gate IGNORES the retrieval when the base model is confident",
+          int(g1[-1].argmax()) == 5,
+          f"argmax stayed {int(g1[-1].argmax())} (the base was sure of 5)")
+    check("M3  the gate LETS THE RETRIEVAL WIN when the base model is unsure",
+          int(g2[-1].argmax()) == 25,
+          f"argmax moved {int(uns[-1].argmax())} -> {int(g2[-1].argmax())} "
+          f"(the retrieved token)")
+
+    # no hit -> the gate must not touch the logits at all
+    miss = {"retrieved": np.array([-1, -1, -1]), "support": np.zeros(3)}
+    g3 = br.gated_logits(uns, miss, gain=20.0)
+    check("M3  the gate is a no-op when the store has no hit",
+          np.array_equal(g3, uns),
+          f"max abs diff {float(np.abs(g3 - uns).max()):.3e}")
+
+
+
+# ==================================================================== 28
+def test_exact_memory():
+    """The memory must be EXACT: the mode is kept, the confidence is
+    counted, and the corroborated entries survive the eviction."""
+    print("\n[28] The exact memory: the mode tracker and the eviction")
+    from superfluid.graft import SAABranch
+    from superfluid.model import TinyTransformer
+
+    class _Emb:
+        def __init__(self, V=32, d=32):
+            self.data = np.random.default_rng(0).normal(0, 0.02, (V, d))
+            self.shape = self.data.shape
+
+    br = SAABranch(M=8, r=4, d=32, emb=_Emb(), ctx_len=1, capacity=8, seed=0)
+
+    # the store keeps the MAJORITY continuation, not the first one
+    for v in (5, 5, 7, 7, 7):
+        br._put(42, v)
+    check("M3  the store keeps the MAJORITY continuation of a context",
+          br.store[42] == 7,
+          f"store[42] = {br.store[42]} (5,5,7,7,7 -> the mode is 7)")
+
+    # the confidence counts the corroboration
+    conf = br.confidence(42)
+    check("M3  the store carries a CONFIDENCE (the corroboration ratio)",
+          0.0 <= conf <= 1.0 and conf > 0.0,
+          f"confidence(42) = {conf:.3f}")
+
+    # and the majority can flip
+    for v in (9, 9, 9, 9):
+        br._put(42, v)
+    check("M3  the stored value follows the majority when it flips",
+          br.store[42] == 9,
+          f"store[42] = {br.store[42]} (after 4 more 9s)")
+
+    # the EVICTION keeps the corroborated entries, not merely the newest
+    br2 = SAABranch(M=8, r=4, d=32, emb=_Emb(), ctx_len=1, capacity=4, seed=0)
+    for _ in range(20):
+        br2._put(1, 77)                    # heavily corroborated
+    for i in range(50):
+        br2._put(100 + i, i)               # a flood of one-off contexts
+    check("M3  the eviction keeps the CORROBORATED entries, not the newest",
+          1 in br2.store and len(br2.store) <= 4,
+          f"the corroborated key survived: {1 in br2.store}  "
+          f"(the store holds {len(br2.store)} of 4 allowed)")
+
+    # the DEFAULT gate must not overrule a confident base model
+    m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
+    br3 = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
+    br3.Wo_exact.data = np.eye(32)
+    br3.read_gain = "raw"
+    br3.read_scale = 300.0
+    br3.read_transform = "pc1"
+    br3.refresh_contrast()
+    seq = np.array([4, 21, 6, 30, 12, 17, 2, 25], dtype=np.int64)
+    br3.reset()
+    br3.forward(m.emb[seq] + m.pos[:len(seq)], m.emb[seq], seq)
+    q = np.array([7, 19, 2], dtype=np.int64)
+    h0 = m.emb[q] + m.pos[:len(q)]
+    _, info = br3.forward(h0, m.emb[q], q)
+    conf = np.full((3, 32), -10.0)
+    conf[2, 5] = 10.0                       # the base model is CERTAIN
+    g = br3.gated_logits(conf, info)        # the DEFAULT settings
+    check("M3  by DEFAULT the gate never overrules a confident base model",
+          int(g[-1].argmax()) == 5,
+          f"argmax stayed {int(g[-1].argmax())} (the base was sure of 5); "
+          f"the hard rules are OFF by default")
+
+
+
+# ==================================================================== 29
+def test_router_tier():
+    """The router tier: the fluid's geometry as an address space.
+
+    "The fluid answers WHERE, the register answers WHAT" -- made literal:
+    the exact tier answers when it has the context, and the per-anchor
+    (router) tier is the FALLBACK, with the whole stream's reach.
+    """
+    print("\n[29] The router tier: the fluid as the address space")
+    from superfluid.graft import SAABranch
+    from superfluid.model import TinyTransformer
+    m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
+    br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, use_router=True, seed=0)
+    br.Wo_exact.data = np.eye(32)
+    br.read_gain = "raw"
+    br.read_scale = 300.0
+    br.read_transform = "pc1"
+    br.refresh_contrast()
+    seq = np.array([4, 21, 6, 30, 12, 17, 2, 25], dtype=np.int64)
+    br.reset()
+    br.forward(m.emb[seq] + m.pos[:len(seq)], m.emb[seq], seq)
+    check("M3  the router tier files the pair under the ANCHOR of the "
+          "previous position",
+          len(br.anchor_store) > 0,
+          f"{len(br.anchor_store)} anchors hold a majority continuation")
+    # the exact tier must win when it has the context
+    q = np.array([7, 19, 2], dtype=np.int64)
+    h0 = m.emb[q] + m.pos[:len(q)]
+    _, info = br.forward(h0, m.emb[q], q)
+    check("M3  the exact tier wins when it has the context",
+          int(info["retrieved"][-1]) == 25 and int(info["router_retrieved"][-1]) != 25,
+          f"exact {int(info['retrieved'][-1])}, router "
+          f"{int(info['router_retrieved'][-1])}")
+    # and the fallback chain: the router answers when the exact tier misses
+    miss = {"retrieved": np.array([-1]), "confidence": np.array([0.0]),
+            "router_retrieved": np.array([9]), "router_confidence": np.array([1.0])}
+    lg = br.gated_logits(np.zeros((1, 32)), miss, gain=8.0)
+    check("M3  the router tier is the FALLBACK when the exact tier misses",
+          int(lg[0].argmax()) == 9,
+          f"argmax {int(lg[0].argmax())} (the router's answer)")
 
 
 if __name__ == "__main__":
@@ -702,6 +897,10 @@ if __name__ == "__main__":
     test_frustration()
     test_hodge_edge_participation()
     test_graft()
+    test_gate()
+    test_exact_memory()
+    test_router_tier()
+
     n_pass = sum(r["pass"] for r in RESULTS)
     print("\n" + "=" * 78)
     print(f"RESULT: {n_pass}/{len(RESULTS)} checks passed")
