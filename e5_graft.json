@@ -1,0 +1,168 @@
+  "config": {
+    "n_tokens": 1000000,
+    "d": 64,
+    "M": 1024,
+    "r": 8,
+    "budget": 100,
+    "seed": 0,
+    "cheb_m": 12,
+    "diffuse_total_tau": 1.0,
+    "chunk": 8192,
+    "n_facts": 195,
+    "n_test_facts": 130,
+    "slot_bytes": 20,
+    "ctx_window": 4
+  },
+  "state_bytes": 24384,
+  "codebook_bytes": 132096,
+  "gist_cosine_local": 0.9678443388646726,
+  "gist_cosine_global": 0.19075505795495717,
+  "policies": {
+    "random": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "surprise": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "rarity": {
+      "pin_precision": 0.05,
+      "fact_recall": 0.03076923076923077,
+      "promoted_test_facts": 4,
+      "exact_given_promoted": 1.0,
+      "exact_hits": 4,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 5,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "topology": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "topology_fine": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "semantic": {
+      "pin_precision": 0.97,
+      "fact_recall": 0.46923076923076923,
+      "promoted_test_facts": 61,
+      "exact_given_promoted": 1.0,
+      "exact_hits": 61,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 97,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "crowding": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "persistence": {
+      "pin_precision": 0.01,
+      "fact_recall": 0.007692307692307693,
+      "promoted_test_facts": 1,
+      "exact_given_promoted": 1.0,
+      "exact_hits": 1,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 1,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "density": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "hodge": {
+      "pin_precision": 0.0,
+      "fact_recall": 0.0,
+      "promoted_test_facts": 0,
+      "exact_given_promoted": 0.0,
+      "exact_hits": 0,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 0,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    },
+    "oracle": {
+      "pin_precision": 1.0,
+      "fact_recall": 0.5384615384615384,
+      "promoted_test_facts": 70,
+      "exact_given_promoted": 1.0,
+      "exact_hits": 70,
+      "wrong_recalls": 0,
+      "promoted_fact_slots": 100,
+      "promoted_total": 100,
+      "n_test_facts": 130,
+      "register_bytes": 2160
+    }
+  },
+  "kv_upper_bound": {
+    "accuracy": 1.0,
+    "bytes": 131072000000,
+    "bytes_per_token": 131072
+  },
+  "exact_bytes_per_fact": 20,
+  "kv_bytes_per_fact": 131072,
+  "kv_over_ours": 6553.6,
+  "logit_override": {
+    "argmax_before": 3801,
+    "argmax_after": 1234,
+    "override_is_exact": true
+  },
+  "runtime_sec": 81.57
+}
