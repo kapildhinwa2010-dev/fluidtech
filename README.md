@@ -9,7 +9,7 @@ exact recall of facts from outside the attention window ·
 pure NumPy, no GPU, no downloads ·  
 seven measured negative results, published on purpose
 
-[![CI](https://github.com/<your-username>/superfluid/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-username>/superfluid/actions/workflows/ci.yml)
+[![CI](https://github.com/<kapildhinwa2010-dev>/superfluid/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-username>/superfluid/actions/workflows/ci.yml)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)
 ![Self-verification](https://img.shields.io/badge/self--verification-38%2F38-brightgreen.svg)
