@@ -1,0 +1,66 @@
+{
+  "base": {
+    "fit_nll": 2.780792512434764,
+    "val_nll": 2.713405907051445,
+    "val_ppl": 15.080551100702035
+  },
+  "fluid_prior_static": {
+    "fit_nll": 2.7728084537174382,
+    "val_nll": 2.7074846428436548,
+    "fit_params": 608,
+    "state_bytes": 2496,
+    "nats_gained": 0.005921264207790156,
+    "nats_per_kb": 0.0024292365980677563
+  },
+  "fluid_prior_live": {
+    "fit_nll": 2.7802877630335137,
+    "val_nll": 2.7131282291209455,
+    "fit_params": 608,
+    "state_bytes": 2496,
+    "nats_gained": 0.00027767793049937595,
+    "nats_per_kb": 0.00011391915097410295
+  },
+  "unigram_bias": {
+    "fit_nll": 2.7243174441912417,
+    "val_nll": 2.675165686409883,
+    "fit_params": 5776,
+    "state_bytes": 23104,
+    "nats_gained": 0.03824022064156196,
+    "nats_per_kb": 0.001694857424556763
+  },
+  "unigram_lowrank": {
+    "fit_nll": 2.7483294834759637,
+    "val_nll": 2.6914698393591867,
+    "fit_params": 608,
+    "state_bytes": 2432,
+    "rank": 8,
+    "alpha": 0.9999999999999988,
+    "nats_gained": 0.0219360676922582,
+    "nats_per_kb": 0.009236239028319241
+  },
+  "bigram_bias": {
+    "fit_nll": 2.755958524126267,
+    "val_nll": 2.7013023598906853,
+    "fit_params": 438976,
+    "state_bytes": 1755904,
+    "nats_gained": 0.012103547160759565,
+    "nats_per_kb": 7.058490835841705e-06
+  },
+  "config": {
+    "steps": 250,
+    "d": 64,
+    "layers": 2,
+    "ctx": 64,
+    "batch": 16,
+    "seed": 0,
+    "M": 1024,
+    "r": 8,
+    "live_chunk": 16,
+    "n_stream": 40000,
+    "stream_len": 40000,
+    "n_windows": 1000,
+    "vocab": 76,
+    "model_params": 71408
+  },
+  "runtime_sec": 802.33
+}
