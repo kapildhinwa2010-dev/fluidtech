@@ -288,7 +288,10 @@ The details and expected outputs: [`docs/REPRODUCING.md`](docs/REPRODUCING.md)
 
 ---
 
-## Contributing
+---
+### 🤝 Contributions & Corrections
+Suggestions, bug reports, and corrections are highly welcome! Feel free to open an **Issue** or submit a **Pull Request**.
+
 
 Issues and pull requests are welcome — especially measurement disagreements.
 
