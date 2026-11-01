@@ -222,7 +222,7 @@ if [[ -e "license " || -L "license " ]]; then
   fi
 fi
 
-git_move "modle.py" "model.py"
+git_move "modle.py" "superfluid/model.py"
 git_move "siperfluid_single.py" "superfluid_single.py"
 
 # -----------------------------------------------------------------------------
