@@ -44,18 +44,18 @@ def load_chars(max_chars=120_000, tokenizer="char", bpe_path=None):
     flatters a content-keyed store.
 
     tokenizer="bpe": a byte-level BPE subword vocabulary trained locally by
-    `tools/bpe.py` (no downloads).  This is the realistic granularity: the
+    `superfluid/bpe.py` (no downloads). This is the realistic granularity: the
     same text needs far fewer tokens, and the redundancy structure that the
     character level corpus has is gone.
     """
     path = os.path.join(ROOT, "corpus.txt")
     with open(path, encoding="utf-8", errors="ignore") as f:
-        text = f.read()
+        text = f.read()[:max_chars]
     if tokenizer == "bpe":
-        from tools.bpe import BPETokenizer
+        from superfluid.bpe import BPETokenizer
         bp = bpe_path or os.path.join(ROOT, "prior", "bpe_512.json")
         tok = BPETokenizer.load(bp)
-        ids = np.array(tok.encode(text[:max_chars]), dtype=np.int64)
+        ids = np.array(tok.encode(text), dtype=np.int64)
         return ids, tok.vocab_size
     chars = sorted(set(text))
     stoi = {c: i for i, c in enumerate(chars)}
@@ -94,12 +94,14 @@ def main():
     ap.add_argument("--r", type=int, default=8)
     ap.add_argument("--tokenizer", default="char", choices=["char", "bpe"])
     ap.add_argument("--bpe", default=None)
+    ap.add_argument("--max-chars", type=int, default=120_000)
     ap.add_argument("--out", default=os.path.join(RESULTS, "e6_real.json"))
     args = ap.parse_args()
 
     t0 = time.time()
     print("[1/4] real corpus (character level) ...")
-    ids, V = load_chars(tokenizer=args.tokenizer, bpe_path=args.bpe)
+    ids, V = load_chars(max_chars=args.max_chars, tokenizer=args.tokenizer,
+                        bpe_path=args.bpe)
     n_tr = int(len(ids) * 0.9)
     tr, va = ids[:n_tr], ids[n_tr:]
     print(f"    {len(ids):,} tokens, vocab {V}, train {len(tr):,} / val {len(va):,} "

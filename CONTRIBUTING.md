@@ -19,8 +19,8 @@ No silent failures.  If something cannot be done, raise.  The frozen
 register refuses to overflow rather than growing; the recall fails loud on
 a signature mismatch.  Keep that spirit.
 Getting set up
-git clone <your-fork>
-cd <your-fork>
+git clone https://github.com/kapildhinwa2010-dev/fluidtech.git
+cd fluidtech
 python -m pip install -e ".[dev]"
 make test          # self-verification and unit tests
 make quick         # a fast smoke run of every experiment

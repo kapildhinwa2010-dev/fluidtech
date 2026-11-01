@@ -9,7 +9,7 @@ description = "A constant-size, bit-exact memory tier for LLMs, attachable with 
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "Superfluid contributors" }]
+authors = [{ name = "Kapil Dhinwa" }]
 keywords = [
     "llm",
     "memory",

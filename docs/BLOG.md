@@ -1,5 +1,7 @@
 The 16 KB memory: exact where it matters, lossy everywhere else
-(blog draft — 700 words, ready to post. Replace the repo URL.)
+By Kapil Dhinwa
+
+(Blog draft — 700 words, ready to post.)
 There is a number in long-context serving that nobody puts on a slide:
 A 70B model on 2× H100 80GB cannot hold a single 128K-token session.
 Not "serves it slowly". Cannot hold it. The weights take 131.5 GB; 40 GB
@@ -115,5 +117,5 @@ static codebook, and a landmark table you can plug into any LLM with one
 residual-stream insertion.
 Try it. Then tell me where it breaks — I have found five places already, and
 I would like to find more.
-Repository: `<your-repo-url>` · 38 self-verification checks · pure NumPy ·
-no GPU required.
+Repository: https://github.com/kapildhinwa2010-dev/fluidtech ·
+50 self-verification checks · pure NumPy · no GPU required.

@@ -22,7 +22,7 @@ test: ## run the self-verification checks
 	$(PY) -m pytest -q tests
 
 quick: ## a fast smoke run of every experiment
-	$(PY) experiments/run_all.py
+	$(PY) experiments/run_all.py --quick
 
 full: ## every experiment at full size
 	$(PY) experiments/run_all.py --full
@@ -31,8 +31,8 @@ bundle: ## rebuild the single-file bundle
 	$(PY) tools/bundle_single_file.py
 
 lint: ## compile check + ruff (if installed)
-	$(PY) -m compileall -q superfluid experiments tools tests examples
-	$(PY) -m ruff check superfluid experiments tools tests examples
+	$(PY) -m compileall -q superfluid experiments tools tests examples selftest.py run_without_pytest.py
+	$(PY) -m ruff check superfluid experiments tools tests examples selftest.py run_without_pytest.py
 
 artifacts: ## rebuild the downloadable prior artifact
 	$(PY) experiments/pretrain_prior.py --synthetic --tokens 200000

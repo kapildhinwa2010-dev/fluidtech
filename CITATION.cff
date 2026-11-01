@@ -16,5 +16,6 @@ keywords:
   - persistent homology
   - KV cache
 authors:
-  - name: "Superfluid contributors"
+  - family-names: "Dhinwa"
+    given-names: "Kapil"
 repository-code: "https://github.com/kapildhinwa2010-dev/fluidtech"

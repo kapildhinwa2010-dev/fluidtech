@@ -35,7 +35,7 @@ printf '==> Running verification\n'
 python3 selftest.py
 python3 superfluid_single.py --selftest
 python3 run_without_pytest.py
-python3 -m ruff check superfluid experiments tools tests examples
+python3 -m ruff check superfluid experiments tools tests examples selftest.py run_without_pytest.py
 
 printf '==> Validating result JSON\n'
 shopt -s nullglob

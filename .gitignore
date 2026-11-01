@@ -28,5 +28,9 @@ htmlcov/
 *.log
 results/*.tmp
 results/selftest.json
+results/e2_scaling.json
+results/e4_gbalance.json
+corpus.txt
+prior/
 .ipynb
 .env

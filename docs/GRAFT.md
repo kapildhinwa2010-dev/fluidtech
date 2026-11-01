@@ -310,7 +310,7 @@ This is the most useful result of the whole project, and it is negative.
 Everything above ran at the **character** level (vocab 76), which is
 maximally redundant and therefore flatters a content-keyed store.  So the
 whole measurement was repeated with a **byte-level BPE subword tokenizer**
-trained locally by `tools/bpe.py` (vocab 512, 69,367 tokens for the same
+trained locally by `superfluid/bpe.py` (vocab 512, 69,367 tokens for the same
 text, no downloads).
 
 | variant | char level (Δ) | **subword level (Δ)** | training |
