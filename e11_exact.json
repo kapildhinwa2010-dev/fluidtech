@@ -1,0 +1,70 @@
+{
+  "config": {
+    "docs": 40,
+    "train_docs": 200,
+    "steps": 400,
+    "ctx": 128,
+    "d": 64,
+    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e11_exact.json"
+  },
+  "e11a_recall": {
+    "the soft gate alone (RECOMMENDED)": 1.0,
+    "+ the clueless rule, tau=0.99": 1.0,
+    "+ the clueless rule, tau=0.95": 1.0,
+    "+ the clueless + trusted rules": 1.0
+  },
+  "e11b_mode_tracker": {
+    "recall": 1.0,
+    "n": 40,
+    "mean_confidence": 0.785462142024642
+  },
+  "e11c_generation": {
+    "base_loss": 2.6110783595284124,
+    "base_ppl": 13.613723427628477,
+    "variants": {
+      "the soft gate alone (RECOMMENDED)|2.0": {
+        "loss": 2.513030590842774,
+        "delta_vs_base": -0.09804776868563847
+      },
+      "the soft gate alone (RECOMMENDED)|8.0": {
+        "loss": 2.435454725297928,
+        "delta_vs_base": -0.17562363423048444
+      },
+      "the soft gate alone (RECOMMENDED)|20.0": {
+        "loss": 2.575697009748886,
+        "delta_vs_base": -0.03538134977952634
+      },
+      "+ the clueless rule, tau=0.99|2.0": {
+        "loss": 2.513030590842774,
+        "delta_vs_base": -0.09804776868563847
+      },
+      "+ the clueless rule, tau=0.99|8.0": {
+        "loss": 2.435454725297928,
+        "delta_vs_base": -0.17562363423048444
+      },
+      "+ the clueless rule, tau=0.99|20.0": {
+        "loss": 2.575697009748886,
+        "delta_vs_base": -0.03538134977952634
+      },
+      "+ the clueless + trusted rules|2.0": {
+        "loss": 2.5847871988420965,
+        "delta_vs_base": -0.026291160686315873
+      },
+      "+ the clueless + trusted rules|8.0": {
+        "loss": 2.589705432064885,
+        "delta_vs_base": -0.021372927463527258
+      },
+      "+ the clueless + trusted rules|20.0": {
+        "loss": 2.6279569555158986,
+        "delta_vs_base": 0.0168785959874862
+      }
+    }
+  },
+  "e11d_eviction": {
+    "hot_contexts": 40,
+    "survived": 40,
+    "capacity": 64,
+    "mean_confidence_survived": 1.0
+  },
+  "runtime_sec": 1599.1310708522797
+}
