@@ -92,6 +92,18 @@ This run can require substantial memory, network access, and compute. Its
 cost and results depend on the selected hardware and model. A successful
 small-model CPU test does not validate production-scale inference.
 
+The E14 GPT-2 experiment uses the repository's downloader by default for
+the checkpoint location (`models/gpt2`). Provide a UTF-8 corpus file; the
+default is `corpus.txt` in the repository root, which is intentionally not
+tracked:
+
+```bash
+python tools/download_gpt2.py --out models/gpt2
+python experiments/e14_real_gpt2.py --corpus /path/to/corpus.txt
+```
+
+Override `--model`, `--corpus`, or `--out` when your files are elsewhere.
+
 ## Determinism and interpreting results
 
 Experiments accept a `--seed` option and use fixed random generators. CPU
