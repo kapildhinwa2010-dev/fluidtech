@@ -47,7 +47,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.memory import (
+from fluidlayer.memory import (
     SLOT_BYTES,
     FrozenRegister,
     SheafMemoryAdapter,
@@ -55,7 +55,7 @@ from superfluid.memory import (
     ctx_key,
     embedding_signature,
 )
-from superfluid.topology import (
+from fluidlayer.topology import (
     hodge_relevance,
     local_density,
     persistence_landmarks,
@@ -218,7 +218,7 @@ def build(tokens, vocab_size, budget_bytes=16 * 1024, M=1024, r=8, d=64,
     size = os.path.getsize(npz)
 
     manifest = {
-        "name": "superfluid domain prior",
+        "name": "fluidlayer domain prior",
         "version": "1.0",
         "created": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "runtime_state_bytes": int(ad.state_bytes()),

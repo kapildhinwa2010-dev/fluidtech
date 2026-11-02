@@ -1,5 +1,5 @@
 """
-superfluid.diffusion — the "freezing" operator.
+fluidlayer.diffusion — the "freezing" operator.
 
 Everything needed to run the fluid in a forward pass, in closed form:
 

@@ -1,5 +1,5 @@
 """
-superfluid.gpt2_tokenizer — the GPT-2 byte-level BPE, in pure Python.
+fluidlayer.gpt2_tokenizer — the GPT-2 byte-level BPE, in pure Python.
 
 WHY THIS FILE EXISTS
 --------------------

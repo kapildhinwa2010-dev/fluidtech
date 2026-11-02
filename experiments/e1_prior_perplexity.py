@@ -14,7 +14,7 @@ The question is therefore NOT "is the fluid better than a transformer".  It is:
 
 Arms (all on the SAME frozen model, all evaluated on the same held-out split)
 -----------------------------------------------------------------------------
-  A  base            the frozen SuperfluidLM, no prior
+  A  base            the frozen FluidLayerLM, no prior
   B0 + static prior  the 16 KB fluid state, read at the anchor of the CURRENT
                      token.  The feature is a function of the token identity,
                      so this is (structurally) a COMPRESSED per-token logit bias.
@@ -49,11 +49,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid import SuperfluidLM
-from superfluid.data import CharTokenizer, get_corpus
-from superfluid.losses import cross_entropy_tensor
-from superfluid.memory import SheafMemoryAdapter
-from superfluid.optim import Adam
+from fluidlayer import FluidLayerLM
+from fluidlayer.data import CharTokenizer, get_corpus
+from fluidlayer.losses import cross_entropy_tensor
+from fluidlayer.memory import SheafMemoryAdapter
+from fluidlayer.optim import Adam
 
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -161,7 +161,7 @@ def run(steps=300, d=64, layers=2, ctx=64, batch=16, lr=3e-3, seed=0,
     log(f"      corpus {len(text)} chars, vocab {V}, train {len(train_ids)} "
         f"/ fit {len(fit_ids)} / val {len(val_ids)} tokens")
 
-    model = SuperfluidLM(vocab=V, d=d, n_layers=layers, n_ctx=ctx,
+    model = FluidLayerLM(vocab=V, d=d, n_layers=layers, n_ctx=ctx,
                          k_neighbors=8, bands=6, cheb_m=12, seed=seed)
     params = model.params()
     opt = Adam(params, lr=lr, betas=(0.9, 0.95), weight_decay=0.01, clip=1.0)

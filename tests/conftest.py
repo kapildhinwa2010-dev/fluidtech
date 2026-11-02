@@ -21,5 +21,5 @@ def root():
 
 @pytest.fixture
 def model():
-    from superfluid import TinyTransformer
+    from fluidlayer import TinyTransformer
     return TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)

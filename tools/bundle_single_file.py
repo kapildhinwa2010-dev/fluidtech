@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 tools/bundle_single_file.py — generate a single self-contained, self-verifying
-Python file from the `superfluid/` package + `selftest.py`.
+Python file from the `fluidlayer/` package + `selftest.py`.
 
     python3 tools/bundle_single_file.py
-    python3 superfluid_single.py --selftest      # runs the self-checks
+    python3 fluidlayer_single.py --selftest      # runs the self-checks
 
-The bundle registers a real `superfluid` package inside sys.modules, so the
+The bundle registers a real `fluidlayer` package inside sys.modules, so the
 relative imports (`from .diffusion import ...`) keep working exactly as in the
 normal package layout — no source rewriting, no drift.
 """
@@ -38,11 +38,11 @@ PLACEHOLDER = "%%SOURCES%%"
 def main():
     parts = []
     for name in MODULES:
-        path = os.path.join(ROOT, "superfluid", name + ".py")
+        path = os.path.join(ROOT, "fluidlayer", name + ".py")
         if not os.path.isfile(path):
             raise FileNotFoundError(f"bundle source module does not exist: {path}")
         with open(path, encoding="utf-8") as source_file:
-            parts.append(f"#--- FILE: superfluid/{name}.py ---")
+            parts.append(f"#--- FILE: fluidlayer/{name}.py ---")
             parts.append(source_file.read())
     with open(os.path.join(ROOT, "selftest.py"), encoding="utf-8") as f:
         parts.append("#--- FILE: selftest.py ---")
@@ -61,7 +61,7 @@ def main():
         raise SystemExit(f"template is missing the {PLACEHOLDER} placeholder")
     out = tpl.replace(PLACEHOLDER, body)
 
-    dest = os.path.join(ROOT, "superfluid_single.py")
+    dest = os.path.join(ROOT, "fluidlayer_single.py")
     with open(dest, "w", encoding="utf-8") as f:
         f.write(out)
     print(f"wrote {dest} ({len(out)} bytes, {out.count(chr(10)) + 1} lines)")

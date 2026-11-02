@@ -1,5 +1,5 @@
 """
-superfluid.gpt2_model — a minimal GPT-2 forward pass, in PyTorch.
+fluidlayer.gpt2_model — a minimal GPT-2 forward pass, in PyTorch.
 
 WHY
 ---
@@ -11,7 +11,7 @@ must produce coherent English, which it does.
 
 The project itself stays dependency-free (the numpy package does not
 import this module); torch is needed only for this file and for
-`superfluid.torch_graft`.
+`fluidlayer.torch_graft`.
 """
 
 from __future__ import annotations

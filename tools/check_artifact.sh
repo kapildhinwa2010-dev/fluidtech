@@ -15,8 +15,8 @@ need() {
 for path in \
   README.md LICENSE CITATION.cff CONTRIBUTING.md CODE_OF_CONDUCT.md \
   SECURITY.md pyproject.toml requirements.txt Makefile Dockerfile \
-  .gitignore .pre-commit-config.yaml selftest.py superfluid_single.py \
-  superfluid/py.typed superfluid/topology.py examples/quickstart.py \
+  .gitignore .pre-commit-config.yaml selftest.py fluidlayer_single.py \
+  fluidlayer/py.typed fluidlayer/topology.py examples/quickstart.py \
   docs/GETTING_STARTED.md docs/CHANGELOG.md docs/API.md docs/REPRODUCING.md \
   docs/LIMITATION.md docs/GRAFT.md docs/NEGATIVE-RESULTS.md \
   .github/workflows/ci.yml .github/workflows/nightly.yml \
@@ -33,9 +33,9 @@ fi
 
 printf '==> Running verification\n'
 python3 selftest.py
-python3 superfluid_single.py --selftest
+python3 fluidlayer_single.py --selftest
 python3 run_without_pytest.py
-python3 -m ruff check superfluid experiments tools tests examples selftest.py run_without_pytest.py
+python3 -m ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py
 
 printf '==> Validating result JSON\n'
 shopt -s nullglob

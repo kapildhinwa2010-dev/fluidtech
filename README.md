@@ -1,4 +1,4 @@
-# Superfluid
+# FluidLayer
 
 **A research memory layer for LLMs — attachable with one residual-stream insertion.**
 
@@ -88,6 +88,12 @@ python examples/gate_demo.py    # the gate: recall AND a better perplexity
 python experiments/e11_exact.py # the exact memory (the full benchmark)
 ```
 
+To install the published package instead of cloning the repository:
+
+```bash
+python -m pip install fluidlayer
+```
+
 Expected output:
 
 ```text
@@ -101,7 +107,7 @@ base + the layer  : 20/20 correct  (the layer retrieved it)
 
 ```python
 import torch
-from superfluid.torch_graft import SAABranchTorch
+from fluidlayer.torch_graft import SAABranchTorch
 
 # Assume `model` is a loaded causal LM and `windows` contains 1-D token-ID tensors.
 embedding = model.get_input_embeddings()
@@ -134,7 +140,7 @@ with torch.no_grad():
   the model output. Enabling retrieval is a separate, calibrated operation.
 - This sketch omits model-specific positional embeddings, attention masks,
   session lifecycle, and gain calibration. See the [integration notes](docs/GETTING_STARTED.md#attach-the-optional-pytorch-adapter).
-- The NumPy reference implementation is [`superfluid/graft.py`](superfluid/graft.py), and the Torch one mirrors it exactly.
+- The NumPy reference implementation is [`fluidlayer/graft.py`](fluidlayer/graft.py), and the Torch one mirrors it exactly.
 
 Start with the [documentation guide](docs/README.md), then read
 [Getting started](docs/GETTING_STARTED.md) and the [API reference](docs/API.md).
@@ -192,7 +198,7 @@ Read it: [`docs/NEGATIVE-RESULTS.md`](docs/NEGATIVE-RESULTS.md)
 ## The repository
 
 ```text
-superfluid/            the package (pure NumPy; torch only in torch_graft.py)
+fluidlayer/            the package (pure NumPy; torch only in torch_graft.py)
   graft.py             the attachable memory layer
   memory.py            the frozen register (20 B per fact, bit-exact)
   torch_graft.py       the same layer in PyTorch, for a real LLM
@@ -206,7 +212,7 @@ experiments/           every measurement; each writes a JSON into results/
 
 tools/                 the artifact checker, bundler, checkpoint downloader,
                        and PyPI fetcher
-superfluid/bpe.py      the byte-level BPE tokenizer
+fluidlayer/bpe.py      the byte-level BPE tokenizer
 
 tests/                 the unit tests (pytest, or run them without it)
 
@@ -248,8 +254,8 @@ The capability works on both.
 
 The checkpoint, the forward pass and the tokenizer are all in this repository:
 
-- [`superfluid/gpt2_model.py`](superfluid/gpt2_model.py)
-- [`superfluid/gpt2_tokenizer.py`](superfluid/gpt2_tokenizer.py)
+- [`fluidlayer/gpt2_model.py`](fluidlayer/gpt2_model.py)
+- [`fluidlayer/gpt2_tokenizer.py`](fluidlayer/gpt2_tokenizer.py)
 
 No `transformers` dependency, and the generation is verified coherent.
 

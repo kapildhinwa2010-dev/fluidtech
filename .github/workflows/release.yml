@@ -8,8 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/fluidlayer
     permissions:
       contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -20,10 +24,13 @@ jobs:
         run: |
           python -m pip install ".[dev]"
           python selftest.py
-          python superfluid_single.py --selftest
+          python fluidlayer_single.py --selftest
           python -m pytest -q tests
       - name: build
         run: python -m build
+      - name: publish to PyPI with trusted publishing
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: pypa/gh-action-pypi-publish@release/v1
       - name: attach Python distributions to the release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2

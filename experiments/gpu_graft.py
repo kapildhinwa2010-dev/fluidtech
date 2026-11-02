@@ -92,7 +92,7 @@ def main():
     except ImportError as error:
         ap.error(f"PyTorch is required; install the optional GPU dependencies: {error}")
 
-    from superfluid.torch_graft import SAABranchTorch
+    from fluidlayer.torch_graft import SAABranchTorch
 
     t0 = time.time()
     device = "cuda" if torch.cuda.is_available() else "cpu"

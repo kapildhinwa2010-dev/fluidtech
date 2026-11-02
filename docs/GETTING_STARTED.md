@@ -5,6 +5,12 @@ implementation. The optional PyTorch adapter is described separately below.
 
 ## Install
 
+Install the published package from PyPI:
+
+```bash
+python -m pip install fluidlayer
+```
+
 From a repository checkout:
 
 ```bash
@@ -46,7 +52,7 @@ and the token IDs consumed at those positions:
 ```python
 import numpy as np
 
-from superfluid import SAABranch, TinyTransformer
+from fluidlayer import SAABranch, TinyTransformer
 
 model = TinyTransformer(vocab=32, d=32, n_layers=2, n_ctx=32, seed=0)
 branch = SAABranch(M=16, r=4, d=32, emb=model.emb, ctx_len=1)
@@ -72,7 +78,7 @@ Install the `gpu` extra before importing `SAABranchTorch`. The adapter's
 ```python
 import torch
 
-from superfluid.torch_graft import SAABranchTorch
+from fluidlayer.torch_graft import SAABranchTorch
 
 embedding = model.get_input_embeddings()
 branch = SAABranchTorch(

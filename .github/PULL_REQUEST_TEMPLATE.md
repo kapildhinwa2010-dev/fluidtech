@@ -14,7 +14,7 @@ command:
 ## The self-verification
 
 - [ ] `python selftest.py` passes
-- [ ] `python superfluid_single.py --selftest` passes
+- [ ] `python fluidlayer_single.py --selftest` passes
 - [ ] `python -m pytest -q tests` passes
 - [ ] a new check exists for any new behaviour
 

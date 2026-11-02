@@ -10,7 +10,7 @@ installation and a first-use walkthrough, see
 layer:
 
 ```python
-from superfluid import SAABranch
+from fluidlayer import SAABranch
 
 branch = SAABranch(
     M=64,
@@ -69,7 +69,7 @@ truth and provenance are not verified.
 same implementation as the branch's majority-tracking store:
 
 ```python
-from superfluid import FrozenRegister
+from fluidlayer import FrozenRegister
 
 register = FrozenRegister(capacity=1024)
 slot = register.promote(value_token_id, key, sig=0)
@@ -102,7 +102,7 @@ This describes the serialized slot payload, not the Python memory cost of
 ## Optional PyTorch API
 
 Install with `python -m pip install ".[gpu]"`, then construct
-`SAABranchTorch` from `superfluid.torch_graft`. Its `forward` signature is
+`SAABranchTorch` from `fluidlayer.torch_graft`. Its `forward` signature is
 `forward(h, content, token_ids)`; see the executable-shaped example in
 [Getting started](GETTING_STARTED.md). The Torch adapter has parity tests,
 but that does not constitute validation on production-scale models.

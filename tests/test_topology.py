@@ -1,7 +1,7 @@
 """The topology: the frustration index, the Hodge participation, persistence."""
 import numpy as np
 
-from superfluid.topology import (
+from fluidlayer.topology import (
     hodge_embedding,
 )
 
@@ -15,7 +15,7 @@ def test_the_frustration_index_matches_a_global_section():
     import importlib.util
     import os
 
-    from superfluid.sheaf import signed_laplacian_from_edges
+    from fluidlayer.sheaf import signed_laplacian_from_edges
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     spec = importlib.util.spec_from_file_location(
         "st", os.path.join(here, "selftest.py")
@@ -47,7 +47,7 @@ def test_the_hodge_embedding_is_finite():
 
 
 def test_the_persistence_landmarks_are_ordered():
-    from superfluid.topology import kruskal_barcode
+    from fluidlayer.topology import kruskal_barcode
     n = 12
     edges = [(i, i + 1) for i in range(n - 1)] + [(0, 5), (3, 9)]
     edges = np.array(edges, dtype=np.int64)

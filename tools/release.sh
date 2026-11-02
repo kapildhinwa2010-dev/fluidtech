@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Release the project: verify, build, tag, publish.
 #
-#   tools/release.sh 1.2.1
+#   tools/release.sh 2.0.0
 #
 # The checks run first and ABORT the release if they fail.  That is the
 # point: a tag must never point at a broken tree.
@@ -9,7 +9,7 @@ set -euo pipefail
 
 VERSION="${1:-}"
 if [ -z "$VERSION" ]; then
-  echo "usage: tools/release.sh <version>   (e.g. 1.2.1)" >&2
+  echo "usage: tools/release.sh <version>   (e.g. 2.0.0)" >&2
   exit 2
 fi
 
@@ -19,7 +19,7 @@ cd "$ROOT"
 
 echo "==> the checks"
 "$PY" selftest.py
-"$PY" superfluid_single.py --selftest
+"$PY" fluidlayer_single.py --selftest
 "$PY" run_without_pytest.py
 
 echo "==> the version must match"
@@ -38,4 +38,4 @@ echo
 echo "Now, by hand:"
 echo "  git tag -a v$VERSION -m 'v$VERSION'"
 echo "  git push origin v$VERSION"
-echo "  # the release workflow publishes the wheel and source archive"
+echo "  # the release workflow publishes to PyPI and attaches files to GitHub Releases"

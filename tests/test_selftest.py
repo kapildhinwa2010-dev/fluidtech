@@ -22,7 +22,7 @@ def test_the_whole_suite_passes(root):
 
 def test_the_bundle_passes(root):
     r = subprocess.run(
-        [sys.executable, os.path.join(root, "superfluid_single.py"), "--selftest"],
+        [sys.executable, os.path.join(root, "fluidlayer_single.py"), "--selftest"],
         capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-3000:]
     assert "checks passed" in r.stdout

@@ -1,5 +1,5 @@
 """
-superfluid.topology — building the data's geometry in one forward pass.
+fluidlayer.topology — building the data's geometry in one forward pass.
 
 This module implements the "instant geometry" of the proposal:
 

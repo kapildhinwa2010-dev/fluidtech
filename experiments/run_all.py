@@ -72,7 +72,7 @@ def main():
 
     steps = [
         ("selftest", [PY, "selftest.py"]),
-        ("bundle", [PY, "superfluid_single.py", "--selftest"]),
+        ("bundle", [PY, "fluidlayer_single.py", "--selftest"]),
         ("e1", [PY, "experiments/e1_prior_perplexity.py",
                 "--steps", "1" if args.quick else "250",
                 "--d", "8" if args.quick else "64",

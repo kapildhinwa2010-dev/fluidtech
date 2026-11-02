@@ -55,9 +55,9 @@ def main():
     except ImportError as error:
         ap.error(f"PyTorch is required; install the optional GPU dependencies: {error}")
 
-    from superfluid.gpt2_model import GPT2Model
-    from superfluid.gpt2_tokenizer import GPT2Tokenizer
-    from superfluid.torch_graft import SAABranchTorch
+    from fluidlayer.gpt2_model import GPT2Model
+    from fluidlayer.gpt2_tokenizer import GPT2Tokenizer
+    from fluidlayer.torch_graft import SAABranchTorch
 
     t0 = time.time()
     res = {"model": args.model, "config": vars(args)}

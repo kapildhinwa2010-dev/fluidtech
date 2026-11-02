@@ -1,5 +1,5 @@
 """
-superfluid.blocks — the Superfluid block.
+fluidlayer.blocks — the FluidLayer block.
 
 One block, five stages.  Every stage exists to fix a named weakness of the
 naive "replace attention with diffusion" idea:
@@ -42,7 +42,7 @@ from .topology import (
     topo_descriptor,
 )
 
-__all__ = ["SuperfluidBlock", "RMSNorm", "softplus"]
+__all__ = ["FluidLayerBlock", "RMSNorm", "softplus"]
 
 
 class RMSNorm:
@@ -57,7 +57,7 @@ class RMSNorm:
         return n * self.g
 
 
-class SuperfluidBlock:
+class FluidLayerBlock:
     def __init__(self, d: int, k_neighbors: int = 8, bands: int = 6, cheb_m: int = 12,
                  t_min: float = 1e-3, t_max: float = 1e3, edge_hidden: int = 16,
                  use_route_head: bool = True, seed: int = 0,

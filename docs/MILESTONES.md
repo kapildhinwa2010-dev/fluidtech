@@ -20,7 +20,7 @@ An autodiff engine, the 7-stage sheaf block, the Chebyshev diffusion with a
 band filter bank, the persistent-homology utilities, a language model and a
 param-matched transformer baseline.  No torch, no scipy, no GPU, no
 downloads.
-→ `superfluid/`
+→ `fluidlayer/`
 
 ## 3. A self-verification harness that has earned its keep
 
@@ -30,7 +30,7 @@ among them a Chebyshev recurrence missing a factor of two, a scatter
 operation that never scattered, gradients zeroed after the backward pass,
 an `exp(+α)` overflow, and a balance diagnostic that did not detect the
 frozen state.
-→ `selftest.py`, `superfluid_single.py` (one file, 154 KB, self-verifying)
+→ `selftest.py`, `fluidlayer_single.py` (one file, 154 KB, self-verifying)
 
 ## 4. The exact tier: bit-exact memory for 20 bytes a fact
 
@@ -39,7 +39,7 @@ refuses overflow. The attachable branch uses a bounded majority-tracking
 store; both return the stored token ID exactly, but neither establishes that
 the token is true. **819 packed slots per 16 KB**, before Python object
 overhead; this is not a tamper-evident audit trail.
-→ `superfluid/memory.py`, `superfluid/graft.py`
+→ `fluidlayer/memory.py`, `fluidlayer/graft.py`
 
 ## 5. The budget law, measured
 
@@ -66,7 +66,7 @@ One residual-stream insertion, `h' = h + W·(exact read, diffusion read)`.
 * the exact tier takes cross-window verbatim recall from **0.050 to 0.800**
   (chance 0.125) — **16× the base model** — at **6.3 KB** of state;
 * a PyTorch twin exists for attaching it to a real pretrained LLM.
-→ `superfluid/graft.py`, `superfluid/torch_graft.py`, `docs/GRAFT.md`
+→ `fluidlayer/graft.py`, `fluidlayer/torch_graft.py`, `docs/GRAFT.md`
 
 ## 8. A divergence diagnosed at the root and fixed
 
@@ -89,7 +89,7 @@ layer's own objective now **converges** (4.34 → 3.81).
   workflow, issue and PR templates, a Docker image, `Makefile` targets,
   `CHANGELOG`, `CONTRIBUTING`, `CODE_OF_CONDUCT`, `SECURITY` with a threat
   model.
-→ `superfluid/bpe.py`, `tests/`, `.github/`, `Makefile`
+→ `fluidlayer/bpe.py`, `tests/`, `.github/`, `Makefile`
 
 ## 10. The byte economics that motivate the whole thing
 

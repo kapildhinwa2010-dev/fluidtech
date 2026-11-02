@@ -1,5 +1,5 @@
 """
-superfluid/bpe.py — a byte-level BPE tokenizer, in pure Python (no downloads).
+fluidlayer/bpe.py — a byte-level BPE tokenizer, in pure Python (no downloads).
 
 WHY THIS EXISTS
 ---------------

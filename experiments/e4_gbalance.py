@@ -45,8 +45,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.diffusion import exact_exp_action, jam_time, spectral_summary
-from superfluid.sheaf import balance_residual, build_laplacian
+from fluidlayer.diffusion import exact_exp_action, jam_time, spectral_summary
+from fluidlayer.sheaf import balance_residual, build_laplacian
 
 RESULTS_DIR = os.path.join(ROOT, "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)

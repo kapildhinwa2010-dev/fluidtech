@@ -55,7 +55,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import SAABranch, Tensor, TinyTransformer, cross_entropy  # noqa: E402
+from fluidlayer import SAABranch, Tensor, TinyTransformer, cross_entropy  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -93,8 +93,8 @@ def train_base(docs, d=64, layers=2, ctx=128, steps=400, batch=16, lr=3e-3,
                seed=0):
     rng = np.random.default_rng(seed)
     model = TinyTransformer(V, d=d, n_layers=layers, n_ctx=ctx, seed=0)
-    from superfluid.losses import cross_entropy_tensor
-    from superfluid.optim import Adam
+    from fluidlayer.losses import cross_entropy_tensor
+    from fluidlayer.optim import Adam
     opt = Adam(model.params(), lr=lr, betas=(0.9, 0.95), weight_decay=0.01)
     toks = np.concatenate([doc["tokens"] for doc in docs])
     for _ in range(steps):

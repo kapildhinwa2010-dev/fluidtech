@@ -36,8 +36,8 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import SAABranch, cross_entropy  # noqa: E402
-from superfluid.memory import SLOT_BYTES  # noqa: E402
+from fluidlayer import SAABranch, cross_entropy  # noqa: E402
+from fluidlayer.memory import SLOT_BYTES  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")

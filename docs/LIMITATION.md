@@ -1,6 +1,6 @@
 # Limitations
 
-Superfluid is a research prototype. The measurements are useful for
+FluidLayer is a research prototype. The measurements are useful for
 understanding the mechanism, but they do not establish production
 performance or safety.
 

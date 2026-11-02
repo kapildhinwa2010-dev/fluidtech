@@ -17,7 +17,7 @@ impact. Avoid including real user data or secrets in a report.
 
 ## Threat model
 
-Superfluid is a research prototype that can store and retrieve content from
+FluidLayer is a research prototype that can store and retrieve content from
 an input stream. Retrieved content can influence model outputs, so
 untrusted documents may act as prompt-injection inputs.
 

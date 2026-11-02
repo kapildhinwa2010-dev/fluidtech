@@ -1,6 +1,6 @@
 """
-superfluid.torch_graft — the same memory layer, in PyTorch, for a REAL LLM.
-This is the GPU-scale twin of `superfluid/graft.py`.  It exists because the
+fluidlayer.torch_graft — the same memory layer, in PyTorch, for a REAL LLM.
+This is the GPU-scale twin of `fluidlayer/graft.py`.  It exists because the
 numpy implementation cannot be attached to a pretrained transformer: it
 needs a tied embedding table to turn a stored token id back into a
 vector, and it needs the model's own scales.

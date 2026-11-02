@@ -1,5 +1,5 @@
 """
-superfluid.losses — training objective for the fluid stack.
+fluidlayer.losses — training objective for the fluid stack.
 
   L_total = CE(next-token)
           + w_E  * sheaf energy        (smoothness / consistency on edges)

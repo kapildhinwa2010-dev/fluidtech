@@ -40,7 +40,7 @@ So the exact value must never live inside the fluid. I split the memory:
 | tier|holds|size|exact?|
 | ---|---|---|---|
 | attachable exact store|token IDs|20 B packed-slot estimate / context|✅ bit-exact ID|
-| superfluid state|the aggregate|16 KB, constant|❌ lossy|
+| fluidlayer state|the aggregate|16 KB, constant|❌ lossy|
 | external source|a pointer|6 B / fact|✅ exact|
 
 A recalled token ID is an `int32`, so the stored ID is exact. The attachable

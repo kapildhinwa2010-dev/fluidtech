@@ -6,6 +6,6 @@ COPY . /app
 
 RUN pip install --no-cache-dir "numpy>=1.23,<3" pytest \
  && python selftest.py \
- && python superfluid_single.py --selftest
+ && python fluidlayer_single.py --selftest
 
 CMD ["python", "examples/quickstart.py"]

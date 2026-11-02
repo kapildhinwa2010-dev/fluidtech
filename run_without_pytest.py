@@ -86,7 +86,7 @@ def _import_or_skip(name, skipped):
 # the fixtures the tests ask for
 # --------------------------------------------------------------------------
 def _fixtures():
-    from superfluid import TinyTransformer
+    from fluidlayer import TinyTransformer
 
     def root():
         return ROOT

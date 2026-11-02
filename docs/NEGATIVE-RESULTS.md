@@ -104,7 +104,7 @@ Its 20-byte slot figure is a packed-payload estimate. The
 
 ### The claim
 
-`superfluid/sheaf.py` states:
+`fluidlayer/sheaf.py` states:
 
 > *"balance_residual(L) = ‖L·1‖∞.  Zero <=> the sheaf is (G-)balanced: every
 > node's incident restriction maps sum to zero, so the constant field is a
@@ -139,7 +139,7 @@ For scalar ±1 restriction maps the correct statement is
 * Added it to the selftest as checks 24 — including the explicit
   all-negative-even-cycle counterexample, so the old claim can never
   silently come back.
-* Documented the distinction in `docs/FRAMEWORK.md` and `superfluid/sheaf.py`.
+* Documented the distinction in `docs/FRAMEWORK.md` and `fluidlayer/sheaf.py`.
 
 ### The lesson
 
@@ -181,13 +181,13 @@ Every place that said "λ₂ predicts quality" now says "λ₂ bounds the
 
 ### The experiment
 
-`train.py` — character-level LM on Project Gutenberg, SuperfluidLM vs a
+`train.py` — character-level LM on Project Gutenberg, FluidLayerLM vs a
 **param-matched** TinyTransformer, same tokens, same optimiser, same schedule.
 
 | model | params | final val loss | best val loss | time |
 |---|---|---|---|---|
 | **TinyTransformer** | 116,544 | **2.6331** | **2.5401** | 95 s |
-| SuperfluidLM | 71,408 | 2.7397 | 2.6181 | 340 s |
+| FluidLayerLM | 71,408 | 2.7397 | 2.6181 | 340 s |
 
 The transformer wins **and** is 3.6× faster to train, with 39 % *more*
 parameters.
@@ -199,7 +199,7 @@ is the quantity the Hodge limit computes exactly:
 
 | aggregator | sign accuracy | RMSE |
 |---|---|---|
-| **Superfluid (global diffusion)** | **97.3 %** | **0.015** |
+| **FluidLayer (global diffusion)** | **97.3 %** | **0.015** |
 | Attention (the baseline) | 100 % | 0.000 |
 | Local R = 4 | 65.6 % | 0.126 |
 | Local R = 8 | 71.0 % | — |
@@ -221,7 +221,7 @@ says so.
 
 ### The experiment
 
-`experiments/e1_prior_perplexity.py` — train a SuperfluidLM, **freeze it**,
+`experiments/e1_prior_perplexity.py` — train a FluidLayerLM, **freeze it**,
 then ask whether a **training-free** domain prior (built by streaming the
 corpus through the fluid) improves its next-token distribution.  Every
 correction is fitted in **closed form**; not a single gradient step is taken

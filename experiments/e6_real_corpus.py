@@ -28,9 +28,9 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from superfluid import TinyTransformer, cross_entropy, cross_entropy_tensor  # noqa: E402
-from superfluid.graft import SAABranch  # noqa: E402
-from superfluid.optim import Adam  # noqa: E402
+from fluidlayer import TinyTransformer, cross_entropy, cross_entropy_tensor  # noqa: E402
+from fluidlayer.graft import SAABranch  # noqa: E402
+from fluidlayer.optim import Adam  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(ROOT, "results")
@@ -44,7 +44,7 @@ def load_chars(max_chars=120_000, tokenizer="char", bpe_path=None):
     flatters a content-keyed store.
 
     tokenizer="bpe": a byte-level BPE subword vocabulary trained locally by
-    `superfluid/bpe.py` (no downloads). This is the realistic granularity: the
+    `fluidlayer/bpe.py` (no downloads). This is the realistic granularity: the
     same text needs far fewer tokens, and the redundancy structure that the
     character level corpus has is gone.
     """
@@ -52,7 +52,7 @@ def load_chars(max_chars=120_000, tokenizer="char", bpe_path=None):
     with open(path, encoding="utf-8", errors="ignore") as f:
         text = f.read()[:max_chars]
     if tokenizer == "bpe":
-        from superfluid.bpe import BPETokenizer
+        from fluidlayer.bpe import BPETokenizer
         bp = bpe_path or os.path.join(ROOT, "prior", "bpe_512.json")
         tok = BPETokenizer.load(bp)
         ids = np.array(tok.encode(text), dtype=np.int64)

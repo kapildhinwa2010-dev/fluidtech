@@ -3,8 +3,8 @@ requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "superfluid"
-version = "1.2.0"
+name = "fluidlayer"
+version = "2.0.0"
 description = "A research memory layer for language models using cellular-sheaf diffusion"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -36,7 +36,12 @@ dependencies = ["numpy>=1.23,<3"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "ruff>=0.5", "build"]
-gpu = ["torch>=2.1", "transformers>=4.40", "accelerate>=0.30"]
+gpu = [
+    "torch>=2.1",
+    "transformers>=4.40",
+    "accelerate>=0.30",
+    "safetensors>=0.4",
+]
 
 [project.urls]
 Homepage = "https://github.com/kapildhinwa2010-dev/fluidtech"
@@ -45,11 +50,11 @@ Issues = "https://github.com/kapildhinwa2010-dev/fluidtech/issues"
 Changelog = "https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/docs/CHANGELOG.md"
 
 [tool.setuptools]
-packages = ["superfluid"]
+packages = ["fluidlayer"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-superfluid = ["py.typed"]
+fluidlayer = ["py.typed"]
 
 [tool.pytest.ini_options]
 minversion = "7.0"
@@ -68,4 +73,4 @@ ignore = ["E741", "B008"]
 [tool.ruff.lint.per-file-ignores]
 "experiments/*.py" = ["E402", "E501"]
 "tools/*.py" = ["E501"]
-"superfluid_single.py" = ["E501", "F401", "F821"]
+"fluidlayer_single.py" = ["E501", "F401", "F821"]

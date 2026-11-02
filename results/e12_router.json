@@ -4,7 +4,7 @@
     "capacity": 64,
     "d": 64,
     "ctx": 128,
-    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e12_router.json"
+    "out": "results/e12_router.json"
   },
   "e12ab_reach_and_precision": {
     "16": {

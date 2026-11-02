@@ -1,5 +1,5 @@
 """
-superfluid.optim — Adam, implemented locally (no torch in this environment).
+fluidlayer.optim — Adam, implemented locally (no torch in this environment).
 """
 
 from __future__ import annotations

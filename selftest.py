@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-selftest.py — numerical verification of every claim the Superfluid proposal makes.
+selftest.py — numerical verification of every claim the FluidLayer proposal makes.
 
 Each check either PASSES (numerically confirmed) or FAILS.  Results are written
 to results/selftest.json so the report quotes measured numbers, not claims.
@@ -46,11 +46,11 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from superfluid import (
+from fluidlayer import (
     SLOT_BYTES,
+    FluidLayerLM,
     FrozenRegister,
     SheafMemoryAdapter,
-    SuperfluidLM,
     band_times,
     betti_numbers,
     budget_split,
@@ -69,7 +69,7 @@ from superfluid import (
     power_iteration_lmax,
     spectral_summary,
 )
-from superfluid.autodiff import Tensor
+from fluidlayer.autodiff import Tensor
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 os.makedirs(OUT, exist_ok=True)
@@ -407,14 +407,14 @@ def test_autodiff():
     )
 
     # end-to-end check on the real model
-    m = SuperfluidLM(
+    m = FluidLayerLM(
         vocab=11, d=8, n_layers=1, n_ctx=12, k_neighbors=3, bands=3, cheb_m=4, seed=4
     )
     params = m.params()
     idx = np.array([1, 2, 3, 4, 5, 6], dtype=np.int64)
     tgt = np.array([2, 3, 4, 5, 6, 7], dtype=np.int64)
 
-    from superfluid.losses import cross_entropy_tensor
+    from fluidlayer.losses import cross_entropy_tensor
 
     def model_loss_t():
         return cross_entropy_tensor(m.forward(idx), tgt)
@@ -434,7 +434,7 @@ def test_autodiff():
     fd = _fd_grad(model_loss, params[key].data, eps=1e-6)
     e = float(np.max(np.abs(g_analytic - fd)) / (np.max(np.abs(fd)) + 1e-12))
     check(
-        "autodiff  SuperfluidLM end-to-end gradient matches finite differences",
+        "autodiff  FluidLayerLM end-to-end gradient matches finite differences",
         e < 1e-3,
         f"relative max error on {key} = {e:.2e}  (loss={val:.4f})",
     )
@@ -481,16 +481,16 @@ def test_block_laplacian():
     print("\n[14] Block Laplacian == numpy reference, and the fluid is not a no-op")
     import numpy as _np
 
-    from superfluid.autodiff import Tensor as _T
-    from superfluid.blocks import SuperfluidBlock
-    from superfluid.sheaf import build_laplacian as np_build_laplacian
+    from fluidlayer.autodiff import Tensor as _T
+    from fluidlayer.blocks import FluidLayerBlock
+    from fluidlayer.sheaf import build_laplacian as np_build_laplacian
 
     rng = _np.random.default_rng(5)
     n, d = 16, 8
     edges = _np.array([[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [2, 5], [7, 9]])
     alpha = rng.normal(0, 0.7, edges.shape[0])
     Lref = np_build_laplacian(n, edges, alpha)
-    blk = SuperfluidBlock(d, k_neighbors=3, bands=3, cheb_m=6, seed=1)
+    blk = FluidLayerBlock(d, k_neighbors=3, bands=3, cheb_m=6, seed=1)
     Lblk = blk._laplacian(n, edges, _T(alpha))
     err = float(_np.abs(Lblk.data - Lref).max())
     check(
@@ -510,7 +510,7 @@ def test_block_laplacian():
     )
 
     # the harmonic branch must be the per-component mean
-    from superfluid.topology import connected_components as _cc
+    from fluidlayer.topology import connected_components as _cc
 
     lab, nc = _cc(n, edges)
     means = _np.zeros((nc, d))
@@ -537,15 +537,15 @@ def test_band_stability():
     (~1e6) and made the whole model diverge.
     """
     print("\n[15] Filter-bank stability (regression: exp(-alpha) sign error)")
-    from superfluid.autodiff import Tensor as _T
-    from superfluid.blocks import SuperfluidBlock
+    from fluidlayer.autodiff import Tensor as _T
+    from fluidlayer.blocks import FluidLayerBlock
 
     rng = _np.random.default_rng(4)
     n, d = 20, 8
     edges = _np.array(
         [[i, (i + 1) % n] for i in range(n)] + [[i, (i + 7) % n] for i in range(n // 2)]
     )
-    blk = SuperfluidBlock(d, k_neighbors=4, bands=5, cheb_m=10, seed=2)
+    blk = FluidLayerBlock(d, k_neighbors=4, bands=5, cheb_m=10, seed=2)
     x = _T(rng.normal(0, 1, (n, d)))
     L = blk._laplacian(n, edges, _T(rng.normal(0, 0.5, edges.shape[0])))
     bands = blk._bands(L, float(_np.abs(L.data).max()), x)
@@ -645,7 +645,7 @@ def test_override_and_budget():
 
     # the override must also accept a framework Tensor (that is how the
     # model actually hands you its logits)
-    from superfluid.autodiff import Tensor
+    from fluidlayer.autodiff import Tensor
 
     t = Tensor(lg.copy())
     o3 = logit_override(t, want)
@@ -794,8 +794,8 @@ def test_graft():
     """The attachable memory layer: attaching it must change NOTHING, and
     the exact tier must return a token the base model cannot see."""
     print("\n[26] The graft: attaching the layer is a provable no-op")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
@@ -850,8 +850,8 @@ def test_gate():
     override by the model's uncertainty fixes that without a second knob.
     """
     print("\n[27] The gate: the model's own uncertainty")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
@@ -913,8 +913,8 @@ def test_exact_memory():
     """The memory must be EXACT: the mode is kept, the confidence is
     counted, and the corroborated entries survive the eviction."""
     print("\n[28] The exact memory: the mode tracker and the eviction")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     class _Emb:
         def __init__(self, V=32, d=32):
@@ -996,8 +996,8 @@ def test_router_tier():
     (router) tier is the FALLBACK, with the whole stream's reach.
     """
     print("\n[29] The router tier: the fluid as the address space")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, use_router=True, seed=0)
@@ -1041,7 +1041,7 @@ def test_router_tier():
 
 if __name__ == "__main__":
     print("=" * 78)
-    print("SUPERFLUID SELFTEST — verifying the proposal's mathematical claims")
+    print("FLUIDLAYER SELFTEST — verifying the proposal's mathematical claims")
     print("=" * 78)
     test_jamming()
     test_chebyshev()
