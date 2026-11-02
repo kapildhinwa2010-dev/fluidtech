@@ -3,7 +3,7 @@
     "d": 64,
     "ctx": 128,
     "steps": 300,
-    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e13_knn.json"
+    "out": "results/e13_knn.json"
   },
   "base": {
     "loss": 2.6110783595284124,

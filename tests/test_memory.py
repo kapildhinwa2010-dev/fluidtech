@@ -1,6 +1,6 @@
 """The frozen register: exactness, append-only, fail-loud, constant size."""
 
-from superfluid import SLOT_BYTES, FrozenRegister, budget_split, ctx_key
+from fluidlayer import SLOT_BYTES, FrozenRegister, budget_split, ctx_key
 
 
 def test_the_slot_is_20_bytes():

@@ -1,7 +1,7 @@
 """
-superfluid.autodiff — a tiny reverse-mode automatic differentiation engine.
+fluidlayer.autodiff — a tiny reverse-mode automatic differentiation engine.
 
-Pure NumPy, ~1 op set, enough to train the Superfluid stack end-to-end inside
+Pure NumPy, ~1 op set, enough to train the FluidLayer stack end-to-end inside
 this sandbox (no torch available).  Every op has a hand-written backward and
 is verified against finite differences in `selftest.py`.
 

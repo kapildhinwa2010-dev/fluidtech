@@ -1,5 +1,5 @@
 """
-superfluid.model — SuperfluidLM and a param-matched transformer baseline.
+fluidlayer.model — FluidLayerLM and a param-matched transformer baseline.
 Both models share: embedding, learned absolute positions, RMSNorm pre-norm
 residual blocks, tied readout.  The only difference is the block body, so the
 A/B in `train.py` isolates exactly one thing: dense attention vs. the
@@ -10,9 +10,9 @@ from __future__ import annotations
 import numpy as np
 
 from .autodiff import Tensor, concat, softmax_rows
-from .blocks import RMSNorm, SuperfluidBlock
+from .blocks import FluidLayerBlock, RMSNorm
 
-__all__ = ["SuperfluidLM", "TinyTransformer"]
+__all__ = ["FluidLayerLM", "TinyTransformer"]
 
 
 def _collect(module, prefix, out):
@@ -22,14 +22,14 @@ def _collect(module, prefix, out):
     return out
 
 
-class SuperfluidLM:
+class FluidLayerLM:
     def __init__(self, vocab: int, d: int = 64, n_layers: int = 2, n_ctx: int = 128,
                  seed: int = 0, **block_kw):
         rng = np.random.default_rng(seed)
         self.vocab, self.d, self.n_ctx = vocab, d, n_ctx
         self.emb = Tensor(rng.normal(0, 0.02, (vocab, d)))
         self.pos = Tensor(rng.normal(0, 0.01, (n_ctx, d)))
-        self.blocks = [SuperfluidBlock(d, seed=seed + 17 * (i + 1), **block_kw)
+        self.blocks = [FluidLayerBlock(d, seed=seed + 17 * (i + 1), **block_kw)
                        for i in range(n_layers)]
         self.norm = RMSNorm(d)
 

@@ -5,9 +5,9 @@ include requirements.txt
 include Makefile
 include selftest.py
 include run_without_pytest.py
-include superfluid_single.py
-recursive-include superfluid *.py
-include superfluid/py.typed
+include fluidlayer_single.py
+recursive-include fluidlayer *.py
+include fluidlayer/py.typed
 recursive-include docs *.md *.html
 recursive-include examples *.py
 recursive-include experiments *.py

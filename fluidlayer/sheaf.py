@@ -1,7 +1,7 @@
 """
-superfluid.sheaf — Cellular sheaf Laplacians on graphs.
+fluidlayer.sheaf — Cellular sheaf Laplacians on graphs.
 
-The mathematical object that makes "Superfluid" real.
+The mathematical object that makes "FluidLayer" real.
 
 A cellular sheaf F on a graph G assigns:
   * a stalk (vector space) F(v) ~ R^d  to every vertex v

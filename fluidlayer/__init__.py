@@ -1,5 +1,5 @@
 """
-superfluid — a topological "fluid" architecture for sequence models.
+fluidlayer — a topological "fluid" architecture for sequence models.
 Core idea
 Replace the transformer's dense attention with a cellular sheaf diffusion:
 X(t) = exp(-t L_F) X(0),      L_F = delta^T delta   (sheaf Laplacian)
@@ -14,7 +14,7 @@ append-only 20-byte slot format with explicit serialization. These logical
 slot sizes exclude Python object overhead in the attachable reference store.
 """
 from .autodiff import Tensor, concat, softmax_rows, softplus
-from .blocks import RMSNorm, SuperfluidBlock
+from .blocks import FluidLayerBlock, RMSNorm
 from .diffusion import (
                     apply_bands,
                     band_energies,
@@ -45,7 +45,7 @@ from .memory import (
                     fnv1a64,
                     logit_override,
 )
-from .model import SuperfluidLM, TinyTransformer
+from .model import FluidLayerLM, TinyTransformer
 from .sheaf import (
                     balance_residual,
                     build_laplacian,
@@ -70,7 +70,7 @@ from .topology import (
                     unique_edges,
 )
 
-__version__ = "1.2.0"
+__version__ = "2.0.0"
 version = __version__
 
 __all__ = [
@@ -87,7 +87,7 @@ __all__ = [
     "connected_components",
     "hodge_relevance", "hodge_embedding", "hodge_edge_participation",
     "local_density", "persistence_landmarks",
-    "SuperfluidBlock", "RMSNorm", "SuperfluidLM", "TinyTransformer",
+    "FluidLayerBlock", "RMSNorm", "FluidLayerLM", "TinyTransformer",
     "cross_entropy", "cross_entropy_grad", "cross_entropy_tensor",
     "band_decorrelation",
     # --- the exact tier -------------------------------------------------

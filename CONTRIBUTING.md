@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving Superfluid. Contributions should be
+Thanks for your interest in improving FluidLayer. Contributions should be
 measurable, reproducible, and consistent with the project's research scope.
 
 ## Development setup

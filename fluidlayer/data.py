@@ -1,5 +1,5 @@
 """
-superfluid.data — tiny corpora + char-level tokenizer.
+fluidlayer.data — tiny corpora + char-level tokenizer.
 
 Prefers a real public-domain text (Project Gutenberg).  If the sandbox has no
 outbound network access it falls back to a deterministic synthetic corpus so

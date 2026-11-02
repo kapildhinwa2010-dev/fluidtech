@@ -13,13 +13,27 @@ uses [Semantic Versioning](https://semver.org/).
 - Clarified the distinction between the bounded majority-tracking branch
   store and the low-level append-only `FrozenRegister`.
 
+## [2.0.0] - 2026-11-02
+
+### Changed
+
+- Renamed the installable distribution and Python package from
+  the previous name to `fluidlayer`. Update installation commands to
+  `python -m pip install fluidlayer` and imports to `from fluidlayer ...`.
+  This is a breaking change; no legacy import namespace is provided.
+- Renamed the standalone verification bundle and downloadable source
+  archive to use the `fluidlayer` name.
+- Enabled PyPI Trusted Publishing for tagged releases. Configure the PyPI
+  publisher for this repository, `.github/workflows/release.yml`, and the
+  `pypi` GitHub Actions environment before publishing.
+
 ## [1.2.0] - 2026-10-29
 
 ### Added
 
-- `superfluid/graft.py`: NumPy attachable memory layer with an exact store
+- `fluidlayer/graft.py`: NumPy attachable memory layer with an exact store
   and a lossy diffusion tier.
-- `superfluid/torch_graft.py`: optional PyTorch adapter for pretrained
+- `fluidlayer/torch_graft.py`: optional PyTorch adapter for pretrained
   language models.
 - Graft benchmarks for attach behavior, perplexity, and cross-window recall.
 - A byte-level BPE tokenizer and real-text experiments.

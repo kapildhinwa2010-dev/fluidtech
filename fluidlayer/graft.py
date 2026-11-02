@@ -1,5 +1,5 @@
 """
-superfluid.graft — the attachable memory layer.
+fluidlayer.graft — the attachable memory layer.
 
 WHAT THIS IS
 ------------

@@ -2,8 +2,8 @@
 import numpy as np
 import pytest
 
-from superfluid import SAABranch, TinyTransformer
-from superfluid.graft import ctx_hash
+from fluidlayer import SAABranch, TinyTransformer
+from fluidlayer.graft import ctx_hash
 
 
 @pytest.fixture
@@ -105,7 +105,7 @@ def test_the_rebuild_state_is_the_diffusion_of_the_history_writes(model):
 
 def test_bad_arguments_are_refused():
     """A production layer refuses a misconfiguration loudly."""
-    from superfluid import TinyTransformer
+    from fluidlayer import TinyTransformer
     m = TinyTransformer(32, d=32, n_layers=1, n_ctx=8, seed=0)
     for kwargs in ({"M": 0}, {"r": 0}, {"capacity": 0},
                    {"state_mode": "nonsense"}, {"read_gain": "nonsense"},

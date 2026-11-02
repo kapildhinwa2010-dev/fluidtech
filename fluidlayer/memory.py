@@ -1,5 +1,5 @@
 """
-superfluid.memory — the FROZEN REGISTER and the geometry-addressed memory graft.
+fluidlayer.memory — the FROZEN REGISTER and the geometry-addressed memory graft.
 This module implements the two ideas that make the fluid trustworthy:
 A frozen register (L1): a bounded append-only table of token IDs. A value
 is stored as an INTEGER token id, so a retrieved value is bit-identical to

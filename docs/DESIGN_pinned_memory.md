@@ -33,7 +33,7 @@ The measured results are in §9.5.
 
 The question was: "freeze a token in the layer, go token-wise, add a special
 extraction tool — can we get exact tokens out?"
-The trap: the Superfluid state is a diffusion. Diffusion smears. The
+The trap: the FluidLayer state is a diffusion. Diffusion smears. The
 moment a token's value enters the sheaf Laplacian, it is mixed with every
 neighbouring anchor and is provably no longer exact. Freezing a token
 inside the fluid is therefore self-defeating: you are asking a smearing
@@ -42,7 +42,7 @@ The fix: freeze it outside the fluid. A frozen token must never enter
 the diffusion. It lives in a separate, append-only register, and the
 fluid's job is reduced from storing to addressing.
 This is the entire design in one move:
-Superfluid stops being a memory. It becomes an index.
+FluidLayer stops being a memory. It becomes an index.
 The memory moves to a write-once register; the fluid answers where, and
 the register answers what.
 And the reason this is not a retreat: the 97.3 % mechanism result was always a
@@ -83,7 +83,7 @@ keep.
          └──────────────────────────────────────────────────┘
                ▲ slot id
          ┌────┴─────────────────────────────────────────────┐
- L2  ──▶ │  SUPERFLUID STATE  (bounded, LOSSY)              │  16 B/anchor
+ L2  ──▶ │  FLUIDLAYER STATE  (bounded, LOSSY)              │  16 B/anchor
          │  S ∈ R^{M×r}: routing prototypes + gist          │  no identity
          │  M=1024, r=4..8                                   │
          └──────────────────────────────────────────────────┘
@@ -352,7 +352,7 @@ survives. Publish fast.
 
 | phase|work|output|
 | ---|---|---|
-| P0 (2 days)|superfluid/memory.py :  FrozenRegister  (append-only, ctx-key, verify, trust bit) +  promote()  /  recall()  + logit override|unit-tested, in the 21-check harness|
+| P0 (2 days)|fluidlayer/memory.py :  FrozenRegister  (append-only, ctx-key, verify, trust bit) +  promote()  /  recall()  + logit override|unit-tested, in the 21-check harness|
 | P1 (2 days)|SAA mode in  blocks.py : dual-role anchor (address + gist),  r_addr:r_gist  split|E5a sweep|
 | P2 (3 days)|experiments/pretrain_prior.py  → domain prior with a  landmark codebook  (exact spans)|86 KB → new artifact, E5 harness|
 | P3 (3 days)|persistence-based landmark selection over the corpus|E5b, E5c|

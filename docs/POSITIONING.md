@@ -184,7 +184,7 @@ project is reframed around  geometry  rather than  topology .  Full analysis
 in  `docs/NEGATIVE-RESULTS.md`  N1.
 Gate 1b — Does a training-free prior help a frozen LM? → ⚠️ ANSWERED: BARELY
 Measured  ( `results/e1_prior.json` ): a 2.4 KB training-free domain prior
-improves a frozen SuperfluidLM by  0.0060 nats  on the well-trained model
+improves a frozen FluidLayerLM by  0.0060 nats  on the well-trained model
 (0.0477 on a weak one) — below the pre-registered  0.02  bar — while a
 plain  23 KB unigram table  improves it by  0.0382 .  The benefit
  shrinks as the model improves .  The downloadable-prior product therefore
@@ -194,7 +194,7 @@ only makes sense for  small, on-device  models, not good ones.
 
 | avoid|why|instead|
 | ---|---|---|
-| Superfluid|superfluid.sh  exists in AI tooling; also common in physics-ML|pick something distinct — check availability before creating the repo|
+| FluidLayer|fluidlayer.sh  exists in AI tooling; also common in physics-ML|pick something distinct — check availability before creating the repo|
 | Landmark|arXiv 2610.00019 owns  "topologically relevant  landmark  selection "|"structural mode ",  "persistent core ",  "skeleton "|
 | Sheaf -anything|SNN, SheafAN, NSD, DNSD, sheaf surveys — the word is saturated|describe the  mechanism , not the tool:  "geometry-addressed memory "|
 

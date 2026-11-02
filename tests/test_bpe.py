@@ -1,6 +1,6 @@
 """The byte-level BPE tokenizer: it must be lossless."""
 
-from superfluid.bpe import train_bpe
+from fluidlayer.bpe import train_bpe
 
 
 def test_a_tiny_tokenizer_round_trips():

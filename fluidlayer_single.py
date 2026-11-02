@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Generated single-file entry point for the Superfluid package."""
+"""Generated single-file entry point for the FluidLayer package."""
 
 import os
 import sys
 import types
 
 _SOURCES = r'''
-#--- FILE: superfluid/__init__.py ---
+#--- FILE: fluidlayer/__init__.py ---
 """
-superfluid — a topological "fluid" architecture for sequence models.
+fluidlayer — a topological "fluid" architecture for sequence models.
 Core idea
 Replace the transformer's dense attention with a cellular sheaf diffusion:
 X(t) = exp(-t L_F) X(0),      L_F = delta^T delta   (sheaf Laplacian)
@@ -16,20 +16,14 @@ The fluid "freezes" the data's geometry onto the space of global sections
 (the Hodge limit).  A multi-scale band filter bank recovers the transient,
 a top-k route head restores sharp retrieval, and a single pointwise
 nonlinearity keeps the model from collapsing to a linear map.
-Second idea: the EXACT tier
-A diffusion smears, so an exact value must never live inside one.  The
-`memory` module splits the memory in two:
-L1  FROZEN REGISTER -- an append-only, write-once table of exact facts
-(20 bytes each).  The value is an INTEGER token id, so a recall is
-bit-exact rather than approximate.
-L2  SUPERFLUID STATE -- a constant-size (M x r) state that carries the
-aggregate.  It never grows, no matter how much is streamed through it.
-L3  an external source -- a 6-byte pointer, unbounded, costs a call.
-The two tiers are separate on purpose: the fluid answers WHERE, the register
-answers WHAT.
+Exact token IDs live outside the diffused state. The attachable `SAABranch`
+uses a bounded, majority-tracking exact store alongside its constant-size
+fluid state. The low-level `FrozenRegister` helper separately provides an
+append-only 20-byte slot format with explicit serialization. These logical
+slot sizes exclude Python object overhead in the attachable reference store.
 """
 from .autodiff import Tensor, concat, softmax_rows, softplus
-from .blocks import RMSNorm, SuperfluidBlock
+from .blocks import FluidLayerBlock, RMSNorm
 from .diffusion import (
                     apply_bands,
                     band_energies,
@@ -60,7 +54,7 @@ from .memory import (
                     fnv1a64,
                     logit_override,
 )
-from .model import SuperfluidLM, TinyTransformer
+from .model import FluidLayerLM, TinyTransformer
 from .sheaf import (
                     balance_residual,
                     build_laplacian,
@@ -85,7 +79,7 @@ from .topology import (
                     unique_edges,
 )
 
-__version__ = "1.2.0"
+__version__ = "2.0.0"
 version = __version__
 
 __all__ = [
@@ -102,7 +96,7 @@ __all__ = [
     "connected_components",
     "hodge_relevance", "hodge_embedding", "hodge_edge_participation",
     "local_density", "persistence_landmarks",
-    "SuperfluidBlock", "RMSNorm", "SuperfluidLM", "TinyTransformer",
+    "FluidLayerBlock", "RMSNorm", "FluidLayerLM", "TinyTransformer",
     "cross_entropy", "cross_entropy_grad", "cross_entropy_tensor",
     "band_decorrelation",
     # --- the exact tier -------------------------------------------------
@@ -110,11 +104,11 @@ __all__ = [
     "ctx_key", "fnv1a64", "embedding_signature", "SLOT_BYTES",
 ]
 
-#--- FILE: superfluid/autodiff.py ---
+#--- FILE: fluidlayer/autodiff.py ---
 """
-superfluid.autodiff — a tiny reverse-mode automatic differentiation engine.
+fluidlayer.autodiff — a tiny reverse-mode automatic differentiation engine.
 
-Pure NumPy, ~1 op set, enough to train the Superfluid stack end-to-end inside
+Pure NumPy, ~1 op set, enough to train the FluidLayer stack end-to-end inside
 this sandbox (no torch available).  Every op has a hand-written backward and
 is verified against finite differences in `selftest.py`.
 
@@ -584,11 +578,11 @@ def softmax_rows(x: Tensor, mask: np.ndarray | None = None) -> Tensor:
     out._backward = bw
     return out
 
-#--- FILE: superfluid/sheaf.py ---
+#--- FILE: fluidlayer/sheaf.py ---
 """
-superfluid.sheaf — Cellular sheaf Laplacians on graphs.
+fluidlayer.sheaf — Cellular sheaf Laplacians on graphs.
 
-The mathematical object that makes "Superfluid" real.
+The mathematical object that makes "FluidLayer" real.
 
 A cellular sheaf F on a graph G assigns:
   * a stalk (vector space) F(v) ~ R^d  to every vertex v
@@ -733,9 +727,9 @@ def component_balance(L: np.ndarray, adj: np.ndarray) -> np.ndarray:
         out.append(float(np.max(np.abs(res))))
     return np.array(out)
 
-#--- FILE: superfluid/diffusion.py ---
+#--- FILE: fluidlayer/diffusion.py ---
 """
-superfluid.diffusion — the "freezing" operator.
+fluidlayer.diffusion — the "freezing" operator.
 
 Everything needed to run the fluid in a forward pass, in closed form:
 
@@ -999,9 +993,9 @@ def exact_exp_action(L: np.ndarray, t: float, X: np.ndarray) -> np.ndarray:
     w, V = np.linalg.eigh(L)
     return V @ (np.exp(-t * w)[:, None] * (V.T @ X))
 
-#--- FILE: superfluid/topology.py ---
+#--- FILE: fluidlayer/topology.py ---
 """
-superfluid.topology — building the data's geometry in one forward pass.
+fluidlayer.topology — building the data's geometry in one forward pass.
 
 This module implements the "instant geometry" of the proposal:
 
@@ -1295,9 +1289,9 @@ def topo_descriptor(n: int, edges: np.ndarray, weights: np.ndarray) -> np.ndarra
         dtype=np.float64,
     )
 
-#--- FILE: superfluid/blocks.py ---
+#--- FILE: fluidlayer/blocks.py ---
 """
-superfluid.blocks — the Superfluid block.
+fluidlayer.blocks — the FluidLayer block.
 
 One block, five stages.  Every stage exists to fix a named weakness of the
 naive "replace attention with diffusion" idea:
@@ -1340,7 +1334,7 @@ from .topology import (
     topo_descriptor,
 )
 
-__all__ = ["SuperfluidBlock", "RMSNorm", "softplus"]
+__all__ = ["FluidLayerBlock", "RMSNorm", "softplus"]
 
 
 class RMSNorm:
@@ -1355,7 +1349,7 @@ class RMSNorm:
         return n * self.g
 
 
-class SuperfluidBlock:
+class FluidLayerBlock:
     def __init__(self, d: int, k_neighbors: int = 8, bands: int = 6, cheb_m: int = 12,
                  t_min: float = 1e-3, t_max: float = 1e3, edge_hidden: int = 16,
                  use_route_head: bool = True, seed: int = 0,
@@ -1572,13 +1566,13 @@ class SuperfluidBlock:
         }
         return out
 
-#--- FILE: superfluid/memory.py ---
+#--- FILE: fluidlayer/memory.py ---
 """
-superfluid.memory — the FROZEN REGISTER and the geometry-addressed memory graft.
+fluidlayer.memory — the FROZEN REGISTER and the geometry-addressed memory graft.
 This module implements the two ideas that make the fluid trustworthy:
-A frozen register (L1): an append-only, write-once table of EXACT
-facts.  A fact's value is stored as an INTEGER token id, so a retrieved
-value is bit-identical to the source -- not float-approximate.  The
+A frozen register (L1): a bounded append-only table of token IDs. A value
+is stored as an INTEGER token id, so a retrieved value is bit-identical to
+the stored ID -- not float-approximate. The
 register is never diffused, so the fluid's smoothing cannot destroy it.
 A sheaf memory adapter (L2, the "graft"): a constant-size state
 S in R^{M x r} plus a static prototype codebook.  The adapter routes
@@ -1709,8 +1703,8 @@ class FrozenRegister:
         """Append a NEW slot.  Returns the slot index.
 
         Append-only means a fact that is promoted twice gets two slots and
-        the *latest* wins on recall: that is the versioning mechanism, and it
-        is also what makes the register an append-only audit log.
+        the *latest* wins on recall. The register is not a tamper-evident
+        audit log.
         """
         if self.n >= self.capacity:
             raise MemoryError(
@@ -2099,9 +2093,9 @@ class SheafMemoryAdapter:
         })
         return s
 
-#--- FILE: superfluid/model.py ---
+#--- FILE: fluidlayer/model.py ---
 """
-superfluid.model — SuperfluidLM and a param-matched transformer baseline.
+fluidlayer.model — FluidLayerLM and a param-matched transformer baseline.
 Both models share: embedding, learned absolute positions, RMSNorm pre-norm
 residual blocks, tied readout.  The only difference is the block body, so the
 A/B in `train.py` isolates exactly one thing: dense attention vs. the
@@ -2112,9 +2106,9 @@ from __future__ import annotations
 import numpy as np
 
 from .autodiff import Tensor, concat, softmax_rows
-from .blocks import RMSNorm, SuperfluidBlock
+from .blocks import FluidLayerBlock, RMSNorm
 
-__all__ = ["SuperfluidLM", "TinyTransformer"]
+__all__ = ["FluidLayerLM", "TinyTransformer"]
 
 
 def _collect(module, prefix, out):
@@ -2124,14 +2118,14 @@ def _collect(module, prefix, out):
     return out
 
 
-class SuperfluidLM:
+class FluidLayerLM:
     def __init__(self, vocab: int, d: int = 64, n_layers: int = 2, n_ctx: int = 128,
                  seed: int = 0, **block_kw):
         rng = np.random.default_rng(seed)
         self.vocab, self.d, self.n_ctx = vocab, d, n_ctx
         self.emb = Tensor(rng.normal(0, 0.02, (vocab, d)))
         self.pos = Tensor(rng.normal(0, 0.01, (n_ctx, d)))
-        self.blocks = [SuperfluidBlock(d, seed=seed + 17 * (i + 1), **block_kw)
+        self.blocks = [FluidLayerBlock(d, seed=seed + 17 * (i + 1), **block_kw)
                        for i in range(n_layers)]
         self.norm = RMSNorm(d)
 
@@ -2242,9 +2236,9 @@ class TinyTransformer:
         _collect(self.norm, "norm", p)
         return p
 
-#--- FILE: superfluid/losses.py ---
+#--- FILE: fluidlayer/losses.py ---
 """
-superfluid.losses — training objective for the fluid stack.
+fluidlayer.losses — training objective for the fluid stack.
 
   L_total = CE(next-token)
           + w_E  * sheaf energy        (smoothness / consistency on edges)
@@ -2330,9 +2324,9 @@ def gap_bonus(L) -> float:
     except Exception:
         return 0.0
 
-#--- FILE: superfluid/optim.py ---
+#--- FILE: fluidlayer/optim.py ---
 """
-superfluid.optim — Adam, implemented locally (no torch in this environment).
+fluidlayer.optim — Adam, implemented locally (no torch in this environment).
 """
 
 from __future__ import annotations
@@ -2389,9 +2383,9 @@ class Adam:
         p = (step - warmup) / max(1, total - warmup)
         return self.lr * (floor + (1 - floor) * 0.5 * (1 + np.cos(np.pi * min(p, 1.0))))
 
-#--- FILE: superfluid/data.py ---
+#--- FILE: fluidlayer/data.py ---
 """
-superfluid.data — tiny corpora + char-level tokenizer.
+fluidlayer.data — tiny corpora + char-level tokenizer.
 
 Prefers a real public-domain text (Project Gutenberg).  If the sandbox has no
 outbound network access it falls back to a deterministic synthetic corpus so
@@ -2483,9 +2477,9 @@ def batchify(tokens: np.ndarray, batch_size: int) -> np.ndarray:
     nb = len(tokens) // batch_size
     return tokens[: nb * batch_size].reshape(batch_size, nb)
 
-#--- FILE: superfluid/graft.py ---
+#--- FILE: fluidlayer/graft.py ---
 """
-superfluid.graft — the attachable memory layer.
+fluidlayer.graft — the attachable memory layer.
 
 WHAT THIS IS
 ------------
@@ -2574,8 +2568,8 @@ def _knn_edges(X: np.ndarray, k: int) -> np.ndarray:
 class _ModeStore:
     """A content-keyed store that keeps the MAJORITY value and a confidence.
 
-    The counts fit in the frozen register's existing `meta uint16`, so a
-    packed slot stays 20 bytes.
+    The counts fit in the frozen register's `meta uint16`; the logical
+    packed-slot payload is 20 bytes, excluding Python dictionary overhead.
     """
 
     __slots__ = ("value", "support", "disagree", "order", "capacity")
@@ -2754,7 +2748,6 @@ class SAABranch:
         # cluster-level precision.  "the fluid answers WHERE, the register
         # answers WHAT" -- made literal.
         self.anchor_store = _ModeStore(capacity=M)
-        self.store_order: list[int] = []               # FIFO eviction order
         self._buf: list[int] = []                      # rolling context window
         self.write_calls = 0
         self.tokens_written = 0
@@ -2800,8 +2793,9 @@ class SAABranch:
 
     @property
     def state_bytes(self) -> int:
-        """Constant runtime state: the diffusion state + the exact store."""
-        return self.state.size * 8 + len(self.store) * 20
+        """Logical payload estimate; excludes Python object overhead."""
+        return (self.state.size * 8 + len(self.store) * 20
+                + len(self.anchor_store) * 20)
 
     def params(self) -> dict:
         p = {
@@ -3226,9 +3220,9 @@ def GRAFT_STATE_BYTES(M: int, r: int) -> int:
     """Bytes of persistent state for M anchors of rank r (exact tier + fluid)."""
     return M * r * 8 + 20 * 819
 
-#--- FILE: superfluid/gpt2_tokenizer.py ---
+#--- FILE: fluidlayer/gpt2_tokenizer.py ---
 """
-superfluid.gpt2_tokenizer — the GPT-2 byte-level BPE, in pure Python.
+fluidlayer.gpt2_tokenizer — the GPT-2 byte-level BPE, in pure Python.
 
 WHY THIS FILE EXISTS
 --------------------
@@ -3355,9 +3349,9 @@ class GPT2Tokenizer:
     def vocab_size(self) -> int:
         return len(self.encoder)
 
-#--- FILE: superfluid/bpe.py ---
+#--- FILE: fluidlayer/bpe.py ---
 """
-superfluid/bpe.py — a byte-level BPE tokenizer, in pure Python (no downloads).
+fluidlayer/bpe.py — a byte-level BPE tokenizer, in pure Python (no downloads).
 
 WHY THIS EXISTS
 ---------------
@@ -3533,7 +3527,7 @@ if __name__ == "__main__":
 #--- FILE: selftest.py ---
 #!/usr/bin/env python3
 """
-selftest.py — numerical verification of every claim the Superfluid proposal makes.
+selftest.py — numerical verification of every claim the FluidLayer proposal makes.
 
 Each check either PASSES (numerically confirmed) or FAILS.  Results are written
 to results/selftest.json so the report quotes measured numbers, not claims.
@@ -3579,11 +3573,11 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from superfluid import (
+from fluidlayer import (
     SLOT_BYTES,
+    FluidLayerLM,
     FrozenRegister,
     SheafMemoryAdapter,
-    SuperfluidLM,
     band_times,
     betti_numbers,
     budget_split,
@@ -3602,7 +3596,7 @@ from superfluid import (
     power_iteration_lmax,
     spectral_summary,
 )
-from superfluid.autodiff import Tensor
+from fluidlayer.autodiff import Tensor
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "results")
 os.makedirs(OUT, exist_ok=True)
@@ -3940,14 +3934,14 @@ def test_autodiff():
     )
 
     # end-to-end check on the real model
-    m = SuperfluidLM(
+    m = FluidLayerLM(
         vocab=11, d=8, n_layers=1, n_ctx=12, k_neighbors=3, bands=3, cheb_m=4, seed=4
     )
     params = m.params()
     idx = np.array([1, 2, 3, 4, 5, 6], dtype=np.int64)
     tgt = np.array([2, 3, 4, 5, 6, 7], dtype=np.int64)
 
-    from superfluid.losses import cross_entropy_tensor
+    from fluidlayer.losses import cross_entropy_tensor
 
     def model_loss_t():
         return cross_entropy_tensor(m.forward(idx), tgt)
@@ -3967,7 +3961,7 @@ def test_autodiff():
     fd = _fd_grad(model_loss, params[key].data, eps=1e-6)
     e = float(np.max(np.abs(g_analytic - fd)) / (np.max(np.abs(fd)) + 1e-12))
     check(
-        "autodiff  SuperfluidLM end-to-end gradient matches finite differences",
+        "autodiff  FluidLayerLM end-to-end gradient matches finite differences",
         e < 1e-3,
         f"relative max error on {key} = {e:.2e}  (loss={val:.4f})",
     )
@@ -4014,16 +4008,16 @@ def test_block_laplacian():
     print("\n[14] Block Laplacian == numpy reference, and the fluid is not a no-op")
     import numpy as _np
 
-    from superfluid.autodiff import Tensor as _T
-    from superfluid.blocks import SuperfluidBlock
-    from superfluid.sheaf import build_laplacian as np_build_laplacian
+    from fluidlayer.autodiff import Tensor as _T
+    from fluidlayer.blocks import FluidLayerBlock
+    from fluidlayer.sheaf import build_laplacian as np_build_laplacian
 
     rng = _np.random.default_rng(5)
     n, d = 16, 8
     edges = _np.array([[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 0], [2, 5], [7, 9]])
     alpha = rng.normal(0, 0.7, edges.shape[0])
     Lref = np_build_laplacian(n, edges, alpha)
-    blk = SuperfluidBlock(d, k_neighbors=3, bands=3, cheb_m=6, seed=1)
+    blk = FluidLayerBlock(d, k_neighbors=3, bands=3, cheb_m=6, seed=1)
     Lblk = blk._laplacian(n, edges, _T(alpha))
     err = float(_np.abs(Lblk.data - Lref).max())
     check(
@@ -4043,7 +4037,7 @@ def test_block_laplacian():
     )
 
     # the harmonic branch must be the per-component mean
-    from superfluid.topology import connected_components as _cc
+    from fluidlayer.topology import connected_components as _cc
 
     lab, nc = _cc(n, edges)
     means = _np.zeros((nc, d))
@@ -4070,15 +4064,15 @@ def test_band_stability():
     (~1e6) and made the whole model diverge.
     """
     print("\n[15] Filter-bank stability (regression: exp(-alpha) sign error)")
-    from superfluid.autodiff import Tensor as _T
-    from superfluid.blocks import SuperfluidBlock
+    from fluidlayer.autodiff import Tensor as _T
+    from fluidlayer.blocks import FluidLayerBlock
 
     rng = _np.random.default_rng(4)
     n, d = 20, 8
     edges = _np.array(
         [[i, (i + 1) % n] for i in range(n)] + [[i, (i + 7) % n] for i in range(n // 2)]
     )
-    blk = SuperfluidBlock(d, k_neighbors=4, bands=5, cheb_m=10, seed=2)
+    blk = FluidLayerBlock(d, k_neighbors=4, bands=5, cheb_m=10, seed=2)
     x = _T(rng.normal(0, 1, (n, d)))
     L = blk._laplacian(n, edges, _T(rng.normal(0, 0.5, edges.shape[0])))
     bands = blk._bands(L, float(_np.abs(L.data).max()), x)
@@ -4178,7 +4172,7 @@ def test_override_and_budget():
 
     # the override must also accept a framework Tensor (that is how the
     # model actually hands you its logits)
-    from superfluid.autodiff import Tensor
+    from fluidlayer.autodiff import Tensor
 
     t = Tensor(lg.copy())
     o3 = logit_override(t, want)
@@ -4327,8 +4321,8 @@ def test_graft():
     """The attachable memory layer: attaching it must change NOTHING, and
     the exact tier must return a token the base model cannot see."""
     print("\n[26] The graft: attaching the layer is a provable no-op")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
@@ -4383,8 +4377,8 @@ def test_gate():
     override by the model's uncertainty fixes that without a second knob.
     """
     print("\n[27] The gate: the model's own uncertainty")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, seed=0)
@@ -4446,8 +4440,8 @@ def test_exact_memory():
     """The memory must be EXACT: the mode is kept, the confidence is
     counted, and the corroborated entries survive the eviction."""
     print("\n[28] The exact memory: the mode tracker and the eviction")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     class _Emb:
         def __init__(self, V=32, d=32):
@@ -4529,8 +4523,8 @@ def test_router_tier():
     (router) tier is the FALLBACK, with the whole stream's reach.
     """
     print("\n[29] The router tier: the fluid as the address space")
-    from superfluid.graft import SAABranch
-    from superfluid.model import TinyTransformer
+    from fluidlayer.graft import SAABranch
+    from fluidlayer.model import TinyTransformer
 
     m = TinyTransformer(32, d=32, n_layers=2, n_ctx=32, seed=0)
     br = SAABranch(M=16, r=4, d=32, emb=m.emb, ctx_len=1, use_router=True, seed=0)
@@ -4574,7 +4568,7 @@ def test_router_tier():
 
 if __name__ == "__main__":
     print("=" * 78)
-    print("SUPERFLUID SELFTEST — verifying the proposal's mathematical claims")
+    print("FLUIDLAYER SELFTEST — verifying the proposal's mathematical claims")
     print("=" * 78)
     test_jamming()
     test_chebyshev()
@@ -4625,10 +4619,10 @@ if __name__ == "__main__":
 
 
 def _build_package():
-    package = types.ModuleType("superfluid")
+    package = types.ModuleType("fluidlayer")
     package.__path__ = []
-    package.__package__ = "superfluid"
-    sys.modules["superfluid"] = package
+    package.__package__ = "fluidlayer"
+    sys.modules["fluidlayer"] = package
     blocks = {}
     current = None
     for line in _SOURCES.splitlines():
@@ -4647,8 +4641,8 @@ def _build_package():
             exec(compile("\n".join(blocks[path]), path, "exec"), package.__dict__)
             continue
         name = path.rsplit("/", 1)[-1][:-3]
-        module = types.ModuleType(f"superfluid.{name}")
-        module.__package__ = "superfluid"
+        module = types.ModuleType(f"fluidlayer.{name}")
+        module.__package__ = "fluidlayer"
         module.__file__ = path
         sys.modules[module.__name__] = module
         exec(compile("\n".join(blocks[path]), path, "exec"), module.__dict__)

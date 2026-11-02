@@ -1,4 +1,4 @@
-# Superfluid -- a constant-size exact memory tier for LLMs.
+# FluidLayer -- a constant-size exact memory tier for LLMs.
 #
 #   make test        self-verification and unit tests
 #   make quick       a fast smoke run of every experiment
@@ -18,7 +18,7 @@ help:
 
 test: ## run the self-verification checks
 	$(PY) selftest.py
-	$(PY) superfluid_single.py --selftest
+	$(PY) fluidlayer_single.py --selftest
 	$(PY) -m pytest -q tests
 
 quick: ## a fast smoke run of every experiment
@@ -31,8 +31,8 @@ bundle: ## rebuild the single-file bundle
 	$(PY) tools/bundle_single_file.py
 
 lint: ## compile check + ruff (if installed)
-	$(PY) -m compileall -q superfluid experiments tools tests examples selftest.py run_without_pytest.py
-	$(PY) -m ruff check superfluid experiments tools tests examples selftest.py run_without_pytest.py
+	$(PY) -m compileall -q fluidlayer experiments tools tests examples selftest.py run_without_pytest.py
+	$(PY) -m ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py
 
 artifacts: ## rebuild the downloadable prior artifact
 	$(PY) experiments/pretrain_prior.py --synthetic --tokens 200000

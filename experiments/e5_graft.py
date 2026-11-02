@@ -73,7 +73,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, ROOT)
 
-from superfluid.memory import (
+from fluidlayer.memory import (
     SLOT_BYTES,
     FrozenRegister,
     SheafMemoryAdapter,
@@ -81,7 +81,7 @@ from superfluid.memory import (
     embedding_signature,
     logit_override,
 )
-from superfluid.topology import (
+from fluidlayer.topology import (
     hodge_edge_participation,
     hodge_embedding,
     hodge_relevance,

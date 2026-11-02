@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generated single-file entry point for the Superfluid package."""
+"""Generated single-file entry point for the FluidLayer package."""
 
 import os
 import sys
@@ -11,10 +11,10 @@ _SOURCES = r'''
 
 
 def _build_package():
-    package = types.ModuleType("superfluid")
+    package = types.ModuleType("fluidlayer")
     package.__path__ = []
-    package.__package__ = "superfluid"
-    sys.modules["superfluid"] = package
+    package.__package__ = "fluidlayer"
+    sys.modules["fluidlayer"] = package
     blocks = {}
     current = None
     for line in _SOURCES.splitlines():
@@ -33,8 +33,8 @@ def _build_package():
             exec(compile("\n".join(blocks[path]), path, "exec"), package.__dict__)
             continue
         name = path.rsplit("/", 1)[-1][:-3]
-        module = types.ModuleType(f"superfluid.{name}")
-        module.__package__ = "superfluid"
+        module = types.ModuleType(f"fluidlayer.{name}")
+        module.__package__ = "fluidlayer"
         module.__file__ = path
         sys.modules[module.__name__] = module
         exec(compile("\n".join(blocks[path]), path, "exec"), module.__dict__)

@@ -5,7 +5,7 @@
     "steps": 400,
     "ctx": 128,
     "d": 64,
-    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e11_exact.json"
+    "out": "results/e11_exact.json"
   },
   "e11a_recall": {
     "the soft gate alone (RECOMMENDED)": 1.0,

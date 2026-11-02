@@ -1,4 +1,4 @@
-# Comparison — Superfluid and bounded memory approaches
+# Comparison — FluidLayer and bounded memory approaches
 
 Reference config: Llama-3.1 (GQA, 8 KV heads, head_dim 128, fp16 KV).
 Every number is computed from published configs — these are arithmetic
@@ -295,8 +295,8 @@ fact, the second half is conditional.
 
 ## 11. The verdict
 
-The Superfluid layer is not a better attention. It is a different memory
-tier, and the comparison is not "superfluid vs transformer" but
+The FluidLayer layer is not a better attention. It is a different memory
+tier, and the comparison is not "fluidlayer vs transformer" but
 "which tier for which part of the context".
 The honest, defensible, arithmetic-backed claim:
 KV cache is the binding constraint on long-context serving from 32K

@@ -27,7 +27,7 @@ Equivalent direct commands are:
 
 ```bash
 python selftest.py
-python superfluid_single.py --selftest
+python fluidlayer_single.py --selftest
 python run_without_pytest.py
 python -m pytest -q tests
 ```

@@ -11,7 +11,7 @@
     "r": 8,
     "ctx_len": 12,
     "seed": 0,
-    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e6_graft.json"
+    "out": "results/e6_graft.json"
   },
   "e6a_attach": {
     "logits_bit_identical": true,

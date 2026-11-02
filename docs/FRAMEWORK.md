@@ -1,4 +1,4 @@
-# Superfluid Framework v1.0 — Historical specification
+# FluidLayer Framework v1.0 — Historical specification
 
 > **Historical design note:** this is not a current implementation contract.
 > For current behavior and limitations, see [the API reference](API.md) and
@@ -16,7 +16,7 @@ and experiment outputs.
 A transformer layer spends its budget on two things: dense weight matrices
 (the FFN) and quadratic attention (the context mixing). The attention is
 what makes long context expensive and what makes retrieval possible.
-Superfluid replaces the attention with a geometric operator stack:
+FluidLayer replaces the attention with a geometric operator stack:
 
 ```text
 X(t) = exp(-t L_F) X(0),        L_F = δᵀδ      (sheaf Laplacian)
@@ -38,13 +38,13 @@ fluid, sharp selection from a sparse route head — is the whole architecture.
 ## 1. Module map
 
 ```text
-SuperfluidLM
+FluidLayerLM
  │
  ├── Embedding  E : ℝ^|V| → ℝ^d            (tied readout)
  ├── Positional  P : ℝ^n_ctx → ℝ^d         (learned absolute; order also enters
  │                                           the topology via the chain edges)
  │
- ├── × L  SuperfluidBlock
+ ├── × L  FluidLayerBlock
  │      │
  │      ├── ① ROUTER      top-k content routing → semantic edges
  │      │                Q,K = hW_Q, hW_K ; scores = QKᵀ/√d ; masked ; top-k
@@ -127,7 +127,7 @@ def block(h):                                  # h: (n, d)
 | L1|‖e^{-tL}u‖ ≤ e^{-λ₂t}‖u‖  for  u ⊥ ker(L)|selftest.py  check 1|✅|
 | L2|t_jam = ln(1/ε)/λ₂  is an  upper bound  on the freezing time|check 2|✅|
 | L3|Chebyshev degree  m = O(√κ · ln(1/ε))  suffices; measured  m=16 → 9.4e-7  error at κ=14.8|check 3|✅|
-| L4|a purely linear Superfluid  cannot  fit XOR (0.50 accuracy); adding one pointwise nonlinearity  can  (1.00)|checks 4–5|✅|
+| L4|a purely linear FluidLayer  cannot  fit XOR (0.50 accuracy); adding one pointwise nonlinearity  can  (1.00)|checks 4–5|✅|
 | L5|the frozen state has rank = #components; the band bank restores the signal (2.8e-6 vs 0.962 error)|checks 6–7|✅|
 
 Plus: G-balance phase transition (check 8), contraction certificate (9),
@@ -176,7 +176,7 @@ between arms; nothing else is trainable.
 
 | aggregator|sign accuracy|RMSE|vs constant baseline|wall clock|
 | ---|---|---|---|---|
-| Superfluid (the fluid)|97.3%|0.015|0.126|95 s|
+| FluidLayer (the fluid)|97.3%|0.015|0.126|95 s|
 | Attention (causal)|100.0%|0.000|0.126|4 s|
 | Local, R = 4|65.6%|0.113|0.126|1 s|
 | Local, R = 8|71.0%|0.102|0.126|1 s|
@@ -231,12 +231,12 @@ batch 16, NumPy.
 
 | model|params|final val (nats/char)|best val|wall clock|
 | ---|---|---|---|---|
-| Superfluid|71,408|2.7397|2.6181|340 s|
+| FluidLayer|71,408|2.7397|2.6181|340 s|
 | Transformer|116,544|2.6331|2.5401|95 s|
 
 Read this honestly. At this scale the transformer is ~0.08–0.10 nats
-better despite the Superfluid having 39 % fewer parameters, and the
-Superfluid is 3.6× slower in wall clock. Two things to keep separate:
+better despite the FluidLayer having 39 % fewer parameters, and the
+FluidLayer is 3.6× slower in wall clock. Two things to keep separate:
 the wall-clock gap is an implementation artefact — dense `O(n²)`
 Laplacians, a Python loop over the batch, no fused kernels. A sparse Torch
 implementation removes most of it;
@@ -250,7 +250,7 @@ for local aggregators).
 
 ## 7. Cost model (per token, per layer)
 
-| component|Superfluid|Transformer|
+| component|FluidLayer|Transformer|
 | ---|---|---|
 | projections|8d²|8d²|
 | context mixing|4kd  (k=16)|4nd|
@@ -267,7 +267,7 @@ topology the decode state is constant (16 KB) instead of a growing KV cache
 (488 GB at 1M context).
 Param-matched totals (D ≈ 44B, 470B tokens, 512×H100 @ 40 % MFU):
 
-| context|Transformer|Superfluid|speed-up|
+| context|Transformer|FluidLayer|speed-up|
 | ---|---|---|---|
 | 8K|188.9 h|172.3 h|1.10×|
 | 32K|238.7 h|172.3 h|1.39×|
@@ -281,7 +281,7 @@ sweep `D ∈ {6e6 … 1e9}` × `N ∈ {6e7 … 4e9}` (≥ 3 points per axis);
 FLOP-matched baselines: the transformer is run at the same FLOPs, i.e.
 its `n` is reduced to compensate — report both FLOP- and param-matched;
 fit `L(D,N) = E + A/D^α + B/N^β`, report α, β, E with bootstrap CIs;
-the hypothesis: Superfluid should show a smaller`B` (data term) if the
+the hypothesis: FluidLayer should show a smaller`B` (data term) if the
 topological prior is real, and possibly a larger`α` if the parameter
 efficiency is real. Either would be a publishable result; if `α`, `β` match
 the transformer, the architecture is merely cheaper, which is still a
@@ -294,7 +294,7 @@ as the model gets better, that is the mechanism.
 The strongest use case is not replacing the whole transformer. It is:
 a static, corpus-level sheaf used as a memory substrate with zero KV
 cache, sitting next to a small attention stack that handles needle retrieval.
-[ tokens ] → [ Superfluid memory layer (static topology, 0-byte KV cache) ]
+[ tokens ] → [ FluidLayer memory layer (static topology, 0-byte KV cache) ]
            → [ small dense-attention head (sharp retrieval) ]
            → [ readout ]
 For 1M-token context this is 488 GB → ~16 KB of state. The cost model says the
@@ -333,15 +333,15 @@ is not a gimmick but the correct inductive bias
 
 ## 11. Repository map
 
-superfluid/
+fluidlayer/
   autodiff.py    reverse-mode autodiff (Tensor, ops, gradient-checked)
   sheaf.py       signed sheaf Laplacian, G-balance, TV energy
   diffusion.py   λmax power iteration, Chebyshev exp(-tL), band bank,
                  spectral gap, jam time, spectral-time band placement
   topology.py    top-k routing, unique edges, Kruskal 0-D barcode,
                  Betti numbers, persistence descriptor
-  blocks.py      SuperfluidBlock (the 6-stage stack)
-  model.py       SuperfluidLM + TinyTransformer baseline
+  blocks.py      FluidLayerBlock (the 6-stage stack)
+  model.py       FluidLayerLM + TinyTransformer baseline
   losses.py      CE (+ tensor variant), sheaf energy, band decorrelation
   optim.py       Adam (decoupled WD, clipping, cosine schedule)
   data.py        Gutenberg corpus + char tokenizer + synthetic fallback
@@ -394,7 +394,7 @@ decoration and the honest conclusion is "sparse attention with extra steps".
 Any of these is a publishable negative result, and the framework is built so
 that each one is cheap to test.
 Appendix (v1.1) — the memory module
-`superfluid/memory.py`
+`fluidlayer/memory.py`
 `FrozenRegister` — the exact tier
 An append-only, write-once table of exact facts.  20 bytes per slot:
 
@@ -450,7 +450,7 @@ The budget law.  Naming one anchor out of `M` needs `log2(M)` bits while an
 anchor holds `r×16` bits, so `r` is over-provisioned for addressing and a
 bigger budget should buy more pins, not more anchors.  The function never
 over-commits: it reduces `M` instead.
-`superfluid/topology.py` (v1.1 additions)
+`fluidlayer/topology.py` (v1.1 additions)
 
 | function|what it computes|
 | ---|---|

@@ -309,7 +309,7 @@ This is the most useful result of the whole project, and it is negative.
 Everything above ran at the **character** level (vocab 76), which is
 maximally redundant and therefore flatters a content-keyed store.  So the
 whole measurement was repeated with a **byte-level BPE subword tokenizer**
-trained locally by `superfluid/bpe.py` (vocab 512, 69,367 tokens for the same
+trained locally by `fluidlayer/bpe.py` (vocab 512, 69,367 tokens for the same
 text, no downloads).
 
 | variant | char level (Δ) | **subword level (Δ)** | training |
@@ -522,7 +522,7 @@ Everything above was measured on a 131,392-parameter model trained in this
 repository.  **This is the same experiment on a genuine pretrained
 checkpoint** — GPT-2 (124M parameters, the real GPT-2 BPE tokenizer with
 50,257 tokens), run on CPU with a from-scratch forward pass
-(`superfluid/gpt2_model.py`, verified by generation).
+(`fluidlayer/gpt2_model.py`, verified by generation).
 
 ### The three measurements
 
@@ -572,7 +572,7 @@ repository — no `transformers` needed)
 ## The recipe that actually works
 
 ```python
-from superfluid.graft import SAABranch
+from fluidlayer.graft import SAABranch
 import numpy as np
 
 branch = SAABranch(M=64, r=8, d=model_dim, emb=model.get_input_embeddings(),
@@ -621,7 +621,7 @@ python3 selftest.py                      # 50/50, including the graft checks
 
 ### The GPU-scale version
 
-`experiments/gpu_graft.py` + `superfluid/torch_graft.py` repeat the three
+`experiments/gpu_graft.py` + `fluidlayer/torch_graft.py` repeat the three
 measurements on a **real pretrained LLM** (any HF causal LM; the default is
 Qwen2.5-0.5B-Instruct) with a real tokenizer, and report the memory
 footprint against the KV cache.
