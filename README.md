@@ -180,15 +180,16 @@ Details: [`docs/TEN-MILLION.md`](docs/TEN-MILLION.md)
 
 This is the part that makes the rest believable.
 Eleven negative or unexpected findings are documented. Most have checked-in
-result files; the historical transformer and real-GPT-2 comparisons are
-explicitly marked unverified because their raw outputs are missing.
+result files; the archived transformer and real-GPT-2 outputs are now
+checked in. Their original model/script environments are not fully included,
+so those historical runs cannot be independently repeated as-is.
 
 | What we expected | What happened |
 |---|---|
 | The **topological** selection criterion picks the right facts | It does **not** — `0.000` precision vs `0.970` for plain geometric affinity. |
 | `‖L·1‖∞` detects the frozen state | It does **not** — the frustration index does; the old claim is now a test case. |
 | `λ₂` predicts long-context quality | Barely — Pearson `0.20`. |
-| A transformer loses at some scale | The historical report says it **wins**, but its raw output is unavailable (unverified). |
+| A transformer loses at some scale | The archived run says it **wins**; see `results/train_results.json`. |
 | A domain prior beats a frequency table | It helps (`−0.006 nats`) but a **unigram table wins 6× more**. |
 | The diffusion tier is neutral on a frozen model | It **degrades** the model by **`+0.81 nats`** (fixed → `+0.0000`, but no upside either). |
 | Training the layer helps | It **hurts** — the training-free identity map is better (`0.800 vs 0.650`). |
@@ -240,12 +241,10 @@ and [limitations](docs/LIMITATION.md).
 
 ## Real-model experiment status
 
-The E14 GPT-2 experiment script, forward implementation and tokenizer are
-included, but the model checkpoint and `results/e14_real_gpt2.json` are not.
-Previously reported GPT-2 measurements cannot be independently verified from
-this checkout and should not be cited until E14 is rerun and its raw output
-is published. See [the reproduction guide](docs/REPRODUCING.md) for the
-checkpoint download and run commands.
+The E14 GPT-2 experiment script, forward implementation, tokenizer, and
+archived `results/e14_real_gpt2.json` are included. The checkpoint is not;
+rerun E14 to independently reproduce the recorded measurements. See
+[the reproduction guide](docs/REPRODUCING.md) for download and run commands.
 
 The Torch twin is now tested against the NumPy reference in [`tests/test_torch_parity.py`](tests/test_torch_parity.py): the two implementations must agree on the router, the store and the gated override.
 

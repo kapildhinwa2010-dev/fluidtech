@@ -516,12 +516,11 @@ size is decisive, and the honest reading is sharper than "we beat kNN-LM":
 
 ---
 
-## ON A REAL PRETRAINED LLM (E14) — raw result unavailable
+## ON A REAL PRETRAINED LLM (E14) — archived result
 
-The E14 script, GPT-2 forward implementation, and tokenizer are present.
-The checkpoint is downloaded separately, and `results/e14_real_gpt2.json`
-is not checked in. Previously reported GPT-2 metrics and capability claims
-cannot be independently verified from this repository; see N11 in
+The E14 script, GPT-2 forward implementation, tokenizer, and archived
+`results/e14_real_gpt2.json` are present. The checkpoint must be downloaded
+separately, so rerun E14 to reproduce the recorded measurements; see N11 in
 [`NEGATIVE-RESULTS.md`](NEGATIVE-RESULTS.md).
 
 To reproduce the run, install the optional dependencies, download GPT-2,

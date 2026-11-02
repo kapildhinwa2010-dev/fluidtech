@@ -75,8 +75,10 @@ standalone commands:
 | `python experiments/e7_lossy_fix.py` | Diffusion-tier training behavior | `results/e7_lossy_fix.json` |
 
 The repository includes `corpus.txt`, the generated `prior/` artifacts, and
-the recorded `results/selftest.json`, `results/e2_scaling.json`, and
-`results/e4_gbalance.json` snapshots. Regenerate the tokenizer and prior with:
+recorded outputs including `results/selftest.json`, `results/e2_scaling.json`,
+`results/e4_gbalance.json`, `results/e9_ten_million.json`,
+`results/e14_real_gpt2.json`, `results/mechanism.json`, and
+`results/train_results.json`. Regenerate the tokenizer and prior with:
 
 ```bash
 python -m fluidlayer.bpe --corpus corpus.txt --vocab 512 --out prior/bpe_512.json

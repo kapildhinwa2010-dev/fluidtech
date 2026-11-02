@@ -159,18 +159,17 @@ claim than the project started with, and a defensible one.
 
 ## 16. A pretrained LLM — unverified
 
-The E14 script and GPT-2 forward/tokenizer implementation are present, but
-the checkpoint and `results/e14_real_gpt2.json` are not. Previously reported
-GPT-2 measurements cannot be independently checked from this repository and
-should not be cited until E14 is rerun and its raw output is published.
+The E14 script, GPT-2 forward/tokenizer implementation, and archived
+`results/e14_real_gpt2.json` are present. The checkpoint is not; rerun E14
+to independently reproduce the recorded measurements.
 → `experiments/e14_real_gpt2.py`; see [reproduction instructions](REPRODUCING.md)
 
 ## 17. A repository a stranger can run in one minute
 
 Fresh clone → `python selftest.py` → **50/50**.  `pip install .` → the public API
 imports from an installed wheel. Reproducible experiments can be rerun with
-`python experiments/run_all.py --full`; the historical N4 and N11 outputs
-are unavailable and are documented as unverified.
+`python experiments/run_all.py --full`; archived N4 results are preserved,
+though their historical source script is unavailable.
 → `scripts/check_artifacts.sh` (the one-command audit)
 
 ## 18. The credibility milestone

@@ -4,9 +4,9 @@
 > repository is worth trusting.
 >
 > Eleven negative or unexpected findings are documented here, with raw result
-> files linked where available. The historical N4 and N11 claims have no
-> surviving raw JSON, so their numbers cannot be independently reproduced
-> from this repository.
+> files linked where available. Archived N4 and N11 JSON outputs are included,
+> but their original training script/checkpoint environments are not fully
+> present, so those historical runs are not independently repeatable as-is.
 >
 > If you only read one file in this repo, read this one.  It is the honest
 > map of the project's real shape.
@@ -20,14 +20,14 @@
 | N1 | the **topological** selection criterion would pick the right facts | it **does not** — 0.000 precision vs 0.970 for plain geometric affinity | `results/e5_graft.json` |
 | N2 | the `‖L·1‖∞` **balance residual** detects the frozen state | it **does not** — the right diagnostic is the frustration index | `results/e4_gbalance.json` |
 | N3 | `λ₂` predicts long-context quality | **barely** — pearson 0.1904, spearman 0.2499 | `results/e4_gbalance.json` |
-| N4 | a **transformer** should lose to the fluid at some scale | the historical report says the transformer **wins**, but its raw result file is missing and the claim cannot be independently checked here | unavailable |
+| N4 | a **transformer** should lose to the fluid at some scale | the archived run says the transformer **wins**; the original training source is not included | `results/train_results.json` |
 | N5 | a 16 KB domain prior should beat a trivial frequency table | it **helps** (−0.006 nats) but a plain **unigram table wins 6× more** (−0.038), and the gain **shrinks as the model improves** | `results/e1_prior.json` |
 | N6 | grafting the **diffusion tier** onto a frozen model should be neutral or helpful | it **degrades the model by +0.81 nats** on real text (ppl 13.3 → 29.9) — the *exact* tier alone is fine (−0.03) | `results/e6_real.json` |
 | N7 | the diffusion tier's **divergence can be fixed** | **yes, the damage is gone** (+1.14 → **+0.0000**) — but the fixed tier had **no upside** (the optimal injection gain was **zero**).  **RESOLVED by the router** (E12): as the fallback tier it now measurably helps | `results/e7_lossy_fix.json` |
 | N8 | one injection gain can serve **both** recall and generation | it could not — the two optimum gains were **1000× apart** (300 vs 0.3), and the recall gain **ruined** the model (+1.08 nats).  **RESOLVED by the gate** (`u = 1 − max p`) | `results/e10_gate.json` |
 | N9 | the memory can be made **exact** | **yes**: the recall **1.000**, the common-key case **1.000** (was 0/3), the corroborated entries survive the eviction (**40/40**), and the base model's perplexity **improves** to **11.78**.  Two plausible-looking rules were tried and **rejected** (both off by default) | `results/e11_exact.json` |
 | N10 | the layer should beat the closest prior art at every budget | the gate wins in the bounded-memory regime, but kNN-LM wins with a 1 MB store | `results/e13_knn.json` |
-| N11 | the small-model advantage should generalize to a real pretrained model | historical GPT-2 claims cannot be verified because the raw E14 result is missing | unavailable |
+| N11 | the small-model advantage should generalize to a real pretrained model | the archived GPT-2 output shows the kNN-LM interpolation wins on perplexity; checkpoint required to rerun | `results/e14_real_gpt2.json` |
 
 ---
 
@@ -180,15 +180,17 @@ Every place that said "λ₂ predicts quality" now says "λ₂ bounds the
 
 ---
 
-## N4 — Historical transformer comparison is not verifiable
+## N4 — The archived transformer comparison favors the transformer
 
 An earlier report described a character-level comparison between FluidLayerLM
 and a TinyTransformer, plus a separate global-aggregation mechanism test.
-The source scripts (`train.py` and `demo_mechanism.py`) and raw outputs
-(`results/train_results.json` and `results/mechanism.json`) are not present
-in this repository. The previously reported numbers have therefore been
-removed from the evidence summary; they must not be treated as independently
-verified until those experiments and their outputs are restored.
+The archived raw outputs are now included in `results/train_results.json`
+and `results/mechanism.json`. The original source scripts (`train.py` and
+`demo_mechanism.py`) are not included, so these snapshots document the
+historical measurements but do not make those runs independently repeatable.
+The recorded LM comparison reports final validation losses of 2.6331 for the
+transformer and 2.7397 for FluidLayerLM; the mechanism output records 97.3%
+sign accuracy for FluidLayer versus 65.6% and 71.0% for local baselines.
 
 ---
 
@@ -577,12 +579,13 @@ records it.
 
 ---
 
-## N11 — The real-model result is not verifiable
+## N11 — The archived real-model result narrows the claim
 
-The E14 experiment script is present, but `results/e14_real_gpt2.json` and
-the GPT-2 checkpoint are not. Previously reported GPT-2 measurements have
-therefore been removed from the evidence summary. Do not cite them as
-verified results until E14 is rerun and its raw JSON is published.
+The E14 script and archived `results/e14_real_gpt2.json` are included. The
+recorded run reports bit-identical attachment, cross-window recall, and
+slightly lower loss with the gated layer, while kNN-LM interpolation lowers
+loss more. Its GPT-2 checkpoint is not included; rerun E14 to independently
+reproduce the snapshot.
 
 ---
 
@@ -595,16 +598,16 @@ The project's shape from the available evidence:
 | the **exact tier** (bounded store, bit-exact token-ID recall) | ✅ **works, measured** |
 | the **constant-size state** | ✅ **works, measured** |
 | the **budget law** (spend on pins, not anchors) | ✅ **works, measured** (E2) |
-| the **fluid as an aggregate carrier** | ⚠️ the historical 97.3 % result is unverified; its raw output is unavailable |
+| the **fluid as an aggregate carrier** | ✅ the archived mechanism output records 97.3 % sign accuracy (`results/mechanism.json`); original source script unavailable |
 | the **layer attached to a frozen model** | ✅ **free** — bit-identical logits (max diff 0.0) |
 | the **exact tier in a graft** | ✅ **works** — recall 0.050 → **0.800** (and **1.000** with the exact store), −0.03 nats on real text |
 | the **lossy tier in a graft** | ✅ **has a job now** — as the router it rescues the recall (0.100 → **0.625**) and fixes the hard contexts (+0.053 → **−0.071**); on its own it still hurts (N6/N7) |
 | the **exact tier in a graft, gated** | ✅ **works** — the recall **1.000** and the base model's perplexity **improves** by **−0.176 nats** (ppl 13.61 → **11.42**) (N8/N9) |
-| **the same layer on a REAL GPT-2 (124M)** | ⚠️ historical E14 claims are unverified because the raw output is missing (N11) |
+| **the same layer on a REAL GPT-2 (124M)** | ✅ archived E14 JSON is included; checkpoint required to rerun (N11) |
 | the **topological selection criterion** | ❌ **does not work** (N1) |
 | the **`‖L·1‖∞` balance diagnostic** | ❌ **was wrong** (N2, now fixed) |
 | **λ₂ as a quality predictor** | ⚠️ **weak** (N3) |
-| **the fluid as an LM backbone** | ⚠️ historical transformer comparison is unverified (N4) |
+| **the fluid as an LM backbone** | ❌ the archived comparison favors the transformer (N4) |
 | **the domain prior vs frequencies** | ⚠️ **helps, but frequencies help more** (N5) |
 
 **The defensible paper is:** *"a constant-size memory tier that is bit-exact

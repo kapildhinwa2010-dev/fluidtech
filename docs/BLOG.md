@@ -85,10 +85,9 @@ suite.
 λ₂ does not predict quality (pearson 0.20). The certificate is true
 about the operator; it says nothing about the task. The claim was
 weakened, not the data massaged.
-An earlier report said a transformer beat the fluid (2.6331 vs 2.7397 nats)
-and cited a 97.3 % mechanism result. The source scripts and raw outputs for
-those measurements are not in this repository, so both claims are
-unverified; see N4 in `docs/NEGATIVE-RESULTS.md`.
+Archived results record a transformer beating the fluid (2.6331 vs 2.7397
+nats) and a 97.3 % mechanism result. The historical source scripts are not
+included, so see N4 in `docs/NEGATIVE-RESULTS.md` for the reproduction caveat.
 Grafted onto a frozen model, my own diffusion tier made the model
 worse — +0.81 nats (ppl 13.3 -> 29.9) on real English. The cause is
 structural: the persistent state sits outside the autodiff graph, so the

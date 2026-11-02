@@ -130,10 +130,10 @@ per exact fact and it does not lie.
 
 In priority order, with the honest cost:
 Gate 1 — Beat the transformer where it matters (the real gap)
-An earlier report said the transformer wins its A/B (2.6331 vs 2.7397),
-but the training script and raw result are missing from this repository.
-Treat that comparison as unverified. Until the experiment is restored and
-rerun, a current transformer comparison is still an open gate.
+The archived result (`results/train_results.json`) says the transformer wins
+the A/B (2.6331 vs 2.7397). Its original training script is not included, so
+the snapshot cannot be independently regenerated as-is. Until a current
+comparison is run from available source, this remains an open gate.
 Cheapest version: a retrieval-style task, not raw LM perplexity, where
 the exactness guarantee is the win. "At 16 KB the fluid+register matches
 full-KV needle accuracy (≥ 95 %) on a 1M-token document; the transformer
@@ -156,13 +156,11 @@ token accuracy.  With a  1 MB  store the kNN-LM wins by  6.4×
 (−1.3013 vs −0.2048).   So the defensible novelty is not  "a datastore " —
 it is the gate under a hard memory budget.   That is a narrower claim than
 the project started with, and it is the one the evidence supports.
-Gate 7 — Does the layer help a REAL pretrained LLM? → ⚠️ UNVERIFIED: raw E14 output missing
-The experiment script (`experiments/e14_real_gpt2.py`) is present, but
-`results/e14_real_gpt2.json` is missing from this repository. Previously
-reported GPT-2 measurements therefore cannot be independently checked here
-and should not be cited as verified results until the experiment is rerun
-and its output is published. The script requires a GPT-2 checkpoint and the
-optional PyTorch dependencies.
+Gate 7 — Does the layer help a REAL pretrained LLM? → ⚠️ ARCHIVED RESULT; rerun required
+The experiment script and raw snapshot (`results/e14_real_gpt2.json`) are
+present. The archived run reports bit-identical attachment and recall, but
+kNN-LM interpolation improves loss more than the gated layer. A GPT-2
+checkpoint and optional PyTorch dependencies are required to rerun it.
 Gate 3 — Topology beats learned gating at equal budget → ❌ ANSWERED: NO
 Measured  ( `results/e5_graft.json` , 1M tokens, 11 policies, equal budget):
 topology-selected slots reach  0.000  pin precision, against  0.970  for
