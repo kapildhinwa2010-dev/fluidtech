@@ -40,7 +40,7 @@ def log(*a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="/workspace/models/gpt2")
+    ap.add_argument("--model", default=os.path.join(ROOT, "models", "gpt2"))
     ap.add_argument("--corpus", default=os.path.join(ROOT, "corpus.txt"))
     ap.add_argument("--ctx", type=int, default=128)
     ap.add_argument("--windows", type=int, default=40)
