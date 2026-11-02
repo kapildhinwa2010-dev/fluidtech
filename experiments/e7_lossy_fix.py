@@ -96,12 +96,13 @@ def main():
     ap.add_argument("--r", type=int, default=8)
     ap.add_argument("--hist-len", type=int, default=8)
     ap.add_argument("--lr", type=float, default=3e-3)
+    ap.add_argument("--max-chars", type=int, default=120_000)
     ap.add_argument("--out", default=os.path.join(RESULTS, "e7_lossy_fix.json"))
     args = ap.parse_args()
 
     t0 = time.time()
     print("[1/4] corpus + base model ...")
-    ids, V = load_chars()
+    ids, V = load_chars(max_chars=args.max_chars)
     n_tr = int(len(ids) * 0.9)
     tr, va = ids[:n_tr], ids[n_tr:]
     print(f"    {len(ids):,} chars, vocab {V}")

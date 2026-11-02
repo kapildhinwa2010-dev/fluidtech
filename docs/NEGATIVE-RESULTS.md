@@ -3,8 +3,8 @@
 > **Read this before the README.** This file is the reason the rest of the
 > repository is worth trusting.
 >
-> Five results in this project came out **negative or against expectation**.
-> All five are measured, reproducible, and reported here in full.  None of
+> Eleven results in this project came out **negative or against expectation**.
+> All eleven are measured, reproducible, and reported here in full. None of
 > them is buried in a footnote, and none of them is dressed up.
 >
 > If you only read one file in this repo, read this one.  It is the honest
@@ -32,7 +32,7 @@
 
 ### The claim we set out to test
 
-`docs/DESIGN-pinned-memory.md` §4 proposed **S4: topology selects the facts.**
+`docs/DESIGN_pinned_memory.md` §4 proposed **S4: topology selects the facts.**
 Build a Vietoris–Rips filtration over the corpus, take the longest bars
 (the structurally important classes), and spend the exactness budget there.
 The argument was appealing: the criterion is computable **once per document**
@@ -85,7 +85,7 @@ is not saturated, and separates cleanly (0.970).
 * The claim in the docs was narrowed from *"topology selects the facts"* to
   *"geometry selects the facts"*.  The sheaf machinery is still what the
   **diffusion** uses; for **selection**, the fine geometry wins.
-* `docs/DESIGN-pinned-memory.md` §9.5.2 records the table, the mechanism, and the
+* `docs/DESIGN_pinned_memory.md` §9.5.2 records the table, the mechanism, and the
   consequence.
 * `docs/POSITIONING.md` §4's "Gate 3" (topology vs learned gating) is
   **answered — and the answer is no.**
@@ -94,7 +94,8 @@ is not saturated, and separates cleanly (0.970).
 
 Everything else.  The exactness mechanism is unaffected: `exact | promoted =
 1.000` for every policy that promotes anything.  A 16 KB state with a
-20-byte-per-fact append-only register returns **bit-exact** token ids.  The
+bounded majority-tracking store returns the stored token ID **bit-exactly**.
+Its 20-byte slot figure is a packed-payload estimate. The
 *mechanism* is sound; only the *selection heuristic* was wrong.
 
 ---
@@ -461,7 +462,6 @@ hyper-parameter: it is the model's confidence.
 |---|---|
 | the cross-window recall, gated | **0.975** (the ungated layer: 0.975) |
 | the base model's val loss | 2.6111 (ppl 13.61) |
-
 | gain | ungated Δ | **gated Δ** |
 |---|---|---|
 | 0.5 | −0.0317 | −0.0240 |
@@ -648,7 +648,7 @@ The project's shape after all five:
 
 | tier | status |
 |---|---|
-| the **exact tier** (append-only register, 20 B/fact, bit-exact recall) | ✅ **works, measured** |
+| the **exact tier** (bounded store, bit-exact token-ID recall) | ✅ **works, measured** |
 | the **constant-size state** | ✅ **works, measured** |
 | the **budget law** (spend on pins, not anchors) | ✅ **works, measured** (E2) |
 | the **fluid as an aggregate carrier** | ✅ **works** (97.3 % vs 65–71 % for local) |
@@ -665,7 +665,7 @@ The project's shape after all five:
 
 **The defensible paper is:** *"a constant-size memory tier that is bit-exact
 for a selected subset, gracefully lossy for the rest, with a certified bound
-and an append-only audit trail — plus the first working, self-verifying
+and a bounded, majority-tracking exact store — plus the self-verifying
 implementation of a sheaf-diffusion LLM, and an honest account of the five
 places where it did not beat the alternatives."*
 

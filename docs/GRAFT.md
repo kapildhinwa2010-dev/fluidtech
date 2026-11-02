@@ -29,9 +29,8 @@ A layer that is attached but not yet trained is a **provable no-op**. You
 cannot regress your model by attaching it. You can only regress it by
 *training* it, and that is a separate, explicit act.
 
-> This is the single most important practical property of the design, and
-> it is why the layer can be shipped into an existing serving stack
-> without a rollback plan.
+> This verifies only the initial no-op behavior. Trained behavior and
+> deployment safety require separate evaluation before integration.
 
 ---
 
@@ -310,7 +309,7 @@ This is the most useful result of the whole project, and it is negative.
 Everything above ran at the **character** level (vocab 76), which is
 maximally redundant and therefore flatters a content-keyed store.  So the
 whole measurement was repeated with a **byte-level BPE subword tokenizer**
-trained locally by `tools/bpe.py` (vocab 512, 69,367 tokens for the same
+trained locally by `superfluid/bpe.py` (vocab 512, 69,367 tokens for the same
 text, no downloads).
 
 | variant | char level (Δ) | **subword level (Δ)** | training |
@@ -368,7 +367,6 @@ there is nothing to tune against it.
 | the cross-window recall, gated | **0.975** — identical to the ungated version |
 | the cross-window recall, ungated | 0.975 |
 | the base model's val loss | 2.6111 (ppl 13.61) |
-
 | gain | ungated Δ | **gated Δ** |
 |---|---|---|
 | 0.5 | −0.0317 | −0.0240 |
@@ -488,7 +486,8 @@ The closest prior art to this layer is a **kNN-LM** (Khandelwal et al.,
 interpolating their distributions, `p = λ·p_LM + (1−λ)·p_knn`.  That is
 functionally what this is, with three differences: the datastore is
 **constant-size**, the combination is a **gated override** rather than a flat
-interpolation, and the store is an **append-only audit trail**.
+interpolation, and the store tracks majority continuations with
+least-corroborated eviction. It does not provide cryptographic audit integrity.
 
 | | val loss | ppl | Δ vs base | token accuracy |
 |---|---|---|---|---|
@@ -600,8 +599,9 @@ branch.read_scale = 300.0
 logits = branch.gated_logits(logits, info, gain=8.0)
 ```
 
-* the state is **6,316 B** for `M=64, r=8` (the fluid tier) plus 20 B per
-  cached fact (the exact tier);
+* the fluid tier is **4,096 B** for `M=64, r=8`, plus a logical 20 B for
+  each populated context or anchor slot; Python object overhead is
+  additional;
 * the base model is **frozen** the whole time;
 * attaching it is **free** and **reversible**;
 * the **diffusion tier is off by default** until its training signal is

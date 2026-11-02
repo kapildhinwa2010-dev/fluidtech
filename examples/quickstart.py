@@ -79,9 +79,9 @@ def main():
 
     hr("what to read next")
     print("   docs/GRAFT.md            what the layer does to a base model (measured)")
-    print("   docs/NEGATIVE-RESULTS.md  the seven things that did not work")
-    print("   docs/GETTING-STARTED.md   how to use it for real")
-    print("   python selftest.py        38 machine-checked claims")
+    print("   docs/NEGATIVE-RESULTS.md  the measured results that did not work")
+    print("   docs/GETTING_STARTED.md  how to use it for real")
+    print("   python selftest.py        50 machine-checked claims")
     print()
 
 

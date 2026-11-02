@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-tests/run_without_pytest.py -- run the test suite with NO pytest.
+run_without_pytest.py -- run the test suite with NO pytest.
 
 pytest is the normal way to run these tests, and it is what CI uses.  But
 this project is meant to work with nothing but numpy, on a laptop, with no
@@ -8,7 +8,7 @@ network -- so this runner provides the tiny subset of pytest the tests
 actually use (the `fixture` decorator, `pytest.raises`, `pytest.mark`) and
 runs everything.
 
-    python tests/run_without_pytest.py
+    python run_without_pytest.py
 
 Exit code 0 = all tests passed.
 """
@@ -17,12 +17,13 @@ from __future__ import annotations
 
 import importlib.util
 import os
+import subprocess
 import sys
 import traceback
 import types
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+ROOT = os.path.dirname(os.path.abspath(__file__))
+TESTS = os.path.join(ROOT, "tests")
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
@@ -38,6 +39,9 @@ def _install_shim():
         pass
 
     mod = types.ModuleType("pytest")
+
+    class _Skipped(Exception):
+        pass
 
     def fixture(*args, **kwargs):
         def deco(fn):
@@ -66,16 +70,22 @@ def _install_shim():
     mod.fixture = fixture
     mod.raises = _Raises
     mod.mark = types.SimpleNamespace(parametrize=lambda *a, **k: (lambda f: f))
-    mod.skip = lambda *a, **k: None
+    mod.importorskip = lambda name: _import_or_skip(name, _Skipped)
     sys.modules["pytest"] = mod
-    return "the built-in shim"
+    return "the built-in shim", _Skipped
+
+
+def _import_or_skip(name, skipped):
+    try:
+        return __import__(name)
+    except ImportError as error:
+        raise skipped(str(error)) from error
 
 
 # --------------------------------------------------------------------------
 # the fixtures the tests ask for
 # --------------------------------------------------------------------------
 def _fixtures():
-    import numpy as np
     from superfluid import TinyTransformer
 
     def root():
@@ -96,15 +106,27 @@ def _load(path):
 
 
 def main() -> int:
-    which = _install_shim()
+    installed = _install_shim()
+    if isinstance(installed, str):
+        print("pytest is installed; delegating to pytest")
+        return subprocess.run(
+            [sys.executable, "-m", "pytest", "-q", TESTS], check=False
+        ).returncode
+
+    which, skipped_exception = installed
     print(f"running the tests with {which}\n")
     fx = _fixtures()
-    files = sorted(f for f in os.listdir(HERE)
+    files = sorted(f for f in os.listdir(TESTS)
                    if f.startswith("test_") and f.endswith(".py"))
-    passed = failed = 0
+    passed = failed = skipped = 0
     failures = []
     for f in files:
-        mod = _load(os.path.join(HERE, f))
+        try:
+            mod = _load(os.path.join(TESTS, f))
+        except skipped_exception as error:
+            skipped += 1
+            print(f"  [SKIP] {f}: {error}")
+            continue
         names = [n for n in dir(mod) if n.startswith("test_")]
         for n in sorted(names):
             fn = getattr(mod, n)
@@ -119,11 +141,14 @@ def main() -> int:
                 fn(**kwargs)
                 passed += 1
                 print(f"  [PASS] {f}::{n}")
+            except skipped_exception as error:
+                skipped += 1
+                print(f"  [SKIP] {f}::{n}: {error}")
             except Exception:
                 failed += 1
                 failures.append((f, n, traceback.format_exc()))
                 print(f"  [FAIL] {f}::{n}")
-    print(f"\n{passed} passed, {failed} failed")
+    print(f"\n{passed} passed, {failed} failed, {skipped} skipped")
     for f, n, tb in failures:
         print(f"\n--- {f}::{n} ---\n{tb}")
     return 0 if failed == 0 else 1

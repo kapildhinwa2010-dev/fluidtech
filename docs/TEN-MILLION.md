@@ -60,25 +60,26 @@ Facts planted at six depths, queried after the whole 10M-token stream:
 10M tokens.
 
 **But the control matters more:** facts planted with *common* keys (a key
-that occurs all over the stream) were recalled **0/3**.  The store is
-first-write-wins, so a context that recurs everywhere keeps only its
-**first** continuation and the planted fact is invisible.
+that occurs all over the stream) were recalled **0/3**. The store is
+majority-tracking, so a context with many conflicting continuations does
+not identify one planted answer.
 
-> **The layer does not remember "facts".  It remembers *the continuation of
-> a distinctive context*.**  If the context recurs, the first continuation
-> wins — forever.
+> **The layer does not remember "facts". It remembers a continuation
+> associated with a context.** The attachable store tracks majority support
+> and evicts the least-corroborated entry when full.
 
 ### Realistic keys (12-grams) → it remembers only the last ~10,000 tokens
 
-A 12-gram context is distinctive, but there are millions of them.  With a
-16 KB budget (819 slots) and FIFO eviction:
+A 12-gram context is distinctive, but there are millions of them. With a
+16 KB budget (819 slots), the bounded store evicts entries:
 
 | the fact was planted at token | recalled? |
 |---|---|
 | 100,000 … 9,000,000 | ❌ **0/6** |
 
-The store holds the **819 most recent distinct contexts**, which is roughly
-the last **10,000 tokens** of a 10M-token stream — 0.1 % of it.
+The reported reach was roughly the last **10,000 tokens** of this 10M-token
+stream — 0.1 % of it. This is a measurement of that run, not a guarantee
+that the store is a FIFO window; current eviction is evidence-based.
 
 > **A constant-size memory does not scale to a long stream.**  It scales in
 > *bytes*; its *reach* is bounded by the number of distinct contexts it can

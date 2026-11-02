@@ -16,7 +16,7 @@ differences:
   * the datastore is CONSTANT-SIZE here (16 KB), not unbounded;
   * the combination is a GATED OVERRIDE (the model's own uncertainty
     scales the retrieval), not a flat interpolation;
-  * the store is an append-only audit trail, first-write/majority tracked.
+  * the bounded store tracks majority continuations and corroboration.
 
 Without this comparison the project has no evidence that the *gate* -- the
 actual contribution -- is worth anything.

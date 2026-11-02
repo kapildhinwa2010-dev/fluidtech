@@ -6,7 +6,7 @@ without a file behind it.
 
 ---
 
-### 1. The mathematics is real, and machine-checked
+## 1. The mathematics is real, and machine-checked
 
 Three propositions (a jamming bound, a Chebyshev degree bound, and a
 linear-collapse theorem), the Hodge limit with an exponential contraction
@@ -14,7 +14,7 @@ certificate, and the spectral decomposition the whole architecture rests on.
 The certificate **‖e^{-tL}‖ ≤ e^{-tλ₂} holds 36/36** on random Laplacians.
 → `docs/FRAMEWORK.md`, `docs/index.html`
 
-### 2. A working, trainable framework — from scratch, in NumPy
+## 2. A working, trainable framework — from scratch, in NumPy
 
 An autodiff engine, the 7-stage sheaf block, the Chebyshev diffusion with a
 band filter bank, the persistent-homology utilities, a language model and a
@@ -22,7 +22,7 @@ param-matched transformer baseline.  No torch, no scipy, no GPU, no
 downloads.
 → `superfluid/`
 
-### 3. A self-verification harness that has earned its keep
+## 3. A self-verification harness that has earned its keep
 
 **50 checks**, running in ~4 seconds, machine-checking every claim in the
 documentation.  It found **twelve real bugs in this project's own code** —
@@ -32,16 +32,16 @@ an `exp(+α)` overflow, and a balance diagnostic that did not detect the
 frozen state.
 → `selftest.py`, `superfluid_single.py` (one file, 154 KB, self-verifying)
 
-### 4. The exact tier: bit-exact memory for 20 bytes a fact
+## 4. The exact tier: bit-exact memory for 20 bytes a fact
 
-An append-only, content-keyed register.  A value is stored as an **int32**,
-so a recalled token is *provably* the right one — not approximately.  It
-refuses to overflow rather than growing, it fails loud on a signature
-mismatch instead of returning another fact's value, and it keeps the first
-write so the memory doubles as an **audit trail**.  **819 facts per 16 KB.**
-→ `superfluid/memory.py`
+The low-level `FrozenRegister` uses a fixed 20-byte, content-keyed slot and
+refuses overflow. The attachable branch uses a bounded majority-tracking
+store; both return the stored token ID exactly, but neither establishes that
+the token is true. **819 packed slots per 16 KB**, before Python object
+overhead; this is not a tamper-evident audit trail.
+→ `superfluid/memory.py`, `superfluid/graft.py`
 
-### 5. The budget law, measured
+## 5. The budget law, measured
 
 * 16× more anchors → **+0.013** of aggregate quality, for **256×** the compute;
 * 64× more exact slots → **+0.69** of fact recall, for **20 KB**.
@@ -50,7 +50,7 @@ Spending the budget on *exactness* rather than on *storage* is not a
 guess; it is the measured shape of the curve.
 → `results/e2_scaling.json`
 
-### 6. The money experiment
+## 6. The money experiment
 
 One million tokens, eleven selection policies, one shared budget.
 * the local aggregate is carried with a cosine of **0.968**;
@@ -58,7 +58,7 @@ One million tokens, eleven selection policies, one shared budget.
 * an exact fact costs **6,554×** less than the equivalent KV-cache state.
 → `results/e5_graft.json`
 
-### 7. A layer you can actually attach to a model
+## 7. A layer you can actually attach to a model
 
 One residual-stream insertion, `h' = h + W·(exact read, diffusion read)`.
 * **attaching it changes nothing**: the logits are **bit-identical**
@@ -68,7 +68,7 @@ One residual-stream insertion, `h' = h + W·(exact read, diffusion read)`.
 * a PyTorch twin exists for attaching it to a real pretrained LLM.
 → `superfluid/graft.py`, `superfluid/torch_graft.py`, `docs/GRAFT.md`
 
-### 8. A divergence diagnosed at the root and fixed
+## 8. A divergence diagnosed at the root and fixed
 
 The diffusion tier's training was **diverging** (+1.14 nats of damage).  The
 cause was located (a persistent state outside the autodiff graph, so the
@@ -77,7 +77,7 @@ graph from a bounded history.  The damage went to **+0.0000** and the
 layer's own objective now **converges** (4.34 → 3.81).
 → `experiments/e7_lossy_fix.py`, `results/e7_lossy_fix.json`
 
-### 9. The infrastructure to believe it
+## 9. The infrastructure to believe it
 
 * a **byte-level BPE tokenizer** in pure Python (no downloads), so every
   measurement can be repeated at a realistic token granularity;
@@ -89,9 +89,9 @@ layer's own objective now **converges** (4.34 → 3.81).
   workflow, issue and PR templates, a Docker image, `Makefile` targets,
   `CHANGELOG`, `CONTRIBUTING`, `CODE_OF_CONDUCT`, `SECURITY` with a threat
   model.
-→ `tools/bpe.py`, `tests/`, `.github/`, `Makefile`
+→ `superfluid/bpe.py`, `tests/`, `.github/`, `Makefile`
 
-### 10. The byte economics that motivate the whole thing
+## 10. The byte economics that motivate the whole thing
 
 | | |
 |---|---|
@@ -99,7 +99,7 @@ layer's own objective now **converges** (4.34 → 3.81).
 | 10,000 tenants at a 32K context (8B) | **40,000 GB** of KV → **153 MB** |
 | per exact fact | **20 bytes** instead of 131,072 |
 
-### 11. Ten million tokens, measured
+## 11. Ten million tokens, measured
 
 10M tokens through the layer: the state stays at **16 KB** (the same tokens
 as a KV cache would be **1.31 TB** for an 8B model, **3.28 TB** for a 70B
@@ -111,7 +111,7 @@ injection gain and **+1.08 nats** at the gain that maximises recall — the
 two knobs are three orders of magnitude apart.
 → `docs/TEN-MILLION.md`, `results/e9_ten_million.json`
 
-### 12. The one-knob problem, solved
+## 12. The one-knob problem, solved
 
 E9 found that the injection gain that maximises **recall** (300) and the
 one that maximises **generation** (0.3) were three orders of magnitude
@@ -122,7 +122,7 @@ the memory speaks only where the model is unsure.  Measured: the recall is
 13.61 to **11.78** — better than the ungated layer ever managed.
 → `experiments/e10_gate.py`, `results/e10_gate.json`
 
-### 13. The memory is EXACT
+## 13. The memory is exact
 
 The recall ceiling (0.975) is gone: **1.000**.  The store now keeps the
 **majority** continuation of a context and counts the corroboration, so the
@@ -134,7 +134,7 @@ With the layer attached the base model's perplexity **improves** to
 measurement (both off by default).
 → `experiments/e11_exact.py`, `results/e11_exact.json`
 
-### 14. The fluid tier finally has a job
+## 14. The fluid tier finally has a job
 
 The diffusion tier was a lossy summary that answered neither "where" nor
 "what" — its optimal injection gain was **zero**.  Used as the **router**
@@ -146,7 +146,7 @@ cases the exact tier cannot serve: a context too old for the store
 compute per token.
 → `experiments/e12_router.py`, `results/e12_router.json`
 
-### 15. The comparison against the closest prior art (kNN-LM)
+## 15. The comparison against the closest prior art (kNN-LM)
 
 The repository had never compared itself against a **kNN-LM**, which is
 functionally the same idea (a datastore plus an LM) and the first thing a
@@ -157,7 +157,7 @@ is the contribution under a hard memory budget** — which is a narrower
 claim than the project started with, and a defensible one.
 → `experiments/e13_knn_baseline.py`, `results/e13_knn.json`
 
-### 16. A REAL pretrained LLM
+## 16. A pretrained LLM
 
 The network came up, torch installed, and **GPT-2 (124M, the real 50,257
 token BPE) ran with the layer attached**: the attach is **bit-identical**,
@@ -172,14 +172,14 @@ interpolation reverses on a strong model** (the tiny model: the gate won by
 model is weak.  The capability works on both.
 → `experiments/e14_real_gpt2.py`, `results/e14_real_gpt2.json`
 
-### 17. A repository a stranger can run in one minute
+## 17. A repository a stranger can run in one minute
 
 Unzip → `python selftest.py` → **50/50**.  `pip install .` → the public API
 imports from an installed wheel.  Every result in `results/` regenerates
 with `python experiments/run_all.py --full`.
 → `scripts/check_artifacts.sh` (the one-command audit)
 
-### 18. The credibility milestone
+## 18. The credibility milestone
 
 **Seven** results that came out negative are published in full, with the
 numbers, in `docs/NEGATIVE-RESULTS.md` — plus a prior-art audit that says
@@ -192,7 +192,7 @@ can run.
 
 ## Where it stands
 
-A **research prototype with a production-shaped skeleton**: the code is
+A **research prototype, not production-ready software**: the code is
 tested, documented, installable and CI-verified; the measurements are
 honest; and the claims are the ones the evidence supports.
 

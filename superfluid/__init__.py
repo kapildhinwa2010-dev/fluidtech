@@ -7,17 +7,11 @@ The fluid "freezes" the data's geometry onto the space of global sections
 (the Hodge limit).  A multi-scale band filter bank recovers the transient,
 a top-k route head restores sharp retrieval, and a single pointwise
 nonlinearity keeps the model from collapsing to a linear map.
-Second idea: the EXACT tier
-A diffusion smears, so an exact value must never live inside one.  The
-`memory` module splits the memory in two:
-L1  FROZEN REGISTER -- an append-only, write-once table of exact facts
-(20 bytes each).  The value is an INTEGER token id, so a recall is
-bit-exact rather than approximate.
-L2  SUPERFLUID STATE -- a constant-size (M x r) state that carries the
-aggregate.  It never grows, no matter how much is streamed through it.
-L3  an external source -- a 6-byte pointer, unbounded, costs a call.
-The two tiers are separate on purpose: the fluid answers WHERE, the register
-answers WHAT.
+Exact token IDs live outside the diffused state. The attachable `SAABranch`
+uses a bounded, majority-tracking exact store alongside its constant-size
+fluid state. The low-level `FrozenRegister` helper separately provides an
+append-only 20-byte slot format with explicit serialization. These logical
+slot sizes exclude Python object overhead in the attachable reference store.
 """
 from .autodiff import Tensor, concat, softmax_rows, softplus
 from .blocks import RMSNorm, SuperfluidBlock

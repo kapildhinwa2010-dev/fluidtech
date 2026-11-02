@@ -17,7 +17,7 @@ def test_the_whole_suite_passes(root):
     assert line, "the harness printed no result line:\n" + r.stdout[-3000:]
     passed, total = line[-1].split()[1].split("/")
     assert passed == total, f"{passed}/{total} checks passed"
-    assert int(total) >= 38, f"expected at least 38 checks, got {total}"
+    assert int(total) >= 50, f"expected at least 50 checks, got {total}"
 
 
 def test_the_bundle_passes(root):

@@ -1,5 +1,10 @@
-The 16 KB memory: exact where it matters, lossy everywhere else
-(blog draft — 700 words, ready to post. Replace the repo URL.)
+# The 16 KB memory: exact where it matters, lossy everywhere else
+
+By Kapil Dhinwa
+
+(Historical blog draft. Its claims should be checked against the current
+measurements and limitations before reuse.)
+
 There is a number in long-context serving that nobody puts on a slide:
 A 70B model on 2× H100 80GB cannot hold a single 128K-token session.
 Not "serves it slowly". Cannot hold it. The weights take 131.5 GB; 40 GB
@@ -8,43 +13,50 @@ optimisation problem — it is a wall, and it arrives at 32K context, long
 before anyone calls it a wall.
 I spent a year building a replacement for it. Here is what worked, what did
 not, and the numbers for both.
-The idea: stop storing, start addressing
+
+## The idea: stop storing, start addressing
+
 Attention remembers by position. Every token keeps a copy of itself, and
 the copy is kept forever. That is why the cost is linear and why the cost is
-unavoidable.
-A different architecture remembers by geometry. Tokens are routed to a
-fixed set of cells; the cell holds a diffusion of what was written there;
-and the routing — not the storage — is what carries the association. The
-state is `M × r` floats. For `M = 1024, r = 8` that is 16 KB, and it
-never grows, no matter how much text you stream through it.
+unavoidable during a sequence, until that context is discarded.
+A different architecture routes tokens to a fixed set of cells; the cell
+holds a diffusion of what was written there; and the routing — not the
+storage — carries the association. The fluid state is `M × r` floats. For
+`M = 1024, r = 8` that is 16 KB, independent of stream length.
 The mathematics is a cellular-sheaf Laplacian: `X(t) = exp(-t L_F) X(0)`.
 The field converges exponentially to `ker(L_F)` — the Hodge limit — and the
 contraction is certified: `‖e^{-tL}‖ ≤ e^{-tλ₂}`. A multi-scale band filter
 bank recovers the transient that the limit throws away, and a sparse top-k
 route head restores the sharp selection that a smooth diffusion cannot
 provide.
-The part I did not expect
+
+## The part I did not expect
+
 A diffusion smears. That is the whole point of it, and it is fatal for
 exactness: the moment a token's value enters the Laplacian, it is mixed with
 its neighbours and is provably no longer exact.
 So the exact value must never live inside the fluid. I split the memory:
+
 | tier|holds|size|exact?|
 | ---|---|---|---|
-| frozen register|token ids as  integers|20 B / fact|✅ bit-exact|
+| attachable exact store|token IDs|20 B packed-slot estimate / context|✅ bit-exact ID|
 | superfluid state|the aggregate|16 KB, constant|❌ lossy|
 | external source|a pointer|6 B / fact|✅ exact|
-A recalled fact is an `int32`. It is not "approximately" the right token — it
-is the right token, and the register is append-only, so a value that was
-written never changes. That also makes it an audit log, and makes poisoning
-partly preventable: the first write wins, so corroboration (a second,
-independent mention) is a promotion to trusted.
+
+A recalled token ID is an `int32`, so the stored ID is exact. The attachable
+store tracks majority continuations and evicts the least-corroborated entries.
+This bounded in-memory store is not a tamper-evident audit log, and support
+counts do not establish that a fact is true or prevent poisoning.
 The extraction is a logit override, not a suggestion. The tool does not
 return a token and hope the model uses it; it sets the recalled token's
 logit to `+∞`, so the argmax is provably that token.
-What the numbers say
+
+## What the numbers say
+
 The fluid carries the local aggregate well: cosine 0.968 against the
 true per-anchor mean.
-When a fact is promoted, the recall is 100 % bit-exact, at 20 B/fact
+When a token ID is retrieved, it is bit-exact; the packed-slot estimate is
+20 B/context, excluding Python object overhead,
 versus the KV cache's 131,072 B/token — 6,554× cheaper.
 More anchors buy almost nothing (16× the anchors: +0.013 aggregate quality,
 256× the compute) while more exact slots buy a lot (64× the slots: +0.69
@@ -53,7 +65,9 @@ A training-free 2.4 KB domain prior improves a frozen model's
 perplexity — by 0.048 nats on a weak model, but only 0.0059 nats on a
 better one, and a plain 23 KB unigram table beats it 6×. The prior's
 value lives where the model is weakest, not where it is good.
-Seven things that did not work
+
+## What the measurements ruled out
+
 This is the part I care about most, because it is the part nobody else
 publishes.
 The topological selection criterion lost. I built the whole selection
@@ -101,7 +115,7 @@ makes sense for small, on-device models, not good ones. I will not
 pretend otherwise.
 Why publish this?
 Because the repository runs its own checks. `python selftest.py` prints
-38/38 — pure NumPy, no GPU, no downloads — and every number above comes
+50/50 — pure NumPy, no GPU, no downloads — and every number above comes
 from a file in `results/` that the same command regenerates. It found ten
 real bugs in my own code, including a Chebyshev recurrence missing a factor
 of two and a scatter operation that never scattered.
@@ -115,5 +129,5 @@ static codebook, and a landmark table you can plug into any LLM with one
 residual-stream insertion.
 Try it. Then tell me where it breaks — I have found five places already, and
 I would like to find more.
-Repository: `<your-repo-url>` · 38 self-verification checks · pure NumPy ·
-no GPU required.
+Repository: https://github.com/kapildhinwa2010-dev/fluidtech ·
+50 self-verification checks · pure NumPy · no GPU required.

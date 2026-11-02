@@ -1,27 +1,43 @@
-Superfluid Framework v1.0 — Specification
+# Superfluid Framework v1.0 — Historical specification
+
+> **Historical design note:** this is not a current implementation contract.
+> For current behavior and limitations, see [the API reference](API.md) and
+> [limitations](LIMITATION.md).
+
 A topological fluid architecture for sequence models: replace the
 transformer's quadratic attention with a cellular-sheaf diffusion whose
 spectrum does the work, and whose geometry is recomputed in every forward pass.
-This document is the design of record. Every numeric claim in it is produced by
-the code in this repository — `selftest.py` verifies the mathematics (15/15
-checks pass), `train.py` produces the empirical curves.
-0. Why this exists
+The architecture below records an earlier design; its claims and numbers
+must not be treated as current results without checking the implementation
+and experiment outputs.
+
+## 0. Why this exists
+
 A transformer layer spends its budget on two things: dense weight matrices
 (the FFN) and quadratic attention (the context mixing). The attention is
 what makes long context expensive and what makes retrieval possible.
 Superfluid replaces the attention with a geometric operator stack:
+
+```text
 X(t) = exp(-t L_F) X(0),        L_F = δᵀδ      (sheaf Laplacian)
+```
+
 This operator has three properties attention does not:
+
 | property|statement|where it comes from|
 | ---|---|---|
 | jamming|the field converges exponentially to  ker(L_F)  — a frozen geometry|spectral theorem, Hansen  & Ghrist 2019|
 | phase transition|balanced complexes freeze onto a non-trivial sign pattern; unbalanced ones cannot|G-balance, Hansen  & Ghrist 2019|
 | certified contraction|‖e^{-tL}‖₂ = e^{-tλ₂} < 1  on  ker(L)⊥|spectral theorem|
+
 …and one property attention has and it does not: a smooth diffusion is a
 low-pass filter, so it cannot select a single neighbour sharply. Retrieval must
 therefore be re-introduced explicitly. That trade — global geometry from the
 fluid, sharp selection from a sparse route head — is the whole architecture.
-1. Module map
+
+## 1. Module map
+
+```text
 SuperfluidLM
  │
  ├── Embedding  E : ℝ^|V| → ℝ^d            (tied readout)
@@ -63,16 +79,26 @@ SuperfluidLM
  │
  ├── Final RMSNorm
  └── Readout  logits = h Eᵀ   (tied)
-The three paths (spectral decomposition)
+```
+
+### The three paths (spectral decomposition)
+
 The block computes a decomposition of the identity operator:
+
+```text
 I  =  P_ker(L)        ← harmonic branch: the FROZEN geometry (component means)
    +  Σ_j band_j      ← transient: the multi-scale relaxation
    +  (I − P_ker − Σ) ← residual: the identity path through the residual stream
+```
+
 Every architectural path has a spectral meaning: the harmonic branch is the
 frozen state, the bands are the transient, the route head is sharp
 selection, and the residual is the identity. Omitting any of them loses a
 capability — and the harmonic one is not optional (measured below).
-Pseudocode (exact)
+
+### Pseudocode (historical)
+
+```python
 def block(h):                                  # h: (n, d)
      xn = rmsnorm(h)
      scores = (xn @ Wq) @ (xn @ Wk).T / sqrt(d)  # (n, n)
@@ -92,7 +118,10 @@ def block(h):                                  # h: (n, d)
      v  = xn @ Wv
      out = out + (softmax_k(scores[idx]) * v[idx]).sum(1) @ Wr
      return out
-2. The five lemmas (all machine-verified)
+```
+
+## 2. The five lemmas (historical checks)
+
 | #|statement|verification|status|
 | ---|---|---|---|
 | L1|‖e^{-tL}u‖ ≤ e^{-λ₂t}‖u‖  for  u ⊥ ker(L)|selftest.py  check 1|✅|
@@ -100,11 +129,14 @@ def block(h):                                  # h: (n, d)
 | L3|Chebyshev degree  m = O(√κ · ln(1/ε))  suffices; measured  m=16 → 9.4e-7  error at κ=14.8|check 3|✅|
 | L4|a purely linear Superfluid  cannot  fit XOR (0.50 accuracy); adding one pointwise nonlinearity  can  (1.00)|checks 4–5|✅|
 | L5|the frozen state has rank = #components; the band bank restores the signal (2.8e-6 vs 0.962 error)|checks 6–7|✅|
+
 Plus: G-balance phase transition (check 8), contraction certificate (9),
 frame property (10), and end-to-end gradient checks against finite differences
 (11–12: max relative error 3e-7 on the op-level test, 0.0e0 on the
 full model).
-3. Improvement ledger — every v0.1 weakness and its v1.0 fix
+
+## 3. Improvement ledger — v0.1 weaknesses and v1.0 design responses
+
 | v0.1 weakness|v1.0 module|mechanism|measured effect|
 | ---|---|---|---|
 | W1  literal  "remove the NN " ⇒ linear model|⑤ one pointwise  gelu|Hornik/Cybenko: σ + a fixed feature map is still a universal approximator|XOR 0.50 → 1.00 (check 5)|
@@ -119,7 +151,9 @@ full model).
 | W10  topology can be redundant|④ band decorrelation regulariser|penalise  |cos|  between band responses|losses.band_decorrelation|
 | W11  the band bank cannot carry the frozen state (found by experiment)|⑤ harmonic branch|the bands  cancel  the kernel component by construction; add the exact Hodge projection (per-component mean)|global-mean task: 49.3% →  97.3%|
 | W12  open band gates swamp the frozen state|④ band gates init at softplus(−3) ≈ 0.05|the transient is orders of magnitude larger than the harmonic term|74.1% →  97.3%|
-4. Objectives
+
+## 4. Objectives
+
 L_total = CE(next-token)
         + w_E · E_sheaf            (smoothness / consistency on routed edges)
         + w_D · band decorrelation  (keep the filter bank a frame)
@@ -133,23 +167,30 @@ gradient: the routing decision is a hard top-k selection and carries no
 gradient path, so a loss on the persistence descriptor would train nothing.
 Probe instead: can a linear head on the descriptor alone predict the label?
 If not, the geometry is decoration.
-4b. The decisive mechanism test (measured)
+
+## 4b. The decisive mechanism test (historical measurement)
+
 Input: a sequence of scalars in fixed features. Target: the mean — a
 global, order-invariant statistic. Only the aggregation mechanism differs
 between arms; nothing else is trainable.
+
 | aggregator|sign accuracy|RMSE|vs constant baseline|wall clock|
 | ---|---|---|---|---|
 | Superfluid (the fluid)|97.3%|0.015|0.126|95 s|
 | Attention (causal)|100.0%|0.000|0.126|4 s|
 | Local, R = 4|65.6%|0.113|0.126|1 s|
 | Local, R = 8|71.0%|0.102|0.126|1 s|
+
 Conclusion: the fluid does compute a global statistic in one pass — it
 beats both strictly-local aggregators and nearly matches attention. The first
 version of this experiment scored 49.3% (chance) and exposed W11/W12 above.
 The wall-clock gap (24×) is an implementation artefact of dense NumPy, not an
 architectural property; a sparse Torch implementation removes most of it.
-5. Instrumentation (the framework is observable)
+
+## 5. Instrumentation (historical design)
+
 Every block exposes, per forward pass:
+
 | diagnostic|meaning|why it matters|
 | ---|---|---|
 | λ₂  (spectral gap)|how fast the geometry jams|predicts  the freezing time before training finishes|
@@ -159,11 +200,14 @@ Every block exposes, per forward pass:
 | band_energy[B]|energy per timescale|detects band collapse|
 | topo[9]|β₀, β₁, persistence lifetimes, density|the persistent signature of the data|
 | n_edges|size of the routed complex|routing entropy|
+
 The spectral gap is a training-time early-warning system: if `λ₂ → 0` the
 model is about to over-smooth into a constant, and the fix (raise the routing
 temperature, raise the chain weight, or reduce depth) is visible before the
 loss curve tells you.
-6. Ablation plan (the experiments that decide this)
+
+## 6. Ablation plan
+
 | #|ablation|expected|kills which hypothesis|
 | ---|---|---|---|
 | A1|SF-0: no nonlinearity|catastrophic failure|confirms L4 empirically|
@@ -178,14 +222,18 @@ loss curve tells you.
 | A10|SF vs Transformer at  equal params|?|ditto|
 | A11|context length 4K → 128K|SF advantage grows|the cost thesis|
 | A12|band decorrelation weight = 0|band collapse|W10|
-6b. Measured: character-level LM on real text
+
+## 6b. Character-level LM on real text (historical measurement)
+
 Project Gutenberg (Alice in Wonderland, 120 k chars, char-level), identical
 tokens / optimiser / schedule, 400 steps, `d = 64`, `L = 2`, `ctx = 64`,
 batch 16, NumPy.
+
 | model|params|final val (nats/char)|best val|wall clock|
 | ---|---|---|---|---|
 | Superfluid|71,408|2.7397|2.6181|340 s|
 | Transformer|116,544|2.6331|2.5401|95 s|
+
 Read this honestly. At this scale the transformer is ~0.08–0.10 nats
 better despite the Superfluid having 39 % fewer parameters, and the
 Superfluid is 3.6× slower in wall clock. Two things to keep separate:
@@ -199,7 +247,9 @@ beat a prior-working, well-tuned baseline, and it does not yet.
 The mechanism test (§4b) is the more informative result: there the fluid
 does deliver the capability it claims (97.3% on a global statistic vs 65–71%
 for local aggregators).
-7. Cost model (per token, per layer)
+
+## 7. Cost model (per token, per layer)
+
 | component|Superfluid|Transformer|
 | ---|---|---|
 | projections|8d²|8d²|
@@ -207,6 +257,7 @@ for local aggregators).
 | the fluid itself|2mk  (m=12,k=16 →  384 flops )|—|
 | FFN|16d²|16d²|
 | total (d=4096, n=4096)|3.02e8|4.70e8|
+
 The fluid is 0.00016 % of a transformer layer. Two consequences, both
 important and both honest:
 the fluid is essentially free — so it cannot be the reason the model works;
@@ -215,13 +266,16 @@ the real win is not FLOPs but memory: with a static corpus-level
 topology the decode state is constant (16 KB) instead of a growing KV cache
 (488 GB at 1M context).
 Param-matched totals (D ≈ 44B, 470B tokens, 512×H100 @ 40 % MFU):
+
 | context|Transformer|Superfluid|speed-up|
 | ---|---|---|---|
 | 8K|188.9 h|172.3 h|1.10×|
 | 32K|238.7 h|172.3 h|1.39×|
 | 64K|305.1 h|172.3 h|1.77×|
 | 128K|438.0 h|172.3 h|2.54×|
-8. Scaling-law harness (for W9)
+
+## 8. Scaling-law harness (for W9)
+
 Follow Hoffmann et al. exactly, or the comparison is worthless:
 sweep `D ∈ {6e6 … 1e9}` × `N ∈ {6e7 … 4e9}` (≥ 3 points per axis);
 FLOP-matched baselines: the transformer is run at the same FLOPs, i.e.
@@ -234,7 +288,9 @@ the transformer, the architecture is merely cheaper, which is still a
 result but a smaller one;
 report the gap collapse curve `λ₂(step)` alongside — if the gap closes
 as the model gets better, that is the mechanism.
-9. Deployment target: the long-context memory layer
+
+## 9. Proposed deployment target (historical)
+
 The strongest use case is not replacing the whole transformer. It is:
 a static, corpus-level sheaf used as a memory substrate with zero KV
 cache, sitting next to a small attention stack that handles needle retrieval.
@@ -245,7 +301,9 @@ For 1M-token context this is 488 GB → ~16 KB of state. The cost model says the
 memory layer is ~free in FLOPs (the fluid is 384 flops/token/layer); the only
 real cost is that the topology is fixed, so it carries distributional memory
 (statistical geometry of the corpus), not instance-specific memory.
-10. Roadmap
+
+## 10. Roadmap
+
 v1.0 (this repo) — verified mathematics, trainable model, end-to-end
 autodiff, LM A/B, global-aggregation mechanism demo, full instrumentation.
 v1.1 (2–4 weeks)
@@ -272,7 +330,9 @@ physical priors: the G-balance phase transition as a regulariser
 (encourage balance → stronger contraction certificate)
 domain port: molecules / meshes / proteins, where the topological prior
 is not a gimmick but the correct inductive bias
-11. Repository map
+
+## 11. Repository map
+
 superfluid/
   autodiff.py    reverse-mode autodiff (Tensor, ops, gradient-checked)
   sheaf.py       signed sheaf Laplacian, G-balance, TV energy
@@ -287,15 +347,20 @@ superfluid/
   data.py        Gutenberg corpus + char tokenizer + synthetic fallback
 selftest.py      15 numerical checks of the mathematics   -> results/selftest.json
 train.py         LM A/B + global-aggregation demo             -> results/train_results.json
-Run it
+
+### Run it
+
 python3 selftest.py                 # verify the maths (15/15)
 python3 train.py --steps 400 --d 64 --layers 2 --ctx 64 --batch 16
 Requirements: numpy only (no torch, no scipy). The whole point of the
 NumPy engine is that every claim can be re-verified on any laptop in under a
 minute.
-11b. The engineering ledger (bugs found by running the code)
+
+## 11b. The engineering ledger (historical bug list)
+
 Each of these silently turned a claim into a no-op, and each was caught by a
 test rather than by reading the code:
+
 | bug|symptom|
 | ---|---|
 | Laplacian built as  A − D|non-PSD operator, overflow in exp(−tL)|
@@ -308,8 +373,11 @@ test rather than by reading the code:
 | no gradient seeding in  backward()|every gradient exactly zero|
 | newaxis ( [:, :, None] ) unhandled in the backward|scatter with mismatched index arrays|
 | λmax underestimated by power iteration|Chebyshev recurrence outside its stable region → band energies of 10¹⁵|
+
 Regression tests now exist for each class of failure (selftest checks 11–15).
-12. What would falsify this
+
+## 12. What would falsify this
+
 Stated up front, because a research proposal without kill criteria is a wish:
 SF-2 trails the transformer by > 0.15 nats at matched FLOPs on a 400M-token
 run → the fluid contributes nothing and the architecture is a slower
@@ -329,6 +397,7 @@ Appendix (v1.1) — the memory module
 `superfluid/memory.py`
 `FrozenRegister` — the exact tier
 An append-only, write-once table of exact facts.  20 bytes per slot:
+
 | field|type|bytes|meaning|
 | ---|---|---|---|
 | key|uint64|8|64-bit context hash (the occurrence identity)|
@@ -336,6 +405,7 @@ An append-only, write-once table of exact facts.  20 bytes per slot:
 | sig|uint32|4|4×uint8 embedding signature (collision detector)|
 | anchor|uint16|2|the anchor the fact routed to|
 | meta|uint16|2|doc_id (12 b) | trust (2 b) | reserved|
+
 API:
 reg = FrozenRegister(capacity=819)          # 819 x 20 B = 16 KB
 slot = reg.promote(token_id, ctx_key, sig, anchor, doc_id, trust)
@@ -343,14 +413,20 @@ out   = reg.recall(ctx_key, sig)             # -> (slot, token_id) or None
 reg.set_trust(slot, 1)                      # corroboration gate
 reg.quorum(key)                             # distinct sources that promoted it
 reg.stats(); reg.to_bytes(); FrozenRegister.from_bytes(blob, capacity)
-Guarantees
+
+## Guarantees in the historical design
+
 Invariance — a slot's value never changes; the register is append-only.
 Integer exactness — the value is an `int32` token id, so a successful
 recall returns a value that is equal, not approximately equal.
 Fail-loud — the recall verifies the 64-bit key and the 4-byte
 signature; on a mismatch it returns `None` rather than another fact's value.
-Versioning — promoting the same key twice appends a second slot and the
-latest wins; the register doubles as an append-only audit log.
+
+### Versioning
+
+Promoting the same key twice appends a second slot and the
+the attachable store tracks the majority continuation and evicts the
+least-corroborated entry. This is not a tamper-evident audit log.
 `SheafMemoryAdapter` — the geometry-addressed tier
 ad = SheafMemoryAdapter(M=1024, r=8, d=64, capacity=819)
 ad.set_prototypes(protos)            # (M, d) codebook
@@ -359,6 +435,9 @@ idx, scores, content = ad.read(q)     # geometry read
 ad.promote(vec, value_id, window)     # exact write
 ad.recall(window, vec)                # exact read
 ad.state_bytes(); ad.codebook_bytes()
+
+### Write path
+
 The write path scatters the chunk into its routed anchors and then applies
 `exp(-tL)`.  That is exact for a linear operator, so chunking is not an
 approximation.
@@ -372,6 +451,7 @@ anchor holds `r×16` bits, so `r` is over-provisioned for addressing and a
 bigger budget should buy more pins, not more anchors.  The function never
 over-commits: it reduces `M` instead.
 `superfluid/topology.py` (v1.1 additions)
+
 | function|what it computes|
 | ---|---|
 | hodge_embedding(n, edges, alpha)|Ψ = (L + (1/n)11ᵀ)^{-1}  for the signed sheaf Laplacian|
@@ -379,15 +459,18 @@ over-commits: it reduces `M` instead.
 | hodge_edge_participation(Ψ, a, b)|normalised participation of a  pair  of cells, in [0,1]|
 | local_density(protos, radius=None, k=8)|how crowded each cell's neighbourhood is|
 | persistence_landmarks(n, edges, weights, k)|nodes whose topological class survives longest in the Kruskal filtration|
+
 Prior art note (important). Hodge-based topological relevance for
 selecting points is not new — see "Topologically Relevant Landmark
 Selection on Point Clouds", arXiv 2610.00019, which scores points by
 harmonic participation to choose PH landmarks.  What is new here is the
 application: allocating the exact slots of a constant-size neural memory.
 And the measured result is that it does not work (0.000 precision vs
-0.970 for the plain geometric affinity) — see `docs/DESIGN-pinned-memory.md`
+0.970 for the plain geometric affinity) — see `docs/DESIGN_pinned_memory.md`
 §9.5.2.
-The corrected balance diagnostic
+
+### Corrected balance diagnostic
+
 `balance_residual(L) = ‖L·1‖∞` does not detect the frozen state of a
 scalar signed sheaf.  An all-negative EVEN cycle has `‖L·1‖∞ = 4` yet
 freezes onto the alternating sign pattern.  The right diagnostic is the
