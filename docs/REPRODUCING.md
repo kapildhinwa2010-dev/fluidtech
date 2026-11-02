@@ -64,6 +64,7 @@ standalone commands:
 
 | Command | Measures | Default result |
 |---|---|---|
+| `python experiments/e9_ten_million.py --phase stream`<br>`python experiments/e9_ten_million.py --phase performance` | 10M-token recall and performance sweep | `results/e9_ten_million.json` |
 | `python experiments/e1_prior_perplexity.py` | Training-free prior on a frozen model | `results/e1_prior.json` |
 | `python experiments/e2_scaling.py` | Anchor and exact-memory budget sweeps | `results/e2_scaling.json` |
 | `python experiments/e4_gbalance.py` | Frustration index and spectral-gap relationship | `results/e4_gbalance.json` |
@@ -84,6 +85,10 @@ python experiments/pretrain_prior.py --text corpus.txt --out prior
 
 Experiments may overwrite their output JSON. Review `git status` and the
 result diff after a run before replacing a recorded snapshot.
+E9's default `--phase all` runs both portions in one process; the two listed
+phases let the long stream and model evaluation run separately. The
+performance phase requires the completed stream-phase JSON at the same
+`--out` path and matching `--tokens`/`--capacity` values.
 
 ## Optional pretrained-model experiment
 

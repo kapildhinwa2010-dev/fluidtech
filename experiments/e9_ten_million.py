@@ -93,13 +93,100 @@ def recall_fact(branch, key):
     return branch.store.get(int(key), -1)
 
 
+def run_performance(args, res):
+    t0 = time.time()
+    print("\n[+] E9d -- the performance delta (before vs after)")
+    from experiments.e6_real_corpus import load_chars, train_base
+    ids_c, V = load_chars()
+    n_tr = int(len(ids_c) * 0.9)
+    tr, va = ids_c[:n_tr], ids_c[n_tr:]
+    model = train_base(tr, V, d=64, ctx=128, steps=args.steps, seed=0)
+    br3 = SAABranch(M=64, r=8, d=model.d, emb=model.emb, ctx_len=12,
+                    capacity=args.capacity, use_exact=True, use_lossy=False,
+                    seed=0)
+    br3.Wo_exact.data = np.eye(model.d)
+    br3.read_gain = "raw"
+    br3.read_scale = 300.0
+    br3.read_transform = "pc1"
+    br3.refresh_contrast()
+
+    def fill_memory():
+        br3.reset()
+        for _ in range(args.tokens // len(tr) + 1):
+            stream_through(br3, tr)
+
+    def val_loss(use_layer):
+        if use_layer and not br3.store:
+            fill_memory()
+        total = count = 0.0
+        for s in range(0, len(va) - 1, 128):
+            window = va[s:s + 129]
+            if use_layer:
+                h = model.emb[window[:-1]] + model.pos[:len(window) - 1]
+                h, _ = br3.forward(h, model.emb[window[:-1]], window[:-1])
+                logits = model.forward_from_h(h)
+            else:
+                logits = model.forward(window[:-1])
+            total += cross_entropy(logits, window[1:]) * (len(window) - 1)
+            count += len(window) - 1
+        return total / count
+
+    base = val_loss(False)
+    print(f"    the base model alone                : {base:.4f} "
+          f"(ppl {np.exp(base):.2f})")
+    sweep = {}
+    for gain in (0.0, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0):
+        br3.read_scale = gain
+        loss = val_loss(True)
+        sweep[str(gain)] = {"loss": float(loss), "delta": float(loss - base)}
+        print(f"    base + layer, gain {gain:>6.1f}          : {loss:.4f} "
+              f"(ppl {np.exp(loss):7.2f})   delta {loss - base:+.4f}")
+    best_gain = min(sweep, key=lambda key: sweep[key]["loss"])
+    print(f"    -> the best gain for GENERATION is {best_gain} "
+          f"(delta {sweep[best_gain]['delta']:+.4f}); the best for RECALL is "
+          f"300.  They are not the same knob.")
+    res["e9d_performance"] = {
+        "base_loss": float(base), "base_ppl": float(np.exp(base)),
+        "training_steps": args.steps,
+        "gain_sweep": sweep,
+        "best_gain_for_generation": best_gain,
+        "best_delta_for_generation": sweep[best_gain]["delta"],
+        "note": "the injection gain that maximises RECALL is NOT the gain "
+                "that maximises GENERATION quality",
+    }
+
+    res["runtime_sec"] = res.get("runtime_sec", 0.0) + time.time() - t0
+    os.makedirs(RESULTS, exist_ok=True)
+    with open(args.out, "w") as f:
+        json.dump(res, f, indent=2)
+    print(f"\nwrote {args.out}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tokens", type=int, default=10_000_000)
     ap.add_argument("--capacity", type=int, default=819)     # a 16 KB budget
     ap.add_argument("--out", default=os.path.join(RESULTS, "e9_ten_million.json"))
+    ap.add_argument("--steps", type=int, default=300,
+                    help="training steps for the E9d base-model evaluation")
+    ap.add_argument("--phase", choices=("all", "stream", "performance"),
+                    default="all",
+                    help="split the long run into stream and performance phases")
     args = ap.parse_args()
     t0 = time.time()
+    if args.phase == "performance":
+        if not os.path.isfile(args.out):
+            ap.error("run --phase stream first to create the E9a-E9c results")
+        with open(args.out) as f:
+            res = json.load(f)
+        if res.get("tokens") != args.tokens or \
+                res.get("capacity") != args.capacity:
+            ap.error("the saved E9a-E9c results do not match --tokens/--capacity")
+        if "e9c_context_level" not in res:
+            ap.error("saved results do not contain the completed E9c stream")
+        return run_performance(args, res)
+
     res = {"tokens": args.tokens, "capacity": args.capacity,
            "slot_bytes": SLOT_BYTES}
 
@@ -192,85 +279,16 @@ def main():
                 "the deep ones are evicted",
     }
 
-    # ---------------------------------------------------------------- E9d
-    print("\n[+] E9d -- the performance delta (before vs after)")
-    # a real base model, trained on the local corpus, evaluated on text the
-    # layer has NOT seen (novel) and on text it HAS seen (a repeat)
-    from experiments.e6_real_corpus import load_chars, train_base
-    ids_c, V = load_chars()
-    n_tr = int(len(ids_c) * 0.9)
-    tr, va = ids_c[:n_tr], ids_c[n_tr:]
-    model = train_base(tr, V, d=64, ctx=128, steps=300, seed=0)
-    br3 = SAABranch(M=64, r=8, d=model.d, emb=model.emb, ctx_len=12,
-                    capacity=args.capacity, use_exact=True, use_lossy=False,
-                    seed=0)
-    br3.Wo_exact.data = np.eye(model.d)
-    br3.read_gain = "raw"
-    br3.read_scale = 300.0
-    br3.read_transform = "pc1"
-    br3.refresh_contrast()
-
-    def fill_memory():
-        """Fill the memory ONCE with 10M tokens of the training text.
-
-        (A real session's worth of context.  The store's contents do not
-        depend on the injection gain, so the gain sweep below does NOT
-        refill it -- refilling per point cost 9 x 10M tokens and made the
-        experiment 9 times slower for nothing.)
-        """
-        br3.reset()
-        for _ in range(args.tokens // len(tr) + 1):
-            stream_through(br3, tr)
-
-    def val_loss(use_layer, repeat=False):
-        if use_layer and not br3.store:
-            fill_memory()
-        tot = cnt = 0.0
-        for s in range(0, len(va) - 1, 128):
-            w = va[s:s + 129]
-            if use_layer:
-                h = model.emb[w[:-1]] + model.pos[:len(w) - 1]
-                h, _ = br3.forward(h, model.emb[w[:-1]], w[:-1])
-                lg = model.forward_from_h(h)
-            else:
-                lg = model.forward(w[:-1])
-            tot += cross_entropy(lg, w[1:]) * (len(w) - 1)
-            cnt += len(w) - 1
-        return tot / cnt
-
-    base = val_loss(False)
-    print(f"    the base model alone                : {base:.4f} "
-          f"(ppl {np.exp(base):.2f})")
-    # The injection gain decides everything.  A big gain is what makes the
-    # RECALL work (the recalled token must win the argmax); a big gain is
-    # also what makes the GENERATION fail (a wrong retrieval is forced into
-    # the residual).  Sweep it.
-    sweep = {}
-    for g in (0.0, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0):
-        br3.read_scale = g
-        l = val_loss(True)
-        sweep[str(g)] = {"loss": float(l), "delta": float(l - base)}
-        print(f"    base + layer, gain {g:>6.1f}          : {l:.4f} "
-              f"(ppl {np.exp(l):7.2f})   delta {l - base:+.4f}")
-    best_gain = min(sweep, key=lambda k: sweep[k]["loss"])
-    print(f"    -> the best gain for GENERATION is {best_gain} "
-          f"(delta {sweep[best_gain]['delta']:+.4f}); the best for RECALL is "
-          f"300.  They are not the same knob.")
-    res["e9d_performance"] = {
-        "base_loss": float(base), "base_ppl": float(np.exp(base)),
-        "gain_sweep": sweep,
-        "best_gain_for_generation": best_gain,
-        "best_delta_for_generation": sweep[best_gain]["delta"],
-        "note": "the injection gain that maximises RECALL is NOT the gain "
-                "that maximises GENERATION quality",
-    }
-
+    if args.phase == "stream":
+        res["runtime_sec"] = time.time() - t0
+        os.makedirs(RESULTS, exist_ok=True)
+        with open(args.out, "w") as f:
+            json.dump(res, f, indent=2)
+        print(f"\nwrote {args.out}; run --phase performance to complete E9d")
+        return 0
     res["runtime_sec"] = time.time() - t0
-    os.makedirs(RESULTS, exist_ok=True)
-    with open(args.out, "w") as f:
-        json.dump(res, f, indent=2)
-    print(f"\nwrote {args.out}")
-    return 0
+    return run_performance(args, res)
+
 
 
 if __name__ == "__main__":

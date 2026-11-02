@@ -3,10 +3,10 @@
 > **Read this before the README.** This file is the reason the rest of the
 > repository is worth trusting.
 >
-> Eleven results in this project came out **negative or against expectation**.
-> Their findings are summarized here, with raw result files linked where
-> available. The historical N4 and N11 runs have no surviving raw JSON, so
-> their numbers cannot be independently reproduced from this repository.
+> Eleven negative or unexpected findings are documented here, with raw result
+> files linked where available. The historical N4 and N11 claims have no
+> surviving raw JSON, so their numbers cannot be independently reproduced
+> from this repository.
 >
 > If you only read one file in this repo, read this one.  It is the honest
 > map of the project's real shape.
