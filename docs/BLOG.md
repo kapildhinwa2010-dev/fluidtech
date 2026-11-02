@@ -85,10 +85,9 @@ suite.
 λ₂ does not predict quality (pearson 0.20). The certificate is true
 about the operator; it says nothing about the task. The claim was
 weakened, not the data massaged.
-A transformer beats the fluid at every scale I could train
-(2.6331 vs 2.7397 nats). The fluid only wins against fixed-receptive-field
-aggregators (97.3 % vs 65.6 % / 71.0 %) — and it loses to full attention,
-which is the honest summary of the entire architecture.
+Archived results record a transformer beating the fluid (2.6331 vs 2.7397
+nats) and a 97.3 % mechanism result. The historical source scripts are not
+included, so see N4 in `docs/NEGATIVE-RESULTS.md` for the reproduction caveat.
 Grafted onto a frozen model, my own diffusion tier made the model
 worse — +0.81 nats (ppl 13.3 -> 29.9) on real English. The cause is
 structural: the persistent state sits outside the autodiff graph, so the

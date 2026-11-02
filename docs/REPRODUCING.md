@@ -64,6 +64,7 @@ standalone commands:
 
 | Command | Measures | Default result |
 |---|---|---|
+| `python experiments/e9_ten_million.py --phase stream`<br>`python experiments/e9_ten_million.py --phase performance` | 10M-token recall and performance sweep | `results/e9_ten_million.json` |
 | `python experiments/e1_prior_perplexity.py` | Training-free prior on a frozen model | `results/e1_prior.json` |
 | `python experiments/e2_scaling.py` | Anchor and exact-memory budget sweeps | `results/e2_scaling.json` |
 | `python experiments/e4_gbalance.py` | Frustration index and spectral-gap relationship | `results/e4_gbalance.json` |
@@ -73,9 +74,23 @@ standalone commands:
 | `python experiments/e6_real_corpus.py --tokenizer bpe` | Subword-tokenized repeat | `results/e6_real_bpe.json` |
 | `python experiments/e7_lossy_fix.py` | Diffusion-tier training behavior | `results/e7_lossy_fix.json` |
 
-Experiments may overwrite their output JSON. Review `git status` after a
-run and preserve or restore result files intentionally; generated corpora
-and prior artifacts are not source documentation.
+The repository includes `corpus.txt`, the generated `prior/` artifacts, and
+recorded outputs including `results/selftest.json`, `results/e2_scaling.json`,
+`results/e4_gbalance.json`, `results/e9_ten_million.json`,
+`results/e14_real_gpt2.json`, `results/mechanism.json`, and
+`results/train_results.json`. Regenerate the tokenizer and prior with:
+
+```bash
+python -m fluidlayer.bpe --corpus corpus.txt --vocab 512 --out prior/bpe_512.json
+python experiments/pretrain_prior.py --text corpus.txt --out prior
+```
+
+Experiments may overwrite their output JSON. Review `git status` and the
+result diff after a run before replacing a recorded snapshot.
+E9's default `--phase all` runs both portions in one process; the two listed
+phases let the long stream and model evaluation run separately. The
+performance phase requires the completed stream-phase JSON at the same
+`--out` path and matching `--tokens`/`--capacity` values.
 
 ## Optional pretrained-model experiment
 
@@ -93,9 +108,8 @@ cost and results depend on the selected hardware and model. A successful
 small-model CPU test does not validate production-scale inference.
 
 The E14 GPT-2 experiment uses the repository's downloader by default for
-the checkpoint location (`models/gpt2`). Provide a UTF-8 corpus file; the
-default is `corpus.txt` in the repository root, which is intentionally not
-tracked:
+the checkpoint location (`models/gpt2`). The model weights are not tracked;
+the default UTF-8 corpus, `corpus.txt`, is included in the repository:
 
 ```bash
 python tools/download_gpt2.py --out models/gpt2

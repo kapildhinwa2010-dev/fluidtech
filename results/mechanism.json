@@ -1,0 +1,35 @@
+{
+  "ctx": 24,
+  "d": 48,
+  "steps": 400,
+  "results": [
+    {
+      "name": "SUPERFLUID (fluid)",
+      "sign_acc": 0.973,
+      "rmse": 0.014991582436580286,
+      "baseline_rmse": 0.12555711594783758,
+      "seconds": 95.2
+    },
+    {
+      "name": "ATTENTION (causal)",
+      "sign_acc": 1.0,
+      "rmse": 3.114653824167844e-05,
+      "baseline_rmse": 0.12555711594783758,
+      "seconds": 3.4
+    },
+    {
+      "name": "LOCAL (R=4)",
+      "sign_acc": 0.656,
+      "rmse": 0.11297257461896859,
+      "baseline_rmse": 0.12555711594783758,
+      "seconds": 1.1
+    },
+    {
+      "name": "LOCAL (R=8)",
+      "sign_acc": 0.71,
+      "rmse": 0.10195349558306185,
+      "baseline_rmse": 0.12555711594783758,
+      "seconds": 1.1
+    }
+  ]
+}

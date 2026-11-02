@@ -179,14 +179,17 @@ Details: [`docs/TEN-MILLION.md`](docs/TEN-MILLION.md)
 ## The negative results
 
 This is the part that makes the rest believable.
-Eleven results came out negative or against expectation, and all eleven are measured, reproducible, and published.
+Eleven negative or unexpected findings are documented. Most have checked-in
+result files; the archived transformer and real-GPT-2 outputs are now
+checked in. Their original model/script environments are not fully included,
+so those historical runs cannot be independently repeated as-is.
 
 | What we expected | What happened |
 |---|---|
 | The **topological** selection criterion picks the right facts | It does **not** — `0.000` precision vs `0.970` for plain geometric affinity. |
 | `‖L·1‖∞` detects the frozen state | It does **not** — the frustration index does; the old claim is now a test case. |
 | `λ₂` predicts long-context quality | Barely — Pearson `0.20`. |
-| A transformer loses at some scale | It **wins** at every scale we could train. |
+| A transformer loses at some scale | The archived run says it **wins**; see `results/train_results.json`. |
 | A domain prior beats a frequency table | It helps (`−0.006 nats`) but a **unigram table wins 6× more**. |
 | The diffusion tier is neutral on a frozen model | It **degrades** the model by **`+0.81 nats`** (fixed → `+0.0000`, but no upside either). |
 | Training the layer helps | It **hurts** — the training-free identity map is better (`0.800 vs 0.650`). |
@@ -236,28 +239,12 @@ and [limitations](docs/LIMITATION.md).
 
 ---
 
-## Status — and it now includes a REAL pretrained LLM
+## Real-model experiment status
 
-GPT-2 (124M parameters, the real 50,257-token BPE tokenizer), run on CPU with the memory layer attached:
-
-| Test | Result |
-|---|---|
-| Attaching the layer | The logits are **bit-identical** (max diff `0.000e+00`). |
-| A fact planted **2,947 tokens** before the query | The base GPT-2 predicts `464`; **the layer predicts the fact**. |
-| The base model’s perplexity | `4.0289` (`ppl 56.20`) → **`4.0019` (`ppl 54.70`)** with the layer. |
-
-And one result that narrows the claim honestly:
-
-On the real model, the classic kNN-LM interpolation beats the gated override by **8×** on perplexity — the opposite of the 131k-parameter model, where the gate won by **7.4×**.
-The gate wins where the base model is weak; interpolation wins where it is strong.
-The capability works on both.
-
-The checkpoint, the forward pass and the tokenizer are all in this repository:
-
-- [`fluidlayer/gpt2_model.py`](fluidlayer/gpt2_model.py)
-- [`fluidlayer/gpt2_tokenizer.py`](fluidlayer/gpt2_tokenizer.py)
-
-No `transformers` dependency, and the generation is verified coherent.
+The E14 GPT-2 experiment script, forward implementation, tokenizer, and
+archived `results/e14_real_gpt2.json` are included. The checkpoint is not;
+rerun E14 to independently reproduce the recorded measurements. See
+[the reproduction guide](docs/REPRODUCING.md) for download and run commands.
 
 The Torch twin is now tested against the NumPy reference in [`tests/test_torch_parity.py`](tests/test_torch_parity.py): the two implementations must agree on the router, the store and the gated override.
 

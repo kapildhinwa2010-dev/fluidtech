@@ -1,0 +1,82 @@
+{
+  "model": "/workspace/models/gpt2",
+  "config": {
+    "model": "models/gpt2",
+    "corpus": "corpus.txt",
+    "ctx": 128,
+    "windows": 30,
+    "M": 64,
+    "r": 8,
+    "read_gain": 300.0,
+    "out": "results/e14_real_gpt2.json"
+  },
+  "e14a_attach": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+  },
+  "base": {
+    "loss": 4.028930099805196,
+    "ppl": 56.2007498762947,
+    "token_accuracy": 0.3072916666666667
+  },
+  "knn_lm": {
+    "0.95": {
+      "loss": 3.805237897237142,
+      "delta": -0.2236922025680541,
+      "token_accuracy": 0.30911458333333336
+    },
+    "0.9": {
+      "loss": 3.8029924631118774,
+      "delta": -0.22593763669331857,
+      "token_accuracy": 0.3028645833333333
+    },
+    "0.8": {
+      "loss": 3.8416152318318684,
+      "delta": -0.18731486797332764,
+      "token_accuracy": 0.28203125
+    }
+  },
+  "gated_layer": {
+    "0.5": {
+      "loss": 4.001791135470072,
+      "delta": -0.02713896433512364,
+      "token_accuracy": 0.3104166666666667
+    },
+    "1.0": {
+      "loss": 4.007833456993103,
+      "delta": -0.021096642812093336,
+      "token_accuracy": 0.3111979166666667
+    },
+    "2.0": {
+      "loss": 4.196231373151144,
+      "delta": 0.1673012733459478,
+      "token_accuracy": 0.2986979166666667
+    },
+    "5.0": {
+      "loss": 6.155922365188599,
+      "delta": 2.126992265383403,
+      "token_accuracy": 0.26484375
+    },
+    "10.0": {
+      "loss": 11.190349801381428,
+      "delta": 7.161419701576232,
+      "token_accuracy": 0.2265625
+    },
+    "20.0": {
+      "loss": 22.29864565531413,
+      "delta": 18.26971555550893,
+      "token_accuracy": 0.19479166666666667
+    }
+  },
+  "e14c_capability": {
+    "retrieved_at_query": 1000,
+    "base_uncertainty": 0.9376360774040222,
+    "base_prediction": 464,
+    "graft_prediction": 1000,
+    "target": 1000,
+    "base_correct": false,
+    "graft_correct": true,
+    "planted_tokens_back": 2947
+  },
+  "runtime_sec": 1206.3396348953247
+}

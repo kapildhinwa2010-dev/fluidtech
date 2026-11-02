@@ -3,6 +3,10 @@
 > **Historical design note:** this is not a current implementation contract.
 > For current behavior and limitations, see [the API reference](API.md) and
 > [limitations](LIMITATION.md).
+> Archived LM-comparison and mechanism-test JSON outputs are included under
+> `results/`, but their original experiment source files are unavailable.
+> Treat the numbers as historical snapshots, not independently rerunnable
+> measurements.
 
 A topological fluid architecture for sequence models: replace the
 transformer's quadratic attention with a cellular-sheaf diffusion whose
@@ -345,8 +349,8 @@ fluidlayer/
   losses.py      CE (+ tensor variant), sheaf energy, band decorrelation
   optim.py       Adam (decoupled WD, clipping, cosine schedule)
   data.py        Gutenberg corpus + char tokenizer + synthetic fallback
-selftest.py      15 numerical checks of the mathematics   -> results/selftest.json
-train.py         LM A/B + global-aggregation demo             -> results/train_results.json
+selftest.py      historical numerical checks
+train.py         historical LM A/B + global-aggregation demo (source unavailable; see archived results/)
 
 ### Run it
 

@@ -1,0 +1,89 @@
+{
+  "tokens": 10000000,
+  "capacity": 819,
+  "slot_bytes": 20,
+  "footprint": {
+    "layer_state_bytes": 16384,
+    "kv_bytes_8b": 1310000000000.0,
+    "kv_bytes_70b": 3280000000000.0,
+    "kv_over_layer_8b": 79956054.6875,
+    "kv_over_layer_70b": 200195312.5
+  },
+  "e9b_token_level": {
+    "common_key_control_recall": 0.0,
+    "seconds": 12.11579442024231,
+    "tokens_per_sec": 825368.9071591233,
+    "store_entries": 76,
+    "store_bytes": 1520,
+    "state_bytes": 5616,
+    "recall_by_depth": {
+      "100000": true,
+      "1000000": true,
+      "3000000": true,
+      "5000000": true,
+      "7000000": true,
+      "9000000": true
+    },
+    "recall_overall": 1.0
+  },
+  "e9c_context_level": {
+    "seconds": 82.0463297367096,
+    "store_entries": 819,
+    "store_bytes": 16380,
+    "recall_by_depth": {
+      "100000": false,
+      "1000000": false,
+      "3000000": false,
+      "5000000": false,
+      "7000000": false,
+      "9000000": false
+    },
+    "note": "a 16 KB budget cannot hold the contexts of 10M tokens; the deep ones are evicted"
+  },
+  "e9d_performance": {
+    "base_loss": 2.6110783595284124,
+    "base_ppl": 13.613723427628477,
+    "gain_sweep": {
+      "0.0": {
+        "loss": 2.6110783595284124,
+        "delta": 0.0
+      },
+      "0.1": {
+        "loss": 2.6080972814173893,
+        "delta": -0.0029810781110231055
+      },
+      "0.3": {
+        "loss": 2.6053836781413757,
+        "delta": -0.00569468138703666
+      },
+      "1.0": {
+        "loss": 2.623593264920141,
+        "delta": 0.012514905391728615
+      },
+      "3.0": {
+        "loss": 2.7457676951187904,
+        "delta": 0.134689335590378
+      },
+      "10.0": {
+        "loss": 3.072049960395278,
+        "delta": 0.4609716008668654
+      },
+      "30.0": {
+        "loss": 3.437382882742129,
+        "delta": 0.8263045232137167
+      },
+      "100.0": {
+        "loss": 3.6353070942673065,
+        "delta": 1.024228734738894
+      },
+      "300.0": {
+        "loss": 3.6939492671989576,
+        "delta": 1.0828709076705452
+      }
+    },
+    "best_gain_for_generation": "0.3",
+    "best_delta_for_generation": -0.00569468138703666,
+    "note": "the injection gain that maximises RECALL is NOT the gain that maximises GENERATION quality"
+  },
+  "runtime_sec": 330.68624091148376
+}

@@ -3,8 +3,14 @@
 > *"Give a model 10M tokens with this layer attached.  What does it
 > remember?  And how does the performance change — before and after?"*
 
-Measured by `experiments/e9_ten_million.py` (10,000,000 tokens, CPU, ~25
-minutes).  Every number below is in `results/e9_ten_million.json`.
+Measured by `experiments/e9_ten_million.py` (10,000,000 tokens, CPU). Every
+number below is in `results/e9_ten_million.json`. To run the long experiment
+in two stages:
+
+```bash
+python experiments/e9_ten_million.py --phase stream
+python experiments/e9_ten_million.py --phase performance
+```
 
 ---
 

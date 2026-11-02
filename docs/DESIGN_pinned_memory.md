@@ -45,10 +45,9 @@ This is the entire design in one move:
 FluidLayer stops being a memory. It becomes an index.
 The memory moves to a write-once register; the fluid answers where, and
 the register answers what.
-And the reason this is not a retreat: the 97.3 % mechanism result was always a
-routing result. In the mechanism test the fluid predicted the right global
-aggregate to 97.3 % sign accuracy. It was already an excellent addresser.
-We just gave it an exact value to point at.
+The archived `results/mechanism.json` records a 97.3 % global-aggregation
+result. Its original experiment source is not present, so the historical run
+cannot be independently regenerated (see N4 in `docs/NEGATIVE-RESULTS.md`).
 
 ## 1. The impossibility, stated precisely
 
@@ -89,7 +88,7 @@ keep.
          └──────────────────────────────────────────────────┘
 Slot layout (20 B, as implemented):`key uint64 | val int32 | sig uint32 | anchor uint16 | meta uint16`.
 The read path is three clean steps, each with a guarantee:
-query h  ──▶  L2 routes h → anchor a   (approx: 97.3 % measured)
+query h  ──▶  L2 routes h → anchor a   (approximate; archived score in results/mechanism.json)
               anchor a → slot id s       (exact: 1 byte)
               L1[s] = (key, token_id)    (exact: 4 bytes)
               verify key matches h's context hash   (fail-loud)
@@ -174,12 +173,12 @@ This is a testable prediction, and it is falsifiable.
 Which tokens to freeze? The longest bars = the structural landmarks =
 the tokens that carry the document's skeleton. Freeze those and you get
 exact extraction of the load-bearing facts, not random trivia.
-Why the fluid wins global aggregation (explains the 97.3 %). The
+The theory suggests why diffusion can carry global aggregation: the
 harmonic branch of `L` (its kernel) is the globally dominant H₀ mode —
-and the global mean is the longest bar. The fluid preserves the kernel
-component exactly; that is precisely why it beat local aggregators
-(65.6 % / 71.0 %) on the global-mean task and lost on position-sensitive
-tasks. The v0.1 theory report and the mechanism experiment now have one
+and the global mean is the longest bar. The archived mechanism output records
+a 97.3 % score, beating local aggregators (65.6 % / 71.0 %); its original
+source is unavailable, so the run cannot be independently regenerated. The
+v0.1 theory report and the mechanism experiment now have one
 unified explanation. That is a real, publishable narrative.
 
 ## 5. Budget: the 3-D trade-off
@@ -366,8 +365,8 @@ P4 needs one GPU for a few hours.
 
 Attention remembers by position. We remember by geometry. But geometry alone
 smears: diffusion destroys exactness by construction. So we split the
-memory. A 16 KB sheaf routes — 97.3 % accurate at picking the right
-landmark — and an append-only frozen register stores the exact token id
+memory. A 16 KB sheaf routes to an approximate landmark (the archived
+mechanism result records 97.3 % sign accuracy) — and an append-only frozen register stores the exact token id
 at 14 bytes per fact, 196,234× cheaper than a KV cache. Topology decides
 which landmarks get exact storage, using the document's own persistence
 diagram, at zero per-token cost. The model can promote a fact or recall one
