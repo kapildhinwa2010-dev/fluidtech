@@ -516,56 +516,22 @@ size is decisive, and the honest reading is sharper than "we beat kNN-LM":
 
 ---
 
-## ON A REAL PRETRAINED LLM (E14) — GPT-2, 124M, the real tokenizer
+## ON A REAL PRETRAINED LLM (E14) — raw result unavailable
 
-Everything above was measured on a 131,392-parameter model trained in this
-repository.  **This is the same experiment on a genuine pretrained
-checkpoint** — GPT-2 (124M parameters, the real GPT-2 BPE tokenizer with
-50,257 tokens), run on CPU with a from-scratch forward pass
-(`fluidlayer/gpt2_model.py`, verified by generation).
+The E14 script, GPT-2 forward implementation, and tokenizer are present.
+The checkpoint is downloaded separately, and `results/e14_real_gpt2.json`
+is not checked in. Previously reported GPT-2 metrics and capability claims
+cannot be independently verified from this repository; see N11 in
+[`NEGATIVE-RESULTS.md`](NEGATIVE-RESULTS.md).
 
-### The three measurements
+To reproduce the run, install the optional dependencies, download GPT-2,
+then run the experiment on the committed corpus:
 
-| | the result |
-|---|---|
-| **E14a -- attach safety** | **bit-identical** (max abs diff `0.000e+00`) on the real model too |
-| **E14c -- the capability** | a fact planted **2,947 tokens** before the query: the base GPT-2 predicts 464, **the layer predicts the fact** |
-| **E14b -- the perplexity** | the base GPT-2: 4.0289 (ppl 56.20); the layer at its best gain: **4.0019 (ppl 54.70, −0.027 nats)** |
-
-### And the kNN-LM baseline, on the real model
-
-| | val loss | ppl | Δ | token accuracy |
-|---|---|---|---|---|
-| the base GPT-2 | 4.0289 | 56.20 | – | 0.3073 |
-| **kNN-LM, λ=0.9** | **3.8030** | **44.84** | **−0.2259** | 0.3029 |
-| kNN-LM, λ=0.95 | 3.8052 | 44.94 | −0.2237 | 0.3091 |
-| the layer (gated), gain 0.5 | 4.0019 | 54.70 | −0.0271 | 0.3104 |
-| the layer (gated), gain 2 | 4.1965 | 66.46 | +0.1676 | 0.2982 |
-
-> **The result that changes the claim.**  On the *tiny* model the gate beat
-> the kNN-LM interpolation by **7.4×**.  On the **real** model the
-> interpolation wins by **8×**.  The reason is structural, not a bug: the
-> interpolation is **bounded** — it can only shift probability mass by
-> (1−λ), so a wrong retrieval can never take over — whereas the gate
-> *can* take over, and on a strong model the base's own guess is usually
-> better than the datastore's answer.
->
-> **The gate wins where the base model is weak; the interpolation wins
-> where the base model is strong.**  The capability (E14c) works on both.
-
-### One thing that had to be fixed to make it work on a real model
-
-The gate was first formulated in probability space, `u = 1 − max p`.  On
-GPT-2 that needed a gain of 50+ and it wrecked the perplexity: GPT-2's
-logits span ±20, while the tiny model's span ±2, so the same "gain" meant
-something completely different.  **The gate is now in logit space**,
-`u = −log p_max` (how many nats the model is from being sure), which is
-**scale-free**: the same gain works on both models.
-
-→ `experiments/e14_real_gpt2.py`, `results/e14_real_gpt2.json`
-(measured with torch 2.4.1+cpu; `python tools/download_gpt2.py --out models/gpt2`
-fetches the checkpoint, and the forward pass + tokenizer are in this
-repository — no `transformers` needed)
+```bash
+python -m pip install -e ".[gpu]"
+python tools/download_gpt2.py --out models/gpt2
+python experiments/e14_real_gpt2.py --corpus corpus.txt
+```
 
 ---
 

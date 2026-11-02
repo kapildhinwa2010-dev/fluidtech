@@ -4,8 +4,9 @@
 > repository is worth trusting.
 >
 > Eleven results in this project came out **negative or against expectation**.
-> All eleven are measured, reproducible, and reported here in full. None of
-> them is buried in a footnote, and none of them is dressed up.
+> Their findings are summarized here, with raw result files linked where
+> available. The historical N4 and N11 runs have no surviving raw JSON, so
+> their numbers cannot be independently reproduced from this repository.
 >
 > If you only read one file in this repo, read this one.  It is the honest
 > map of the project's real shape.
@@ -18,13 +19,15 @@
 |---|---|---|---|
 | N1 | the **topological** selection criterion would pick the right facts | it **does not** — 0.000 precision vs 0.970 for plain geometric affinity | `results/e5_graft.json` |
 | N2 | the `‖L·1‖∞` **balance residual** detects the frozen state | it **does not** — the right diagnostic is the frustration index | `results/e4_gbalance.json` |
-| N3 | `λ₂` predicts long-context quality | **barely** — pearson 0.20, spearman 0.26 | `results/e4_gbalance.json` |
-| N4 | a **transformer** should lose to the fluid at some scale | the transformer **wins** at every scale we could train | `results/train_results.json` |
+| N3 | `λ₂` predicts long-context quality | **barely** — pearson 0.1904, spearman 0.2499 | `results/e4_gbalance.json` |
+| N4 | a **transformer** should lose to the fluid at some scale | the historical report says the transformer **wins**, but its raw result file is missing and the claim cannot be independently checked here | unavailable |
 | N5 | a 16 KB domain prior should beat a trivial frequency table | it **helps** (−0.006 nats) but a plain **unigram table wins 6× more** (−0.038), and the gain **shrinks as the model improves** | `results/e1_prior.json` |
 | N6 | grafting the **diffusion tier** onto a frozen model should be neutral or helpful | it **degrades the model by +0.81 nats** on real text (ppl 13.3 → 29.9) — the *exact* tier alone is fine (−0.03) | `results/e6_real.json` |
 | N7 | the diffusion tier's **divergence can be fixed** | **yes, the damage is gone** (+1.14 → **+0.0000**) — but the fixed tier had **no upside** (the optimal injection gain was **zero**).  **RESOLVED by the router** (E12): as the fallback tier it now measurably helps | `results/e7_lossy_fix.json` |
 | N8 | one injection gain can serve **both** recall and generation | it could not — the two optimum gains were **1000× apart** (300 vs 0.3), and the recall gain **ruined** the model (+1.08 nats).  **RESOLVED by the gate** (`u = 1 − max p`) | `results/e10_gate.json` |
 | N9 | the memory can be made **exact** | **yes**: the recall **1.000**, the common-key case **1.000** (was 0/3), the corroborated entries survive the eviction (**40/40**), and the base model's perplexity **improves** to **11.78**.  Two plausible-looking rules were tried and **rejected** (both off by default) | `results/e11_exact.json` |
+| N10 | the layer should beat the closest prior art at every budget | the gate wins in the bounded-memory regime, but kNN-LM wins with a 1 MB store | `results/e13_knn.json` |
+| N11 | the small-model advantage should generalize to a real pretrained model | historical GPT-2 claims cannot be verified because the raw E14 result is missing | unavailable |
 
 ---
 
@@ -163,8 +166,8 @@ spectral gap means a better memory.
 | measurement | value |
 |---|---|
 | the contraction certificate `‖e^{-tL}‖ ≤ e^{-tλ₂}` holds | **36/36** ✅ |
-| `pearson(λ₂, tracking quality)` | **0.199** |
-| `spearman(λ₂, tracking quality)` | **0.256** |
+| `pearson(λ₂, tracking quality)` | **0.1904** |
+| `spearman(λ₂, tracking quality)` | **0.2499** |
 
 The certificate is **true and verified**.  The *inference* that a bigger λ₂
 means better long-context behaviour is **not supported**: the correlation is
@@ -177,43 +180,15 @@ Every place that said "λ₂ predicts quality" now says "λ₂ bounds the
 
 ---
 
-## N4 — The transformer wins.  At every scale we could train.
+## N4 — Historical transformer comparison is not verifiable
 
-### The experiment
-
-`train.py` — character-level LM on Project Gutenberg, FluidLayerLM vs a
-**param-matched** TinyTransformer, same tokens, same optimiser, same schedule.
-
-| model | params | final val loss | best val loss | time |
-|---|---|---|---|---|
-| **TinyTransformer** | 116,544 | **2.6331** | **2.5401** | 95 s |
-| FluidLayerLM | 71,408 | 2.7397 | 2.6181 | 340 s |
-
-The transformer wins **and** is 3.6× faster to train, with 39 % *more*
-parameters.
-
-### Where the fluid *does* win
-
-The mechanism test (`demo_mechanism.py`) isolates global aggregation, which
-is the quantity the Hodge limit computes exactly:
-
-| aggregator | sign accuracy | RMSE |
-|---|---|---|
-| **FluidLayer (global diffusion)** | **97.3 %** | **0.015** |
-| Attention (the baseline) | 100 % | 0.000 |
-| Local R = 4 | 65.6 % | 0.126 |
-| Local R = 8 | 71.0 % | — |
-
-So: the fluid **wins against every fixed-receptive-field aggregator** and
-**loses to full attention** — which is the honest summary of the whole
-architecture.  A diffusion gets you the global aggregate nearly as well as
-attention does, at a fraction of the cost, and it is still worse.
-
-### Why it is in the README anyway
-
-Because a repository that reports this is worth more than one that does not.
-Most papers in this area do not run their own code.  This one does, and it
-says so.
+An earlier report described a character-level comparison between FluidLayerLM
+and a TinyTransformer, plus a separate global-aggregation mechanism test.
+The source scripts (`train.py` and `demo_mechanism.py`) and raw outputs
+(`results/train_results.json` and `results/mechanism.json`) are not present
+in this repository. The previously reported numbers have therefore been
+removed from the evidence summary; they must not be treated as independently
+verified until those experiments and their outputs are restored.
 
 ---
 
@@ -602,72 +577,41 @@ records it.
 
 ---
 
-## N11 — The advantage does NOT generalise to a real model (but the capability does)
+## N11 — The real-model result is not verifiable
 
-The whole project was measured on a 131,392-parameter model trained here.
-Then the network came up, torch installed, and **a real GPT-2 (124M, the
-real 50,257-token BPE) could be run** — with the memory layer attached.
-
-| | the tiny model (131k) | **real GPT-2 (124M)** |
-|---|---|---|
-| the layer (gated) vs the kNN-LM interpolation | the layer wins by **7.4×** | **the interpolation wins by 8×** |
-| the layer's best perplexity delta | −0.1134 (16 KB store) | −0.0271 (ppl 56.20 → 54.70) |
-| the capability (cross-window recall) | ✅ 1.000 | ✅ **the base predicts 464, the layer predicts the fact** |
-| attach safety | bit-identical | **bit-identical** |
-
-### Why the reversal
-
-The interpolation is **bounded**: it shifts probability mass by (1−λ) and
-can never let a wrong retrieval take over.  The gate *can* take over.  So:
-
-* on a **weak** base model the base's own guess is worse than the
-  datastore's answer → the gate wins;
-* on a **strong** base model the base's guess is usually better → the
-  interpolation wins and the gate does harm.
-
-**The gate wins where the model is weak.  That is a much narrower claim
-than "the gate beats kNN-LM", and it is the one the evidence supports.**
-
-The **capability** (giving a frozen model a recall it did not have) works
-on both, and that is the part this project is actually for.
-
-### What had to change to make it work at all
-
-The gate was formulated in probability space (`u = 1 − max p`).  On GPT-2
-that needed a gain above 50 and it wrecked the perplexity, because GPT-2's
-logits span ±20 while the tiny model's span ±2 — **the same "gain" meant
-something completely different**.  The gate is now in **logit space**
-(`u = −log p_max`, i.e. how many nats the model is from being sure), which
-is scale-free: the same gain works on both models.
+The E14 experiment script is present, but `results/e14_real_gpt2.json` and
+the GPT-2 checkpoint are not. Previously reported GPT-2 measurements have
+therefore been removed from the evidence summary. Do not cite them as
+verified results until E14 is rerun and its raw JSON is published.
 
 ---
 
-## What the negative results add up to
+## What the available evidence says
 
-The project's shape after all five:
+The project's shape from the available evidence:
 
 | tier | status |
 |---|---|
 | the **exact tier** (bounded store, bit-exact token-ID recall) | ✅ **works, measured** |
 | the **constant-size state** | ✅ **works, measured** |
 | the **budget law** (spend on pins, not anchors) | ✅ **works, measured** (E2) |
-| the **fluid as an aggregate carrier** | ✅ **works** (97.3 % vs 65–71 % for local) |
+| the **fluid as an aggregate carrier** | ⚠️ the historical 97.3 % result is unverified; its raw output is unavailable |
 | the **layer attached to a frozen model** | ✅ **free** — bit-identical logits (max diff 0.0) |
 | the **exact tier in a graft** | ✅ **works** — recall 0.050 → **0.800** (and **1.000** with the exact store), −0.03 nats on real text |
 | the **lossy tier in a graft** | ✅ **has a job now** — as the router it rescues the recall (0.100 → **0.625**) and fixes the hard contexts (+0.053 → **−0.071**); on its own it still hurts (N6/N7) |
 | the **exact tier in a graft, gated** | ✅ **works** — the recall **1.000** and the base model's perplexity **improves** by **−0.176 nats** (ppl 13.61 → **11.42**) (N8/N9) |
-| **the same layer on a REAL GPT-2 (124M)** | ✅ attach **bit-identical**, the capability **works** (the base predicts 464, the layer predicts the fact from 2,947 tokens back) — but the perplexity advantage over the interpolation **reverses** (N11) |
+| **the same layer on a REAL GPT-2 (124M)** | ⚠️ historical E14 claims are unverified because the raw output is missing (N11) |
 | the **topological selection criterion** | ❌ **does not work** (N1) |
 | the **`‖L·1‖∞` balance diagnostic** | ❌ **was wrong** (N2, now fixed) |
 | **λ₂ as a quality predictor** | ⚠️ **weak** (N3) |
-| **the fluid as an LM backbone** | ❌ **loses to a transformer** (N4) |
+| **the fluid as an LM backbone** | ⚠️ historical transformer comparison is unverified (N4) |
 | **the domain prior vs frequencies** | ⚠️ **helps, but frequencies help more** (N5) |
 
 **The defensible paper is:** *"a constant-size memory tier that is bit-exact
 for a selected subset, gracefully lossy for the rest, with a certified bound
-and a bounded, majority-tracking exact store — plus the self-verifying
-implementation of a sheaf-diffusion LLM, and an honest account of the five
-places where it did not beat the alternatives."*
+and a bounded, majority-tracking exact store — plus an honest account of
+which findings are supported by checked-in results and which historical
+claims still need their raw outputs."*
 
 That is a smaller paper than "we replace attention".  It is also a paper
 that can be **believed**, which in 2026 is worth more.

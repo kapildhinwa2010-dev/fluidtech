@@ -130,10 +130,10 @@ per exact fact and it does not lie.
 
 In priority order, with the honest cost:
 Gate 1 — Beat the transformer where it matters (the real gap)
-Currently the transformer wins your own A/B (2.6331 vs 2.7397). Until you
-show the fluid winning at a scale that matters, the reviewer objection is
-unanswerable. This is the only gate that can produce a paradigm-adjacent
-result. It is also the hardest.
+An earlier report said the transformer wins its A/B (2.6331 vs 2.7397),
+but the training script and raw result are missing from this repository.
+Treat that comparison as unverified. Until the experiment is restored and
+rerun, a current transformer comparison is still an open gate.
 Cheapest version: a retrieval-style task, not raw LM perplexity, where
 the exactness guarantee is the win. "At 16 KB the fluid+register matches
 full-KV needle accuracy (≥ 95 %) on a 1M-token document; the transformer
@@ -156,25 +156,13 @@ token accuracy.  With a  1 MB  store the kNN-LM wins by  6.4×
 (−1.3013 vs −0.2048).   So the defensible novelty is not  "a datastore " —
 it is the gate under a hard memory budget.   That is a narrower claim than
 the project started with, and it is the one the evidence supports.
-Gate 7 — Does the layer help a REAL pretrained LLM? → ✅ ANSWERED: YES, WITH A PRECISE CAVEAT
-Measured (`results/e14_real_gpt2.json`) on GPT-2, 124M parameters, the
-real GPT-2 BPE tokenizer (50,257 tokens), on CPU:
-attach safety: the logits are bit-identical (max diff `0.000e+00`);
-the capability: a fact planted 2,947 tokens before the query — the
-base GPT-2 predicts 464, the layer predicts the fact;
-the perplexity: the layer improves it by −0.027 nats (ppl 56.20 →
-54.70), but the kNN-LM interpolation wins by 8× on the same datastore.
-The caveat is the finding: the gate's advantage over the interpolation
-shrinks and reverses as the base model gets stronger (on a 131k-parameter
-model the gate won by 7.4×; on a 124M model the interpolation wins by 8×).
-The gate wins where the base model is weak (its guess is worse than the
-datastore's); the interpolation wins where the base model is strong (its
-guess is better, and the interpolation can never overrule it).   The
-capability works on both.
-One implementation note that the real model forced: the gate had to move to
-logit space (`u = −log p_max`), because a probability-space gate means
-something completely different on a model whose logits span ±20 than on one
-whose logits span ±2.
+Gate 7 — Does the layer help a REAL pretrained LLM? → ⚠️ UNVERIFIED: raw E14 output missing
+The experiment script (`experiments/e14_real_gpt2.py`) is present, but
+`results/e14_real_gpt2.json` is missing from this repository. Previously
+reported GPT-2 measurements therefore cannot be independently checked here
+and should not be cited as verified results until the experiment is rerun
+and its output is published. The script requires a GPT-2 checkpoint and the
+optional PyTorch dependencies.
 Gate 3 — Topology beats learned gating at equal budget → ❌ ANSWERED: NO
 Measured  ( `results/e5_graft.json` , 1M tokens, 11 policies, equal budget):
 topology-selected slots reach  0.000  pin precision, against  0.970  for

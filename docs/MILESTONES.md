@@ -157,26 +157,20 @@ is the contribution under a hard memory budget** — which is a narrower
 claim than the project started with, and a defensible one.
 → `experiments/e13_knn_baseline.py`, `results/e13_knn.json`
 
-## 16. A pretrained LLM
+## 16. A pretrained LLM — unverified
 
-The network came up, torch installed, and **GPT-2 (124M, the real 50,257
-token BPE) ran with the layer attached**: the attach is **bit-identical**,
-and a fact planted **2,947 tokens** before the query is recalled (the base
-predicts 464, the layer predicts the fact).  The checkpoint, the forward
-pass and the tokenizer are all in this repository — no `transformers`
-dependency, and the generation is verified coherent.
-
-The honest caveat it forced: **the gate's advantage over the kNN-LM
-interpolation reverses on a strong model** (the tiny model: the gate won by
-7.4×; GPT-2: the interpolation wins by 8×).  The gate wins where the base
-model is weak.  The capability works on both.
-→ `experiments/e14_real_gpt2.py`, `results/e14_real_gpt2.json`
+The E14 script and GPT-2 forward/tokenizer implementation are present, but
+the checkpoint and `results/e14_real_gpt2.json` are not. Previously reported
+GPT-2 measurements cannot be independently checked from this repository and
+should not be cited until E14 is rerun and its raw output is published.
+→ `experiments/e14_real_gpt2.py`; see [reproduction instructions](REPRODUCING.md)
 
 ## 17. A repository a stranger can run in one minute
 
-Unzip → `python selftest.py` → **50/50**.  `pip install .` → the public API
-imports from an installed wheel.  Every result in `results/` regenerates
-with `python experiments/run_all.py --full`.
+Fresh clone → `python selftest.py` → **50/50**.  `pip install .` → the public API
+imports from an installed wheel. Reproducible experiments can be rerun with
+`python experiments/run_all.py --full`; the historical N4 and N11 outputs
+are unavailable and are documented as unverified.
 → `scripts/check_artifacts.sh` (the one-command audit)
 
 ## 18. The credibility milestone

@@ -205,7 +205,7 @@ what makes per-user persistent memory economically possible at all.
 | ---|---|---|---|---|---|---|---|---|---|
 | exact needle at a position|✅|✅ recent|✅|❌|❌|❌|❌|✅|✅ pinned / L3|
 | exact  specific  fact|✅|✅ recent|✅|❌|❌|❌|❌|✅|✅ pinned (20 B)|
-| global gist / aggregate|✅|❌|✅|✅|✅|✅|❌|❌|✅ 97.3 % meas.|
+| global gist / aggregate|✅|❌|✅|✅|✅|✅|❌|❌|⚠️ historical 97.3 % claim; raw result unavailable|
 | positional recall ( "3rd paragraph ")|✅|✅|✅|✅|❌|❌|❌|❌|❌|
 | infinite stream / never re-encode|❌|✅|❌|❌|✅|✅|n/a|✅|✅|
 | no  "lost in the middle "|❌|❌|❌|❌|~ (no positions)|~|n/a|~|✅ (no positional decay)|
@@ -266,12 +266,12 @@ the measured semantic/local-geometric policy performed better.
 KV bytes/token, KV @ctx, sessions that fit in VRAM, prefill FLOPs, crossover point
 fluid read cost 16 KB = 0.009 µs; fluid compute = 384 flops/token/layer
 our `selftest.py` → 50/50
-mechanism test: fluid 97.3 % sign acc vs local R=4 65.6 %, R=8 71.0 %
-LM A/B: transformer wins — 2.6331 vs 2.7397 final val (fewer params on our side)
+mechanism test: historical report claims 97.3 % sign accuracy, but source and raw result are unavailable; unverified
+LM A/B: historical report says transformer wins (2.6331 vs 2.7397), but source and raw result are unavailable; unverified
 param-matched FLOPs: 1.10× cheaper @8K → 2.54× @128K
 ⚠️ PROJECTED — needs E1/E5 to become fact
 that the 16 KB fluid carries long-range information at usable quality
-that a real LLM actually routes to the fluid (the 97.3 % was a synthetic task)
+that a real LLM actually routes to the fluid (the historical 97.3 % synthetic-task result is unverified)
 that topology picks the right facts to freeze
 that pinned facts survive a real model's distribution shift
 Every table above is a CONDITIONAL: "IF the fluid is usable, THEN this".

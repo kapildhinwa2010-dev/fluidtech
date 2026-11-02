@@ -1,0 +1,2220 @@
+{
+  "config": {
+    "n_cells": 64,
+    "n_trials": 40,
+    "seed": 0
+  },
+  "phase_transition": {
+    "0.0": {
+      "mean_balance_residual": 4.0,
+      "mean_frustration": 0.0,
+      "frac_nonconstant_kernel": 1.0,
+      "frac_global_section": 1.0,
+      "frac_zero_frustration": 1.0,
+      "mean_lam2": 0.009630546655605265
+    },
+    "0.25": {
+      "mean_balance_residual": 4.0,
+      "mean_frustration": 0.475,
+      "frac_nonconstant_kernel": 0.25,
+      "frac_global_section": 0.525,
+      "frac_zero_frustration": 0.525,
+      "mean_lam2": 0.006200353599278357
+    },
+    "0.5": {
+      "mean_balance_residual": 4.0,
+      "mean_frustration": 0.5,
+      "frac_nonconstant_kernel": 0.225,
+      "frac_global_section": 0.5,
+      "frac_zero_frustration": 0.5,
+      "mean_lam2": 0.006019817122629572
+    },
+    "0.75": {
+      "mean_balance_residual": 3.9,
+      "mean_frustration": 0.475,
+      "frac_nonconstant_kernel": 0.125,
+      "frac_global_section": 0.525,
+      "frac_zero_frustration": 0.525,
+      "mean_lam2": 0.006200353599278357
+    },
+    "1.0": {
+      "mean_balance_residual": 0.0,
+      "mean_frustration": 0.0,
+      "frac_nonconstant_kernel": 0.0,
+      "frac_global_section": 1.0,
+      "frac_zero_frustration": 1.0,
+      "mean_lam2": 0.009630546655605265
+    }
+  },
+  "frustration_agreement": {
+    "n": 200,
+    "n_agree": 200
+  },
+  "phase_transition_rows": [
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.0,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.25,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.5,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 2.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": true,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 2.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 0.75,
+      "balance_residual": 4.0,
+      "frustration": 1,
+      "lam2": 0.0024090875896538772,
+      "kernel_dim": 0,
+      "nonconstant_kernel": false,
+      "has_global_section": false
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    },
+    {
+      "sign_frac": 1.0,
+      "balance_residual": 0.0,
+      "frustration": 0,
+      "lam2": 0.009630546655605265,
+      "kernel_dim": 1,
+      "nonconstant_kernel": false,
+      "has_global_section": true
+    }
+  ],
+  "lam2_vs_quality": {
+    "pearson": 0.1904019534471121,
+    "spearman": 0.24990619136960604,
+    "n": 40,
+    "rows": [
+      {
+        "lam2": 0.27330113116273475,
+        "quality": 0.0757860745471374,
+        "balance_residual": 12.0,
+        "frac": 0.6369616873214543,
+        "t_jam": 50.55050631948519
+      },
+      {
+        "lam2": 0.30659862352450423,
+        "quality": 0.04797924674333616,
+        "balance_residual": 10.0,
+        "frac": 0.6217577535206225,
+        "t_jam": 45.060575938496015
+      },
+      {
+        "lam2": 0.3838854202644233,
+        "quality": 0.020599642698509304,
+        "balance_residual": 16.0,
+        "frac": 0.0744204749017332,
+        "t_jam": 35.98863053576778
+      },
+      {
+        "lam2": 0.4014336401922088,
+        "quality": 0.08694229508445575,
+        "balance_residual": 8.0,
+        "frac": 0.6374599597834919,
+        "t_jam": 34.41542804272538
+      },
+      {
+        "lam2": 0.4102506746716006,
+        "quality": 0.20161881958870806,
+        "balance_residual": 4.0,
+        "frac": 0.8949128252937306,
+        "t_jam": 33.67577778884429
+      },
+      {
+        "lam2": 0.46510440787239055,
+        "quality": 0.1508457165478508,
+        "balance_residual": 6.0,
+        "frac": 0.7136557878256957,
+        "t_jam": 29.704105839725344
+      },
+      {
+        "lam2": 0.34870008877985526,
+        "quality": -0.0011822659532626089,
+        "balance_residual": 12.0,
+        "frac": 0.441216184624204,
+        "t_jam": 39.6200373974852
+      },
+      {
+        "lam2": 0.295162782260957,
+        "quality": 0.06689642659584777,
+        "balance_residual": 10.0,
+        "frac": 0.6996466007939142,
+        "t_jam": 46.80641120176802
+      },
+      {
+        "lam2": 0.4154691417234408,
+        "quality": 0.03335030542503745,
+        "balance_residual": 14.0,
+        "frac": 0.2663586743822731,
+        "t_jam": 33.252795865067256
+      },
+      {
+        "lam2": 0.28902318453610754,
+        "quality": -0.026130921943244793,
+        "balance_residual": 8.0,
+        "frac": 0.6729991554300506,
+        "t_jam": 47.80070007234423
+      },
+      {
+        "lam2": 0.39027229411862147,
+        "quality": 0.012749163421091666,
+        "balance_residual": 16.0,
+        "frac": 0.03644719606244218,
+        "t_jam": 35.39967034853136
+      },
+      {
+        "lam2": 0.47065778175700307,
+        "quality": 0.07125619174019623,
+        "balance_residual": 10.0,
+        "frac": 0.5144006540509459,
+        "t_jam": 29.35362187445381
+      },
+      {
+        "lam2": 0.21392388316046948,
+        "quality": 0.13028378369327598,
+        "balance_residual": 4.0,
+        "frac": 0.8965640108641936,
+        "t_jam": 64.58143127292115
+      },
+      {
+        "lam2": 0.3704958333422067,
+        "quality": 0.08169721834390418,
+        "balance_residual": 6.0,
+        "frac": 0.8609753844167359,
+        "t_jam": 37.28924677326572
+      },
+      {
+        "lam2": 0.30066540528656266,
+        "quality": 0.06489380489484195,
+        "balance_residual": 10.0,
+        "frac": 0.7739156620565896,
+        "t_jam": 45.94978442829757
+      },
+      {
+        "lam2": 0.30699540439370226,
+        "quality": 0.03793322583158776,
+        "balance_residual": 4.0,
+        "frac": 0.926612322750323,
+        "t_jam": 45.00233671331038
+      },
+      {
+        "lam2": 0.2838550815901497,
+        "quality": 0.07640837058536315,
+        "balance_residual": 10.0,
+        "frac": 0.595569495512578,
+        "t_jam": 48.67099958390774
+      },
+      {
+        "lam2": 0.33405349575389304,
+        "quality": 0.044800219993378555,
+        "balance_residual": 6.0,
+        "frac": 0.7837091769245054,
+        "t_jam": 41.35718001329513
+      },
+      {
+        "lam2": 0.42148564630757446,
+        "quality": 0.036490242092996686,
+        "balance_residual": 18.0,
+        "frac": 0.09056641550890165,
+        "t_jam": 32.77812822096095
+      },
+      {
+        "lam2": 0.2243098504178186,
+        "quality": -0.0032599656527019755,
+        "balance_residual": 10.0,
+        "frac": 0.5414339328230982,
+        "t_jam": 61.59118974146846
+      },
+      {
+        "lam2": 0.4178569122208034,
+        "quality": 0.08137001449382336,
+        "balance_residual": 6.0,
+        "frac": 0.825207838859189,
+        "t_jam": 33.0627785586658
+      },
+      {
+        "lam2": 0.37605994990255875,
+        "quality": 0.032967016616537066,
+        "balance_residual": 14.0,
+        "frac": 0.20229275851552342,
+        "t_jam": 36.737521667872436
+      },
+      {
+        "lam2": 0.12662313546135381,
+        "quality": 0.0075849712610583046,
+        "balance_residual": 12.0,
+        "frac": 0.4313899485361953,
+        "t_jam": 109.10731682347935
+      },
+      {
+        "lam2": 0.12743777386821165,
+        "quality": 0.22714390440640092,
+        "balance_residual": 2.0,
+        "frac": 0.9866192420641197,
+        "t_jam": 108.40985477548776
+      },
+      {
+        "lam2": 0.46649722349818085,
+        "quality": 0.42511316723951936,
+        "balance_residual": 0.0,
+        "frac": 0.9985289164056933,
+        "t_jam": 29.615418617851965
+      },
+      {
+        "lam2": 0.304982550481628,
+        "quality": 0.0005051794055632972,
+        "balance_residual": 18.0,
+        "frac": 0.0689194554477186,
+        "t_jam": 45.29934757299013
+      },
+      {
+        "lam2": 0.441514445783421,
+        "quality": 0.005821317043942734,
+        "balance_residual": 14.0,
+        "frac": 0.2730071402527906,
+        "t_jam": 31.291185803558708
+      },
+      {
+        "lam2": 0.2712059350551725,
+        "quality": -0.03398315269668375,
+        "balance_residual": 14.0,
+        "frac": 0.5261235770567847,
+        "t_jam": 50.94103326003441
+      },
+      {
+        "lam2": 0.32876939724643545,
+        "quality": 0.017703026228197766,
+        "balance_residual": 10.0,
+        "frac": 0.7191347435988211,
+        "t_jam": 42.02188729752299
+      },
+      {
+        "lam2": 0.291835254303466,
+        "quality": 0.012435430248354707,
+        "balance_residual": 12.0,
+        "frac": 0.3797583189124689,
+        "t_jam": 47.34010149300934
+      },
+      {
+        "lam2": 0.24352673553266224,
+        "quality": 0.01590978024120277,
+        "balance_residual": 16.0,
+        "frac": 0.22751296324257764,
+        "t_jam": 56.73098080071505
+      },
+      {
+        "lam2": 0.24646353308451796,
+        "quality": 0.09948592853744699,
+        "balance_residual": 10.0,
+        "frac": 0.6669472748183716,
+        "t_jam": 56.054988683565696
+      },
+      {
+        "lam2": 0.27082115042760524,
+        "quality": 0.010165264103383417,
+        "balance_residual": 16.0,
+        "frac": 0.26541383718177636,
+        "t_jam": 51.01341064444439
+      },
+      {
+        "lam2": 0.36665343210125123,
+        "quality": 0.19745081914513576,
+        "balance_residual": 8.0,
+        "frac": 0.8550755260294669,
+        "t_jam": 37.68002519106142
+      },
+      {
+        "lam2": 0.3984917571114473,
+        "quality": 0.07026899363873323,
+        "balance_residual": 10.0,
+        "frac": 0.43339379490953045,
+        "t_jam": 34.66950146750577
+      },
+      {
+        "lam2": 0.30316419135268435,
+        "quality": 0.045050276589575215,
+        "balance_residual": 16.0,
+        "frac": 0.377468440541214,
+        "t_jam": 45.57105011749913
+      },
+      {
+        "lam2": 0.388787592615774,
+        "quality": 0.08217512098669431,
+        "balance_residual": 6.0,
+        "frac": 0.724211647178304,
+        "t_jam": 35.534854559048874
+      },
+      {
+        "lam2": 0.387196655922696,
+        "quality": 0.06512928871962403,
+        "balance_residual": 6.0,
+        "frac": 0.7335705579773136,
+        "t_jam": 35.68086228699906
+      },
+      {
+        "lam2": 0.4965726990101421,
+        "quality": 0.04058647027414405,
+        "balance_residual": 8.0,
+        "frac": 0.6207823833779637,
+        "t_jam": 27.821727987671956
+      },
+      {
+        "lam2": 0.36000936918828574,
+        "quality": 0.026552052534102605,
+        "balance_residual": 10.0,
+        "frac": 0.48026329156557357,
+        "t_jam": 38.3754194762046
+      }
+    ]
+  },
+  "contraction_certificate": {
+    "n_checked": 36,
+    "n_holding": 36,
+    "all_hold": true,
+    "sample": [
+      {
+        "lam2": 0.2785476123354537,
+        "t": 0.5,
+        "observed": 0.8699897872741726,
+        "bound": 0.8699897872741722,
+        "holds": true
+      },
+      {
+        "lam2": 0.2785476123354537,
+        "t": 1.0,
+        "observed": 0.7568822299613593,
+        "bound": 0.7568822299613593,
+        "holds": true
+      },
+      {
+        "lam2": 0.2785476123354537,
+        "t": 2.0,
+        "observed": 0.5728707100312798,
+        "bound": 0.57287071003128,
+        "holds": true
+      },
+      {
+        "lam2": 0.41170161789674337,
+        "t": 0.5,
+        "observed": 0.813954501953008,
+        "bound": 0.8139545019530078,
+        "holds": true
+      },
+      {
+        "lam2": 0.41170161789674337,
+        "t": 1.0,
+        "observed": 0.6625219312495692,
+        "bound": 0.6625219312495689,
+        "holds": true
+      },
+      {
+        "lam2": 0.41170161789674337,
+        "t": 2.0,
+        "observed": 0.43893530938665865,
+        "bound": 0.43893530938665853,
+        "holds": true
+      },
+      {
+        "lam2": 0.3943831765436054,
+        "t": 0.5,
+        "observed": 0.8210333178887791,
+        "bound": 0.8210333178887773,
+        "holds": true
+      },
+      {
+        "lam2": 0.3943831765436054,
+        "t": 1.0,
+        "observed": 0.674095709083455,
+        "bound": 0.6740957090834541,
+        "holds": true
+      },
+      {
+        "lam2": 0.3943831765436054,
+        "t": 2.0,
+        "observed": 0.4544050250047253,
+        "bound": 0.4544050250047247,
+        "holds": true
+      },
+      {
+        "lam2": 0.3418077725970952,
+        "t": 0.5,
+        "observed": 0.8429025840657617,
+        "bound": 0.8429025840657619,
+        "holds": true
+      }
+    ]
+  },
+  "runtime_sec": 0.71
+}

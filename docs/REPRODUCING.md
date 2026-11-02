@@ -73,9 +73,17 @@ standalone commands:
 | `python experiments/e6_real_corpus.py --tokenizer bpe` | Subword-tokenized repeat | `results/e6_real_bpe.json` |
 | `python experiments/e7_lossy_fix.py` | Diffusion-tier training behavior | `results/e7_lossy_fix.json` |
 
-Experiments may overwrite their output JSON. Review `git status` after a
-run and preserve or restore result files intentionally; generated corpora
-and prior artifacts are not source documentation.
+The repository includes `corpus.txt`, the generated `prior/` artifacts, and
+the recorded `results/selftest.json`, `results/e2_scaling.json`, and
+`results/e4_gbalance.json` snapshots. Regenerate the tokenizer and prior with:
+
+```bash
+python -m fluidlayer.bpe --corpus corpus.txt --vocab 512 --out prior/bpe_512.json
+python experiments/pretrain_prior.py --text corpus.txt --out prior
+```
+
+Experiments may overwrite their output JSON. Review `git status` and the
+result diff after a run before replacing a recorded snapshot.
 
 ## Optional pretrained-model experiment
 
@@ -93,9 +101,8 @@ cost and results depend on the selected hardware and model. A successful
 small-model CPU test does not validate production-scale inference.
 
 The E14 GPT-2 experiment uses the repository's downloader by default for
-the checkpoint location (`models/gpt2`). Provide a UTF-8 corpus file; the
-default is `corpus.txt` in the repository root, which is intentionally not
-tracked:
+the checkpoint location (`models/gpt2`). The model weights are not tracked;
+the default UTF-8 corpus, `corpus.txt`, is included in the repository:
 
 ```bash
 python tools/download_gpt2.py --out models/gpt2

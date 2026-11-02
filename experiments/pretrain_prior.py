@@ -175,10 +175,12 @@ def build(tokens, vocab_size, budget_bytes=16 * 1024, M=1024, r=8, d=64,
     # --- landmark table: the EXACT spans at the structural landmarks ------
     # a landmark is an anchor; the span is the most frequent token window
     # that routed to it.  We keep the span's exact token ids.
-    q = emb[tokens]
     Pn = protos / (np.linalg.norm(protos, axis=1, keepdims=True) + 1e-12)
-    qn = q / (np.linalg.norm(q, axis=1, keepdims=True) + 1e-12)
-    anchor_of = np.argmax(qn @ Pn.T, axis=1)
+    anchor_of = np.empty(len(tokens), dtype=np.int32)
+    for s in range(0, len(tokens), chunk):
+        q = emb[tokens[s:s + chunk]]
+        qn = q / (np.linalg.norm(q, axis=1, keepdims=True) + 1e-12)
+        anchor_of[s:s + len(q)] = np.argmax(qn @ Pn.T, axis=1)
     spans = {}
     for a in lm[:min(len(lm), 256)]:
         idx = np.nonzero(anchor_of == a)[0]
