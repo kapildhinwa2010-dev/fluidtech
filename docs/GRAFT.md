@@ -367,7 +367,6 @@ there is nothing to tune against it.
 | the cross-window recall, gated | **0.975** — identical to the ungated version |
 | the cross-window recall, ungated | 0.975 |
 | the base model's val loss | 2.6111 (ppl 13.61) |
-
 | gain | ungated Δ | **gated Δ** |
 |---|---|---|
 | 0.5 | −0.0317 | −0.0240 |

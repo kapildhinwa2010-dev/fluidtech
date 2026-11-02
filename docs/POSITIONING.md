@@ -1,27 +1,41 @@
-POSITIONING — the honest novelty audit
+# Positioning — historical novelty audit
+
+> **Historical research memo:** this is not current product guidance. The
+> measured results and known limitations in
+> [Negative results](NEGATIVE-RESULTS.md) supersede proposed claims below.
+
 Historical pre-publication strategy memo. Proposed claims and forecasts
 below are not current project guidance; implementation measurements
 supersede them. Topology-based selection did not work, and the register is
 not tamper-evident or poisoning-bounded. See `docs/NEGATIVE-RESULTS.md` and
 `SECURITY.md` for current evidence and limitations.
+
 Question answered here: "is this revolutionary?" → No. Here is what it
 actually is, and here is what would make it more.
-1. The verdict
+
+## 1. The verdict
+
 No, this is not revolutionary. And that is fine — but you must know which
 of the two you are building, because they require completely different
 marketing, different venues, and different career expectations.
+
 | outcome|probability (my honest estimate)|
 | ---|---|
 | paradigm shift (field changes course)|1–2 %|
 | solid niche paper at a good venue (ACL/NeurIPS/ICLR workshop-track+)|10–20 %|
 | well-executed open-source project with real adoption|40–50 %|
 | personal/learning upside: a top-tier research apprenticeship, a public codebase, a reputation for rigour|~85 %|
+
 The last row is the one that is actually reliable, and it is not a consolation
 prize. See §6.
-2. Why it is not revolutionary — the prior-art audit
+
+## 2. Why it is not revolutionary — the prior-art audit
+
 I went looking for the papers that would kill this, and they exist. Three
 literatures are already crowded, and your project sits at their intersection.
-2.1 Sheaf/graph diffusion is a program, not an idea
+
+### 2.1 Sheaf/graph diffusion is a program, not an idea
+
 | work|what it establishes|
 | ---|---|
 | Belkin et al. (2006)|manifold regularisation  via the heat kernel  — the grandmother|
@@ -33,16 +47,21 @@ literatures are already crowded, and your project sits at their intersection.
 | Hierarchical Pooling for Sheaf NN  (2606.20932)|sheaf diffusion as a hierarchy|
 | ST-Sheaf GNN  (2604.11275)|sheaf diffusion for spatio-temporal|
 | Sheaves in Machine Learning  (survey)|the whole program, documented|
+
 Consequence:"we replace attention with diffusion on a sheaf Laplacian" is
 a known thesis with a decade of literature. A reviewer will cite this
 table. Do not lead with it.
-2.2 Constant-size / test-time memory is crowded too
+
+### 2.2 Constant-size / test-time memory is crowded too
+
 Mamba · Infini-attention · Titans (surprise-gated neural memory, 2M-ctx
 needles) · Memory Layers (Meta, 128B memory params) · Larimar (episodic
 memory, exact recall ≤K) · landmark attention · DeepSeek-V2 MLA.
 Every one of these already claims "constant or compressed memory". Titans
 already does needle-in-haystack at 2M context.
-2.3 ⚠️ Persistent homology on LLM activations is the most crowded — and this one bites
+
+### 2.3 Persistent homology on LLM activations is crowded
+
 | work|what it takes from us|
 | ---|---|
 | Persistent Topological Features in LLMs  (2410.11042)|persistence similarity across layers|
@@ -51,6 +70,7 @@ already does needle-in-haystack at 2M context.
 | ACL-SRW 2026 (adversarial topology)|PH on attention maps, sandbagging/code injection|
 | 2606.19542|PH on LLM activations +  token selection by PH|
 | Topologically Relevant Landmark Selection  ( 2610.00019 )|⚠️ the direct hit — see below|
+
 The direct hit: arXiv 2610.00019
 "To select topologically relevant landmarks, we propose a landmark selection
 method based on Hodge Laplacian. It assigns each point a topological
@@ -68,20 +88,24 @@ Your claim must narrow to: "topology selects which memory slots of a
 constant-size LLM memory are exact, beating learned gating (Titans' surprise)
 and random selection at equal budget." That is narrower — but it is
 defensible and unfilled.
-2.4 The one paper that sounded like a hit but isn't
+
+### 2.4 The one paper that sounded like a hit but isn't
+
 "Memory as Structured Trajectories: Persistent Homology and Contextual
 Sheaves" (2508.11646) — I fetched it. It uses the phrase "persistent
 memory classes" but means slow dynamical modes, not persistent homology.
 No sheaf construction, no constant-size LLM memory, no sheaf-Laplacian
 diffusion. Not a hit. Good news.
-3. So what IS the actual contribution?
+
+## 3. So what IS the actual contribution?
+
 Write the paper around this, not around the architecture:
 Exact-where-it-matters memory.
 A  constant-size  state that is  bit-exact  for a  selected  subset of
 facts,  gracefully lossy  for the rest, with a  certified stability
 bound , an  append-only auditable  write path, and a  zero-extra-
 parameter  training-free attach path — plus the first  working, self-
-verifying  implementation (21 checks) and an  honest negative result 
+verifying  implementation (21 checks) and an  honest negative result
 (the transformer wins at small LM scale).
 Why this framing survives review:
 "bit-exact" is a guarantee, not a benchmark number. Guarantees are
@@ -95,10 +119,15 @@ field drowning in unreproducible claims.
 The sheaf/topology becomes the how (the selection mechanism), not the
 what (the claim). That is where it is unfilled.
 What this framing gives up: the "new architecture" excitement. Accept it.
+
+### Who might use this
+
 The people who will actually use this do not care whether the operator is a
 sheaf Laplacian or a sparse mixture — they care that it is 196,234× cheaper
 per exact fact and it does not lie.
-4. The three gates that would elevate it from "nice" to "cited"
+
+## 4. The three gates that would elevate it from "nice" to "cited"
+
 In priority order, with the honest cost:
 Gate 1 — Beat the transformer where it matters (the real gap)
 Currently the transformer wins your own A/B (2.6331 vs 2.7397). Until you
@@ -123,7 +152,7 @@ Gate 6 — Does the layer beat the closest prior art (kNN-LM)? → ⚠️ ANSWER
 Measured  ( `results/e13_knn.json` , same corpus, same datastore, same base
 model): with a  16 KB  store the gated layer beats the kNN-LM
 interpolation by  7.4×  on the loss (−0.1134 vs −0.0154) and by 8× on the
-token accuracy.  With a  1 MB  store the kNN-LM wins by  6.4× 
+token accuracy.  With a  1 MB  store the kNN-LM wins by  6.4×
 (−1.3013 vs −0.2048).   So the defensible novelty is not  "a datastore " —
 it is the gate under a hard memory budget.   That is a narrower claim than
 the project started with, and it is the one the evidence supports.
@@ -160,16 +189,21 @@ improves a frozen SuperfluidLM by  0.0060 nats  on the well-trained model
 plain  23 KB unigram table  improves it by  0.0382 .  The benefit
  shrinks as the model improves .  The downloadable-prior product therefore
 only makes sense for  small, on-device  models, not good ones.
-5. Naming: three collisions to avoid
+
+## 5. Naming: three collisions to avoid
+
 | avoid|why|instead|
 | ---|---|---|
 | Superfluid|superfluid.sh  exists in AI tooling; also common in physics-ML|pick something distinct — check availability before creating the repo|
 | Landmark|arXiv 2610.00019 owns  "topologically relevant  landmark  selection "|"structural mode ",  "persistent core ",  "skeleton "|
 | Sheaf -anything|SNN, SheafAN, NSD, DNSD, sheaf surveys — the word is saturated|describe the  mechanism , not the tool:  "geometry-addressed memory "|
+
 A working direction: name it after the guarantee, not the operator —
 "Exact-core memory", "fluid + frozen", or a coined name with no
 collision. Check GitHub + PyPI + arXiv before you commit.
-6. The part that actually compounds: what you get regardless of outcome
+
+## 6. The part that actually compounds: what you get regardless of outcome
+
 This is the real return, and it is not conditional on the paper:
 You learn a complete research loop — hypothesis → build → verify →
 find your own bug → report the negative → revise. Your `selftest.py` catching
@@ -186,7 +220,9 @@ writing: "attention remembers by position; geometry-addressed memory
 remembers by structure; and the only thing that makes a constant-size
 memory trustworthy is an exactness guarantee for the part that matters."
 That sentence is worth more than a hype cycle.
-7. The one-sentence honest answer to "is it revolutionary?"
+
+## 7. The one-sentence honest answer to "is it revolutionary?"
+
 No. It is a well-timed, well-verified, specific solution to a real
 constraint, built in three crowded literatures, whose value is a guarantee
 and an artefact rather than a paradigm. That is worth publishing, worth a

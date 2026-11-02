@@ -1,11 +1,11 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "Superfluid: a constant-size exact memory tier for LLMs, on a cellular-sheaf diffusion"
+title: "Superfluid: a research memory layer for language models using cellular-sheaf diffusion"
 abstract: >-
-  A pure-NumPy implementation of a sheaf-diffusion sequence architecture
-  together with a frozen register: an append-only, 20-bytes-per-fact store
-  that returns bit-exact token ids. Includes a 50-check self-verification
-  suite and documented negative results.
+  A NumPy research implementation of a sheaf-diffusion sequence architecture
+  with a bounded, majority-tracking exact-token store and an optional
+  PyTorch adapter. Includes machine-checked tests and documented measured
+  limitations. It is a research prototype, not a production-ready service.
 type: software
 version: "1.2.0"
 license: MIT

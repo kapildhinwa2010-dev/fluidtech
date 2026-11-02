@@ -3,8 +3,8 @@
 > **Read this before the README.** This file is the reason the rest of the
 > repository is worth trusting.
 >
-> Nine results in this project came out **negative or against expectation**.
-> All nine are measured, reproducible, and reported here in full. None of
+> Eleven results in this project came out **negative or against expectation**.
+> All eleven are measured, reproducible, and reported here in full. None of
 > them is buried in a footnote, and none of them is dressed up.
 >
 > If you only read one file in this repo, read this one.  It is the honest
@@ -462,7 +462,6 @@ hyper-parameter: it is the model's confidence.
 |---|---|
 | the cross-window recall, gated | **0.975** (the ungated layer: 0.975) |
 | the base model's val loss | 2.6111 (ppl 13.61) |
-
 | gain | ungated Δ | **gated Δ** |
 |---|---|---|
 | 0.5 | −0.0317 | −0.0240 |

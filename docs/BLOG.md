@@ -1,7 +1,10 @@
-The 16 KB memory: exact where it matters, lossy everywhere else
+# The 16 KB memory: exact where it matters, lossy everywhere else
+
 By Kapil Dhinwa
 
-(Blog draft — 700 words, ready to post.)
+(Historical blog draft. Its claims should be checked against the current
+measurements and limitations before reuse.)
+
 There is a number in long-context serving that nobody puts on a slide:
 A 70B model on 2× H100 80GB cannot hold a single 128K-token session.
 Not "serves it slowly". Cannot hold it. The weights take 131.5 GB; 40 GB
@@ -10,7 +13,9 @@ optimisation problem — it is a wall, and it arrives at 32K context, long
 before anyone calls it a wall.
 I spent a year building a replacement for it. Here is what worked, what did
 not, and the numbers for both.
-The idea: stop storing, start addressing
+
+## The idea: stop storing, start addressing
+
 Attention remembers by position. Every token keeps a copy of itself, and
 the copy is kept forever. That is why the cost is linear and why the cost is
 unavoidable during a sequence, until that context is discarded.
@@ -24,16 +29,20 @@ contraction is certified: `‖e^{-tL}‖ ≤ e^{-tλ₂}`. A multi-scale band fi
 bank recovers the transient that the limit throws away, and a sparse top-k
 route head restores the sharp selection that a smooth diffusion cannot
 provide.
-The part I did not expect
+
+## The part I did not expect
+
 A diffusion smears. That is the whole point of it, and it is fatal for
 exactness: the moment a token's value enters the Laplacian, it is mixed with
 its neighbours and is provably no longer exact.
 So the exact value must never live inside the fluid. I split the memory:
+
 | tier|holds|size|exact?|
 | ---|---|---|---|
 | attachable exact store|token IDs|20 B packed-slot estimate / context|✅ bit-exact ID|
 | superfluid state|the aggregate|16 KB, constant|❌ lossy|
 | external source|a pointer|6 B / fact|✅ exact|
+
 A recalled token ID is an `int32`, so the stored ID is exact. The attachable
 store tracks majority continuations and evicts the least-corroborated entries.
 This bounded in-memory store is not a tamper-evident audit log, and support
@@ -41,7 +50,9 @@ counts do not establish that a fact is true or prevent poisoning.
 The extraction is a logit override, not a suggestion. The tool does not
 return a token and hope the model uses it; it sets the recalled token's
 logit to `+∞`, so the argmax is provably that token.
-What the numbers say
+
+## What the numbers say
+
 The fluid carries the local aggregate well: cosine 0.968 against the
 true per-anchor mean.
 When a token ID is retrieved, it is bit-exact; the packed-slot estimate is
@@ -54,7 +65,9 @@ A training-free 2.4 KB domain prior improves a frozen model's
 perplexity — by 0.048 nats on a weak model, but only 0.0059 nats on a
 better one, and a plain 23 KB unigram table beats it 6×. The prior's
 value lives where the model is weakest, not where it is good.
-What the measurements ruled out
+
+## What the measurements ruled out
+
 This is the part I care about most, because it is the part nobody else
 publishes.
 The topological selection criterion lost. I built the whole selection

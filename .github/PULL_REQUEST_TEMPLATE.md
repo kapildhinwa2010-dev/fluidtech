@@ -10,6 +10,7 @@
 before:
 after:
 command:
+
 ## The self-verification
 
 - [ ] `python selftest.py` passes
