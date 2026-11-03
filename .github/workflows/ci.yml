@@ -38,6 +38,7 @@ jobs:
       - name: Optional backend command help
         run: |
           python experiments/e14_real_gpt2.py --help
+          python experiments/e15_scale_model.py --help
           python experiments/gpu_graft.py --help
 
   package:
@@ -88,4 +89,4 @@ jobs:
           python -m pip install "numpy>=1.23,<3" pytest
           python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
       - name: Compare the NumPy and PyTorch implementations
-        run: python -m pytest -q tests/test_torch_parity.py
+        run: python -m pytest -q tests/test_torch_parity.py tests/test_qwen2_model.py

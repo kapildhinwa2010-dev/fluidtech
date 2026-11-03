@@ -2,10 +2,10 @@
 """
 experiments/e15_scale_model.py -- E15: the graft on a BIGGER real model.
 
-E14 ran the protocol on GPT-2 (124M).  This runs the SAME protocol on
+E14 ran the protocol on GPT-2 (124M). This runs the same protocol on
 Qwen2.5-0.5B (494M, a different architecture: RoPE + RMSNorm + GQA +
-SwiGLU, tied embeddings), with a forward pass written from scratch in
-`superfluid/qwen2_model.py` (no `transformers` at inference time).
+SwiGLU), with a forward pass written from scratch in
+`fluidlayer/qwen2_model.py` (no `transformers` at inference time).
 
 WHY THIS MATTERS
 ----------------
@@ -25,7 +25,7 @@ WHAT IS MEASURED
   E15c  the capability: a fact planted ~3,000 tokens back, far outside
         the attention window
 
-    python experiments/e15_scale_model.py --model /workspace/models/qwen05b
+    python experiments/e15_scale_model.py --model models/qwen05b
 """
 from __future__ import annotations
 
@@ -68,13 +68,14 @@ def _need_torch():
         except ImportError:
             raise SystemExit(
                 "this experiment needs torch: "
-                "pip install torch --index-url https://download.pytorch.org/whl/cpu")
+                "pip install torch --index-url https://download.pytorch.org/whl/cpu"
+            ) from None
     return torch
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="/workspace/models/qwen05b")
+    ap.add_argument("--model", default=os.path.join(ROOT, "models", "qwen05b"))
     ap.add_argument("--corpus", default=os.path.join(ROOT, "corpus.txt"))
     ap.add_argument("--ctx", type=int, default=128)
     ap.add_argument("--windows", type=int, default=40)
@@ -89,13 +90,14 @@ def main():
     t0 = time.time()
     res = {"model": args.model, "config": vars(args)}
 
-    from superfluid.qwen2_model import Qwen2Model
-    from superfluid.gpt2_tokenizer import GPT2Tokenizer
-    from superfluid.torch_graft import SAABranchTorch
+    from transformers import AutoTokenizer
+
+    from fluidlayer.qwen2_model import Qwen2Model
+    from fluidlayer.torch_graft import SAABranchTorch
 
     log("[1/4] loading the real checkpoint ...")
     model = Qwen2Model(args.model, dtype=torch.bfloat16)
-    tok = GPT2Tokenizer.from_pretrained(args.model)
+    tok = AutoTokenizer.from_pretrained(args.model, local_files_only=True)
     n_params = model.wte.numel()
     for L in model.layers:
         for k in ("q", "k", "v", "o", "gate", "up", "down"):
