@@ -106,6 +106,23 @@ integration must handle the model's positional embeddings, attention masks,
 device placement, session boundaries, and task-specific gain calibration.
 Call `branch.reset()` when starting a new independent session.
 
+## Run the GPT-2/Qwen2 app kit
+
+The repository includes a standalone app kit that loads a local GPT-2 or
+Qwen2 checkpoint and demonstrates attachment and recall:
+
+```bash
+python -m pip install "fluidlayer[gpu]"
+hf download Qwen/Qwen2.5-0.5B --local-dir models/qwen05b
+python examples/appkit/attach_layer.py --model models/qwen05b
+```
+
+The Qwen2 forward implementation is in the published `fluidlayer` package;
+the Qwen tokenizer is provided by the optional Transformers dependency.
+Model weights are not bundled. This app kit is a research example, not a
+production serving wrapper. See [the E15 result](../results/e15_scale_model.json)
+and [reproduction guide](REPRODUCING.md#qwen2-scale-experiment-e15).
+
 ## Memory behavior and safety
 
 The attachable store is bounded. Its reported 20-byte slot cost is a logical

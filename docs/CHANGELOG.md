@@ -6,6 +6,15 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-03
+
+### Added
+
+- Added the optional PyTorch Qwen2 adapter, E15 scale-model experiment,
+  archived measurements, and a runnable app-kit example.
+- Categorized the new project-process, app-kit, experiment, and result files
+  into `docs/`, `examples/`, `experiments/`, and `results/`.
+
 ### Changed
 
 - Improved the Markdown documentation structure, added a documentation

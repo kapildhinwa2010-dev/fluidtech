@@ -19,9 +19,13 @@ find a specific answer.
 | If you want to… | Read… |
 |---|---|
 | Attach the memory layer to a model | [Graft measurements and recipe](GRAFT.md) |
+| Load a local GPT-2/Qwen2 checkpoint | [App-kit loader](../examples/appkit/load_model.py) |
+| Attach the layer in the app kit | [App-kit integration](../examples/appkit/attach_layer.py) |
+| Read the project and experiment history | [Process overview](PROCESS.md) |
 | Understand the mathematical framework | [Framework specification](FRAMEWORK.md) |
 | Reproduce tests and research results | [Reproduction guide](REPRODUCING.md) |
 | See the 10-million-token experiment | [Ten-million-token results](TEN-MILLION.md) |
+| Reproduce the Qwen2.5-0.5B scale experiment | [E15 scale experiment](REPRODUCING.md#qwen2-scale-experiment-e15) |
 | Review failed hypotheses and measured limits | [Negative results](NEGATIVE-RESULTS.md) |
 | Compare with other memory approaches | [Comparison](COMPARISON.md) |
 | Review the design history | [Pinned-memory design (historical)](DESIGN_pinned_memory.md) |

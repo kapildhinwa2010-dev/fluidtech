@@ -1,5 +1,5 @@
 """
-attach_layer.py -- paste this file BELOW `load_model.py` in your app.
+examples/appkit/attach_layer.py -- app-kit integration and verification.
 
 This is the WHOLE attachment, in one file:
 
@@ -38,7 +38,7 @@ generation quality.
 
 RUN IT
 ------
-    python attach_layer.py --model /workspace/models/qwen05b
+    python examples/appkit/attach_layer.py --model models/qwen05b
 """
 from __future__ import annotations
 
@@ -47,6 +47,7 @@ import math
 import os
 import sys
 import time
+from pathlib import Path
 
 import torch
 
@@ -54,27 +55,21 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def _import_layer():
-    """SAABranchTorch from whichever copy of the package is available."""
-    for mod in ("fluidlayer", "superfluid"):
-        try:
-            return getattr(__import__(mod), "SAABranchTorch")
-        except (ImportError, AttributeError):
-            pass
-    cur = _HERE
-    for _ in range(5):
-        for pkg in ("superfluid", "fluidlayer"):
-            if os.path.exists(os.path.join(cur, pkg, "torch_graft.py")):
-                if cur not in sys.path:
-                    sys.path.insert(0, cur)
-                mod = __import__(f"{pkg}.torch_graft", fromlist=["SAABranchTorch"])
-                return mod.SAABranchTorch
-        cur = os.path.dirname(cur)
-    if os.path.exists(os.path.join(_HERE, "torch_graft.py")):
-        if _HERE not in sys.path:
-            sys.path.insert(0, _HERE)
-        from torch_graft import SAABranchTorch
-        return SAABranchTorch
-    raise ImportError("the fluidlayer package is required: pip install fluidlayer")
+    """Import the optional adapter from an installed package or this checkout."""
+    for parent in Path(_HERE).resolve().parents:
+        if (parent / "fluidlayer" / "torch_graft.py").is_file():
+            root = str(parent)
+            if root not in sys.path:
+                sys.path.insert(0, root)
+            break
+    try:
+        from fluidlayer.torch_graft import SAABranchTorch
+    except ImportError as error:
+        raise ImportError(
+            "install the optional adapter with `python -m pip install "
+            "'fluidlayer[gpu]'`"
+        ) from error
+    return SAABranchTorch
 
 
 def _import_loader():
@@ -101,7 +96,7 @@ def run(model_dir: str, ctx: int = 128, windows: int = 12, gain: float = 8.0,
         corpus: str = None):
     load = _import_loader()
     model, tok = load(model_dir)
-    print(f"the model: {type(model).__name__} | the vocab: {len(tok.encoder)}")
+    print(f"the model: {type(model).__name__} | the vocab: {tok.vocab_size}")
 
     # ------------------------------------------------------------------
     # TEST 1 -- the attach is a provable no-op
@@ -126,7 +121,6 @@ def run(model_dir: str, ctx: int = 128, windows: int = 12, gain: float = 8.0,
     # ------------------------------------------------------------------
     # Two token ids that occur NOWHERE in the corpus: the key (the context
     # that is stored) and the value (the token that must come after it).
-    used = set(tok.encode("The quick brown fox jumps over the lazy dog"))
     key_tok = 150000
     val_tok = 1000
     filler = tok.encode(" ".join(["memory"] * (ctx * 8)))
@@ -228,7 +222,7 @@ def _has(obj, name):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default=os.environ.get(
-        "MODEL_DIR", "/workspace/models/qwen05b"))
+        "MODEL_DIR", "models/qwen05b"))
     ap.add_argument("--ctx", type=int, default=128)
     ap.add_argument("--windows", type=int, default=12)
     ap.add_argument("--gain", type=float, default=8.0)

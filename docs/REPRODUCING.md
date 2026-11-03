@@ -118,6 +118,26 @@ python experiments/e14_real_gpt2.py --corpus /path/to/corpus.txt
 
 Override `--model`, `--corpus`, or `--out` when your files are elsewhere.
 
+## Qwen2 scale experiment (E15)
+
+The E15 run uses Qwen2.5-0.5B, the custom PyTorch forward pass, and the
+checkpoint's Hugging Face tokenizer. The model weights are not included.
+Install the optional dependencies, download the checkpoint, then run:
+
+```bash
+python -m pip install -e ".[gpu]"
+hf download Qwen/Qwen2.5-0.5B --local-dir models/qwen05b
+python experiments/e15_scale_model.py --model models/qwen05b
+```
+
+The default run evaluates the attachment, perplexity against the kNN-LM
+baseline, and a planted-fact recall case. It can take several minutes and
+requires enough memory for the model. The checked-in
+[`results/e15_scale_model.json`](../results/e15_scale_model.json) is the
+archived run; its original checkpoint and hardware environment are not
+bundled, so exact reproduction is not guaranteed. `--help` works without
+PyTorch or downloaded weights.
+
 ## Determinism and interpreting results
 
 Experiments accept a `--seed` option and use fixed random generators. CPU

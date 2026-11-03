@@ -201,16 +201,18 @@ Read it: [`docs/NEGATIVE-RESULTS.md`](docs/NEGATIVE-RESULTS.md)
 ## The repository
 
 ```text
-fluidlayer/            the package (pure NumPy; torch only in torch_graft.py)
+fluidlayer/            the package (NumPy core; optional PyTorch adapters)
   graft.py             the attachable memory layer
   memory.py            the frozen register (20 B per fact, bit-exact)
   torch_graft.py       the same layer in PyTorch, for a real LLM
   gpt2_model.py        a GPT-2 forward pass in PyTorch (no transformers needed)
   gpt2_tokenizer.py    the GPT-2 byte-level BPE, in pure Python
+  qwen2_model.py       an optional PyTorch Qwen2 forward pass
   sheaf.py topology.py diffusion.py blocks.py autodiff.py ...
 
 experiments/           every measurement; each writes a JSON into results/
   e14_real_gpt2.py     the graft on a REAL pretrained GPT-2 (124M)
+  e15_scale_model.py   the graft on Qwen2.5-0.5B
   e13_knn_baseline.py  the layer vs. the closest prior art (kNN-LM)
 
 tools/                 the artifact checker, bundler, checkpoint downloader,
@@ -219,7 +221,7 @@ fluidlayer/bpe.py      the byte-level BPE tokenizer
 
 tests/                 the unit tests (pytest, or run them without it)
 
-examples/              quickstart.py, graft_demo.py, gate_demo.py
+examples/              quickstart.py, graft_demo.py, gate_demo.py, appkit/
 
 docs/                  the design docs, the API, the limits, the theory report
 
@@ -246,6 +248,14 @@ archived `results/e14_real_gpt2.json` are included. The checkpoint is not;
 rerun E14 to independently reproduce the recorded measurements. See
 [the reproduction guide](docs/REPRODUCING.md) for download and run commands.
 
+E15 adds a from-scratch Qwen2.5-0.5B forward implementation and app-kit
+integration. Its archived run records bit-identical attachment, exact recall
+of a planted fact 1,411 tokens back, and a best gated loss improvement of
+`0.041` nats; the kNN-LM baseline improves loss by `0.274` nats, so this run
+does not show the gate outperforming that baseline. The checkpoint is not
+bundled. Reproduction requires the optional GPU dependencies and local model
+weights; see [E15 instructions](docs/REPRODUCING.md#qwen2-scale-experiment-e15).
+
 The Torch twin is now tested against the NumPy reference in [`tests/test_torch_parity.py`](tests/test_torch_parity.py): the two implementations must agree on the router, the store and the gated override.
 
 That test found **four real port bugs**:
@@ -264,7 +274,9 @@ claim or validate production-scale operation.
 
 ## A research prototype, honestly labelled
 
-Everything above was measured on CPU, at small scale, on a character-level or 512-token subword corpus, with a **131,392-parameter model**.
+The core research experiments use small CPU models and character-level or
+512-token subword corpora. E14 and E15 are separate pretrained-model
+experiments; their checkpoints are not included.
 
 The subword repeat is the closest thing to a realistic tokenizer in this repository.
 The GPU run, [`experiments/gpu_graft.py`](experiments/gpu_graft.py), is written and has not been executed here.
@@ -320,9 +332,7 @@ A research memory layer with an operator-level stability bound, a bounded in-mem
 ## Origin and acknowledgments
 
 The project began with the author's idea of flowing information through a
-topological structure. The implementation and repository organization were
-developed with AI assistance. The measurements, limitations, and research
-decisions are documented alongside the code so the work can be evaluated and
-reproduced.
-I ( the author) don't know how to code but this idea ais mine 
-this is my school project,how's it?
+topological structure. The author describes it as a school project and
+credits AI assistance for implementation and repository organization. The
+research decisions, measurements, and limitations are documented alongside
+the code so the work can be evaluated and reproduced.

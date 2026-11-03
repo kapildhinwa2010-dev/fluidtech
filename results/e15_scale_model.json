@@ -1,14 +1,14 @@
 {
-  "model": "/workspace/models/qwen05b",
+  "model": "models/qwen05b",
   "config": {
-    "model": "/workspace/models/qwen05b",
-    "corpus": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/corpus.txt",
+    "model": "models/qwen05b",
+    "corpus": "corpus.txt",
     "ctx": 128,
     "windows": 24,
     "M": 64,
     "r": 8,
     "read_gain": 300.0,
-    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e15_scale_model.json",
+    "out": "results/e15_scale_model.json",
     "only_capability": false
   },
   "e15a_attach": {

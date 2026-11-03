@@ -1,4 +1,4 @@
-# PROCESS.md — how the fluid layer was built, attached and verified
+# FluidLayer process — how the layer was built, attached, and verified
 
 This is the whole process in one file: what the layer is, how it is
 attached to an LLM, what I did to build it, every experiment that was
@@ -144,7 +144,7 @@ produced by a script that writes a JSON*.
 
 ### Step 3 — the memory layer (the part that survived)
 
-The **frozen register** (`superfluid/memory.py`): append-only, 20 B per
+The **frozen register** (`fluidlayer/memory.py`): append-only, 20 B per
 slot, fail-loud signature, versioning, a quorum, `to_bytes`/`from_bytes`.
 And the **topology** module (Hodge embedding, relevance, edge
 participation, persistence landmarks, local density).
@@ -152,7 +152,7 @@ participation, persistence landmarks, local density).
 Then the decisive design change: the memory became something you **graft
 onto** a model instead of something you train into one.
 
-### Step 4 — the graft (`superfluid/graft.py` + `torch_graft.py`)
+### Step 4 — the graft (`fluidlayer/graft.py` + `torch_graft.py`)
 
 The numpy twin and the torch twin, with a **parity test** between them
 (`tests/test_torch_parity.py`) — which caught **four real port bugs**
@@ -197,7 +197,7 @@ Everything up to here was on a toy model. Then:
   layer, and a fact planted **2 947 tokens** back: the base predicts
   464, **the layer predicts the fact**.
 * **E15** — Qwen2.5-0.5B, a *different architecture* (RoPE + RMSNorm +
-  GQA + SwiGLU, tied embeddings), again a forward written from scratch
+  GQA + SwiGLU), again a forward written from scratch
   and **verified against HuggingFace** (max abs logit diff **0.34**, i.e.
   bf16 rounding). See `results/e15_scale_model.json`.
 
@@ -314,16 +314,18 @@ Every one of these was found by *running* the thing, not by reading it:
 
 ---
 
-## 7. The six files
+## 7. The six uploaded files
+
+The upload files are categorized by purpose:
 
 | file | what it is |
 |---|---|
-| `examples/appkit/load_model.py` | **only the model loading** — drop it into your app |
-| `examples/appkit/attach_layer.py` | **paste it below `load_model.py`** — it attaches the layer and runs every test |
-| `experiments/e15_scale_model.py` | the E15 code (the scale ladder on Qwen2.5-0.5B) |
-| `results/e15_scale_model.json` | the E15 results |
+| `examples/appkit/load_model.py` | local GPT-2/Qwen2 checkpoint loader |
+| `examples/appkit/attach_layer.py` | app-kit integration and verification |
+| `experiments/e15_scale_model.py` | E15 experiment source |
+| `results/e15_scale_model.json` | archived E15 measurements |
 | `docs/PROCESS.md` | this file |
-| `fluidtech-quickstart.zip` | all of the above, packaged |
+| `fluidtech-quickstart.zip` | upload archive, intentionally kept at the repository root |
 
 ---
 
@@ -332,11 +334,11 @@ Every one of these was found by *running* the thing, not by reading it:
 ```bash
 pip install numpy                     # the core: no other dependency
 python selftest.py                    # 50/50
-python superfluid_single.py --selftest
+python fluidlayer_single.py --selftest
 
-# the real model (torch is optional; it is only needed for these)
-pip install torch --index-url https://download.pytorch.org/whl/cpu
-python tools/download_hf.py Qwen/Qwen2.5-0.5B --out models/qwen05b
+# the real model and app kit (optional dependencies)
+python -m pip install "fluidlayer[gpu]"
+hf download Qwen/Qwen2.5-0.5B --local-dir models/qwen05b
 python experiments/e15_scale_model.py --model models/qwen05b
 
 # the app kit: load the model, attach the layer, run the tests
