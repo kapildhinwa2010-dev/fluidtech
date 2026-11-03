@@ -1,0 +1,83 @@
+{
+  "model": "/workspace/models/qwen05b",
+  "config": {
+    "model": "/workspace/models/qwen05b",
+    "corpus": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/corpus.txt",
+    "ctx": 128,
+    "windows": 24,
+    "M": 64,
+    "r": 8,
+    "read_gain": 300.0,
+    "out": "/run/csi/mount-root/nas/eab0d61a99b6696edb3d2aff87b585e8/output/superfluid-framework/results/e15_scale_model.json",
+    "only_capability": false
+  },
+  "e15a_attach": {
+    "bit_identical": true,
+    "max_abs_diff": 0.0
+  },
+  "base": {
+    "loss": 3.744261105855306,
+    "ppl": 42.27775688790107,
+    "token_accuracy": 0.3313802083333333
+  },
+  "knn_lm": {
+    "0.95": {
+      "loss": 3.470179478327433,
+      "delta": -0.274081627527873,
+      "token_accuracy": 0.3343098958333333
+    },
+    "0.9": {
+      "loss": 3.4747786223888397,
+      "delta": -0.2694824834664664,
+      "token_accuracy": 0.3307291666666667
+    },
+    "0.8": {
+      "loss": 3.5221962531407676,
+      "delta": -0.22206485271453857,
+      "token_accuracy": 0.310546875
+    }
+  },
+  "gated_layer": {
+    "0.5": {
+      "loss": 3.713803003231684,
+      "delta": -0.03045810262362192,
+      "token_accuracy": 0.3401692708333333
+    },
+    "1.0": {
+      "loss": 3.7030505736668906,
+      "delta": -0.04121053218841553,
+      "token_accuracy": 0.3359375
+    },
+    "2.0": {
+      "loss": 3.781386365493139,
+      "delta": 0.03712525963783264,
+      "token_accuracy": 0.328125
+    },
+    "5.0": {
+      "loss": 5.030662556489308,
+      "delta": 1.2864014506340022,
+      "token_accuracy": 0.2913411458333333
+    },
+    "10.0": {
+      "loss": 9.172138611475626,
+      "delta": 5.4278775056203195,
+      "token_accuracy": 0.2535807291666667
+    },
+    "20.0": {
+      "loss": 19.197233478228252,
+      "delta": 15.452972372372946,
+      "token_accuracy": 0.22265625
+    }
+  },
+  "e15c_capability": {
+    "key_token": 150000,
+    "value_token": 1000,
+    "fact_distance_tokens": 1411,
+    "retrieved": 1000,
+    "uncertainty_nats": 3.7504405975341797,
+    "base_top": 146187,
+    "layer_top": 1000,
+    "correct": true
+  },
+  "seconds": 421.31597924232483
+}
