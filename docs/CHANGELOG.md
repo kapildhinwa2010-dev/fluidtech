@@ -6,6 +6,17 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-11-03
+
+### Added
+
+- Include the optional deployment session-isolation companion in the
+  published wheel and source distribution.
+
+### Changed
+
+- Add clean-install CI verification for the deployment package.
+
 ## [2.1.0] - 2026-11-03
 
 ### Added

@@ -5,6 +5,12 @@ system. The helpers here add application-side lifecycle controls without
 changing the core package. They do not make the core suitable for sensitive
 data, establish model quality, or replace a security review.
 
+Install the published package to use the helper:
+
+```bash
+python -m pip install fluidlayer
+```
+
 ## Process-local session isolation
 
 `SessionRegistry` creates one independent branch for each authenticated
