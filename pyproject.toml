@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fluidlayer"
-version = "2.1.0"
+version = "2.2.0"
 description = "A research memory layer for language models with optional GPT-2 and Qwen2 adapters"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -50,7 +50,7 @@ Issues = "https://github.com/kapildhinwa2010-dev/fluidtech/issues"
 Changelog = "https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/docs/CHANGELOG.md"
 
 [tool.setuptools]
-packages = ["fluidlayer"]
+packages = ["fluidlayer", "deployment"]
 include-package-data = true
 
 [tool.setuptools.package-data]

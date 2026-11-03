@@ -61,6 +61,9 @@ jobs:
           /tmp/v/bin/python -c "
           from fluidlayer import SAABranch, FrozenRegister
           print('the public API imports from an installed wheel')"
+          /tmp/v/bin/python -c "
+          from deployment.session_registry import SessionRegistry
+          print('the deployment companion imports from an installed wheel')"
 
   lint:
     name: lint
