@@ -55,12 +55,14 @@ jobs:
           mkdir -p /tmp/pub/logs
           { date -u; pwd; ls -la; } > /tmp/pub/logs/workspace.txt 2>&1 || true
           cp -f comparison-results/* /tmp/pub/ 2>/dev/null || true
-          cp -f compare.log ruff.log /tmp/pub/logs/ 2>/dev/null || true
+          cp -f ruff.log /tmp/pub/logs/ 2>/dev/null || true
           git checkout -- . 2>/dev/null || true
           git fetch origin verification-results
           git checkout -f -b publish origin/verification-results
           mkdir -p results/comparison/logs
-          cp -f /tmp/pub/run.json /tmp/pub/comparison.md results/comparison/ 2>/dev/null || true
+          cp -f /tmp/pub/run.json results/comparison/ 2>/dev/null || true
+          cp -f /tmp/pub/comparison.md results/comparison/ 2>/dev/null || true
+          cp -f /tmp/pub/compare.log results/comparison/logs/ 2>/dev/null || true
           cp -f /tmp/pub/logs/* results/comparison/logs/ 2>/dev/null || true
           git add results/comparison
           if git diff --cached --quiet; then
