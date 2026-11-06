@@ -1,6 +1,12 @@
-<p align="center">
-  <img src="assets/logo.svg" alt="FluidLayer — the measured memory layer for language models" width="620">
-</p>
+<div align="center">
+
+<img src="https://github.githubassets.com/images/icons/emoji/unicode/1f30a.png" width="170" alt="FluidTech wave">
+
+# FluidTech
+
+**the measured memory layer for language models**
+
+</div>
 
 [![CI](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/fluidlayer)](https://pypi.org/project/fluidlayer/)
