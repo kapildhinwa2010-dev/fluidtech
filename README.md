@@ -13,14 +13,20 @@
 
 ## 🚀 **ULTIMATE BULLETPROOF VERSION NOW AVAILABLE!**
 
-We have created the **ULTIMATE version** of FluidLayer with:
+Every claim below was **MEASURED**: on every push to `main`, CI runs
+[`experiments/e16_verify_readme.py`](experiments/e16_verify_readme.py) and
+publishes the verdicts — see [`docs/VERIFICATION.md`](docs/VERIFICATION.md)
+and the `verification-results` branch. Latest run: **9/9 CONFIRMED**.
 
-✅ **100% 12-gram recall** (guaranteed)  
-✅ **Maximum perplexity improvement** (best in class)  
-✅ **Full Llama.cpp/GGUF support** (production-ready)  
-✅ **100% security & tenant isolation** (military-grade)  
-✅ **All bugs & loopholes closed** (bulletproof)  
-✅ **Thread-safe & production-ready** (enterprise-grade)
+✅ **100% recall for previously seen contexts** (1/4/8/12-gram, measured & asserted)  
+✅ **Never-seen contexts recall ~0** (no fabricated recall)  
+✅ **Attaches to a real GPT-2 and runs** (A/B measured: Δ ≈ +0.0005 nats — attaching is essentially free)  
+✅ **GGUF export writes a valid GGUF container** (magic b'GGUF')  
+✅ **MILITARY level: Fernet encrypt/decrypt round-trip** (AES-128-CBC + HMAC-SHA256)  
+✅ **Tenant isolation** (0 cross-session hits, measured)  
+✅ **Bounded memory ≤ 100 MB** (4 KB state + capacity-bounded store, ~11 MB worst case at defaults)  
+✅ **Thread-safe** (8 concurrent threads, 0 errors)  
+✅ **Measured overhead** (forward ~5-9 ms/256 tokens, keygen ~3-6 µs, lookup ~3-5 µs)
 
 ---
 
@@ -45,21 +51,23 @@ We have created the **ULTIMATE version** of FluidLayer with:
 
 ### **Core Features**
 
-| Feature | Original | Refactored | Bulletproof | Improvement |
-|---------|----------|------------|-------------|-------------|
-| **12-gram Recall** | 0% | 95% | **100%** | +100% |
-| **Perplexity** | Baseline | +0.81 nats | **-0.30 nats** | -1.11 nats |
-| **Security** | None | Basic | **Military-grade** | ✅ Enabled |
-| **GGUF Export** | ❌ Not possible | Schema-only | **Full Support** | ✅ Enabled |
-| **Thread Safety** | ❌ Not safe | Partial | **Fully Safe** | ✅ Enabled |
-| **Memory Efficiency** | Basic | Improved | **Optimized** | ✅ Best |
+| Feature | Measured (CI — see [docs/VERIFICATION.md](docs/VERIFICATION.md)) |
+|---------|--------------------------------------------------------------|
+| **Recall** | **100%** for previously-seen contexts (1/4/8/12-gram); **~0** for never-seen contexts |
+| **Real-model A/B** | attaches to sshleifer/tiny-gpt2 and runs end-to-end; Δ ≈ +0.0005 nats (untrained — no improvement claimed without training) |
+| **Security** | session-masked tenants at BASIC/STANDARD; Fernet encryption (AES-128-CBC + HMAC-SHA256) at MILITARY |
+| **GGUF Export** | valid GGUF container (magic b'GGUF'; llama.cpp execution needs a backend patch) |
+| **Thread Safety** | 8 concurrent threads, 0 errors (measured) |
+| **Memory** | 4 KB state + capacity-bounded store, ≤ **100 MB** worst case (~11 MB at defaults) |
 
-### **All Critical Failures FIXED**
+### **Critical failures found by the verification — and FIXED**
 
-1. ✅ **12-Gram Zero-Recall Collapse** → **100% Recall with Perfect Hashing**
-2. ✅ **Sheaf Diffusion Degradation** → **Adaptive Gated Sheaf (-0.30 nats)**
-3. ✅ **Standard Serving & Compilation** → **Full GGUF/Llama.cpp Support**
-4. ✅ **Zero Security & Tenant Isolation** → **Military-Grade Encryption**
+The verification pipeline itself found five real bugs (the GGUF magic
+bytes were REVERSED, the MILITARY Fernet key was invalid, the
+constructor's `d` was silently ignored next to a config, the numpy-only
+suites hard-imported torch, and the first verification run was a green
+job with zero output). All fixed — see
+[docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ---
 
@@ -70,10 +78,10 @@ We have created the **ULTIMATE version** of FluidLayer with:
 git clone https://github.com/kapildhinwa2010-dev/fluidtech.git
 cd fluidtech
 
-# Install dependencies
-pip install numpy torch
+# Install dependencies (torch is OPTIONAL -- only the PyTorch twin needs it)
+pip install numpy
 
-# For GGUF export (optional)
+# For MILITARY-level encryption (optional)
 pip install cryptography
 ```
 
@@ -98,9 +106,9 @@ layer = SAABranchBulletproof(
     d=d,               # Model width
     emb=emb,           # Embedding table
     config=BulletproofConfig(
-        ctx_len=12,         # Context length for 100% recall
-        hash_mode=HashMode.DOUBLE_64,  # Perfect hashing
-        security_level=SecurityLevel.STANDARD,  # Military-grade
+        ctx_len=12,         # context length for the exact-tier keys (100% recall on replayed contexts)
+        hash_mode=HashMode.DOUBLE_64,  # 128-bit digest keys
+        security_level=SecurityLevel.STANDARD,  # session masking (MILITARY adds Fernet encryption)
         capacity=10000,     # Initial capacity
         max_capacity=100000,  # Maximum capacity
         use_gated_sheaf=True,  # Adaptive gated sheaf
@@ -167,7 +175,7 @@ print(f"Device: {h_out.device}")
 
 ## 🔧 **Configuration Options**
 
-### **Hash Modes (For 100% Recall)**
+### **Hash Modes (collision resistance — recall is measured on REPLAYED contexts)**
 
 | Mode | Bit Length | Collision Resistance | Speed | Recall |
 |------|------------|---------------------|-------|--------|
@@ -182,8 +190,8 @@ print(f"Device: {h_out.device}")
 |-------|------------|----------|
 | `NONE` | No security | Single-tenant, research |
 | `BASIC` | XOR masking | Multi-tenant, basic |
-| `STANDARD` | AES-128 | Enterprise, production |
-| `MILITARY` | AES-256 + HMAC | Military, high-security |
+| `STANDARD` | XOR session masking | Enterprise, production |
+| `MILITARY` | + Fernet (AES-128-CBC + HMAC-SHA256) | High-security |
 
 ### **Recommended Configurations**
 
@@ -233,37 +241,44 @@ config = BulletproofConfig(
 
 #### **Recall Performance**
 
-| Context Length | Original | Refactored | **Bulletproof** | Improvement |
-|----------------|----------|------------|----------------|-------------|
-| 1-gram | 100% | 100% | **100%** | 0% |
-| 4-gram | 95% | 99% | **100%** | +5% |
-| 8-gram | 85% | 97% | **100%** | +15% |
-| **12-gram** | **0%** | **95%** | **100%** | **+100%** |
+Measured by CI on corpus.txt (6000 word-level tokens, two passes —
+[docs/VERIFICATION.md](docs/VERIFICATION.md)):
+
+| Context Length | Fresh text (never seen) | **Replayed (seen before)** |
+|----------------|-------------------------|-----------------------------|
+| 1-gram | 80.0% | **100%** |
+| 4-gram | 1.5% | **100%** |
+| 8-gram | 0.1% | **100%** |
+| **12-gram** | **0.0%** | **100%** |
 
 #### **Perplexity Impact**
 
-| Configuration | Original | Refactored | **Bulletproof** | Delta |
-|---------------|----------|------------|----------------|-------|
-| Baseline | 0.00 nats | 0.00 nats | 0.00 nats | 0.00 |
-| Lossy Tier Only | +0.81 nats | -0.15 nats | **-0.30 nats** | **-1.11 nats** |
-| Full Layer | Baseline | -0.10 nats | **-0.30 nats** | **-0.20 nats** |
+| Configuration | Loss (nats/token, measured on tiny-gpt2) |
+|---------------|--------------------------------------------------|
+| Baseline sshleifer/tiny-gpt2 | 10.8249 |
+| + FluidLayer (untrained) | 10.8254 (Δ ≈ +0.0005 — attaching is essentially free when nothing is recalled) |
+
+The layer is **UNTRAINED**: no improvement is claimed without training.
+The old "-0.30 nats" table had no measurement behind it and was removed.
 
 #### **Memory Usage**
 
-| Component | Size (16 KB budget) | Notes |
-|-----------|---------------------|-------|
-| Fluid State | M × r × 8 bytes | Lossy tier |
-| Exact Store | Adaptive | Grows as needed |
-| **Total** | **≤ 16 KB** | Auto-scaling |
+| Component | Measured | Notes |
+|-----------|----------|-------|
+| Fluid State | 4096 B (M=64, r=8) | the lossy tier — FIXED size |
+| Exact Store | ~112 B per entry | grows up to `max_capacity`, then evicts |
+| **Worst case (default max_capacity=100000)** | **~11.2 MB ≤ 100 MB** | the store can never exceed the budget |
 
 #### **Speed Benchmarks**
 
-| Operation | Original | **Bulletproof** | Speedup |
-|-----------|----------|----------------|---------|
-| Hash Generation | O(n) | **O(1)** | 10x |
-| Store Lookup | O(1) | **O(1)** | Same |
-| Diffusion | O(M²) | **O(M)** | 10x |
-| Full Forward | 1.0x | **1.5x** | 1.5x faster |
+The old relative rows (10x / 1.5x) had no runnable baseline and were
+removed. Measured absolute overhead (CI runner, CPU):
+
+| Operation | Measured |
+|-----------|----------|
+| Full forward | ~5-9 ms / 256 tokens (~18-37 µs/token) |
+| Hash generation (12-gram) | ~3-6 µs |
+| Store lookup | ~3-5 µs |
 
 ---
 
@@ -292,13 +307,13 @@ layer2 = SAABranchBulletproof(
 - Prevents casual inspection
 - Good for multi-tenant
 
-#### **STANDARD (AES-128)**
-- Encrypts stored tokens
-- Prevents memory inspection
+#### **STANDARD (XOR session masking)**
+- Session-scoped masks on keys and values
+- Prevents cross-tenant reads (measured: 0 leaks)
 - Good for enterprise
 
-#### **MILITARY (AES-256 + HMAC)**
-- Full encryption
+#### **MILITARY (+ Fernet encryption)**
+- Fernet round-trip: AES-128-CBC + HMAC-SHA256 (not AES-256)
 - Message authentication
 - Prevents tampering
 - Good for high-security
@@ -347,7 +362,7 @@ print(schema)
   "metadata": {
     "fluidlayer.version": "2.0.0",
     "fluidlayer.bulletproof": true,
-    "fluidlayer.recall_guarantee": "100%"
+    "fluidlayer.recall": "verbatim replay, measured; fresh text recalls 0 by construction"
   }
 }
 ```
@@ -434,7 +449,7 @@ layer = SAABranchBulletproof(
     )
 )
 
-# Process text (tokens are automatically encrypted)
+# Process text (keys/values are session-masked; MILITARY also encrypts)
 h_out, info = layer.forward(h, content, token_ids)
 ```
 
@@ -483,8 +498,8 @@ for tok in pattern:
     h_out, info = layer.forward(h, content, np.array([tok]))
     h = h_out
 
-# Target should be recalled with 100% accuracy
-print(f"Recall: {info['recall_rate']:.2%}")  # Should be 100%
+# The target is recalled when the 12-gram context is replayed (seen before)
+print(f"Recall: {info['recall_rate']:.2%}")  # 100% -- the context was stored on the first pass
 ```
 
 ### **Example 5: Multi-Tenant**
@@ -641,7 +656,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 - **Original FluidLayer**: Created by Kapil Dhinwa
 - **Refactored Version**: Improved recall and stability
-- **Bulletproof Version**: 100% recall, maximum performance, full security
+- **Bulletproof Version**: measured recall, bounded memory, verified security ([docs/VERIFICATION.md](docs/VERIFICATION.md))
 
 ---
 
@@ -657,10 +672,10 @@ For questions, issues, or contributions:
 
 We're continuously improving FluidLayer. Stay tuned for:
 
-- ✅ **100% 12-gram recall** - DONE
-- ✅ **Maximum perplexity improvement** - DONE
-- ✅ **Full GGUF/Llama.cpp support** - DONE
-- ✅ **100% security** - DONE
+- ✅ **100% recall on replayed contexts** - MEASURED in CI
+- ✅ **Real-model A/B** - MEASURED in CI
+- ✅ **Valid GGUF container export** - MEASURED in CI
+- ✅ **Fernet MILITARY encryption** - MEASURED in CI
 - 🔜 **Quantization support** - Coming soon
 - 🔜 **Multi-GPU support** - Coming soon
 - 🔜 **Hardware acceleration** - Coming soon
@@ -669,4 +684,4 @@ We're continuously improving FluidLayer. Stay tuned for:
 
 **⭐ Star this repository if you find it useful!**
 
-**🚀 The Ultimate Bulletproof FluidLayer is ready for production use!**
+**🚀 Every claim in this README is measured — see [docs/VERIFICATION.md](docs/VERIFICATION.md).**

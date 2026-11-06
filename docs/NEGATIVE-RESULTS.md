@@ -671,3 +671,35 @@ tenants could address the same slot).
 
 **The lesson, written down because it is easy to repeat:** *a number
 that is printed must be asserted.*
+
+---
+
+## N14 — a green CI job that produced nothing (the claims-verification pipeline)
+
+The verification workflow (`.github/workflows/verify-claims.yml`) had a
+FIRST RUN that was GREEN in 45 seconds and produced NOTHING: no results
+branch, no run.json. Two silent failures had stacked:
+
+* the committed `experiments/e16_verify_readme.py` was syntactically
+  INVALID — a string literal contained a real newline (the push pipeline
+  mangled the escape), so python died at parse time in 0 seconds;
+* `git add results/` was silently emptied by `.gitignore`'s `*.log`,
+  and the crash meant no other file existed to stage — the push step took
+  the "nothing to commit" path and exited 0.
+
+**The lesson:** *a green job is not a result.* The workflow now
+force-adds the results directory, and the same pipeline — once it
+actually ran — found four more real bugs by MEASURING instead of reading:
+the GGUF magic bytes were REVERSED (b'GUFF'), the MILITARY Fernet key was
+invalid (raw 32 bytes instead of url-safe base64), the constructor's
+`d` was silently ignored whenever a config was passed (the README's own
+quickstart hit this), and both numpy-only test suites hard-imported torch
+and failed the CI's numpy job.
+
+Two claims were also corrected with measurements rather than code: the
+"≤ 16 KB" memory budget (measured: 116 KB at only 1000 entries → the
+honest bound is the capacity-enforced **≤ 100 MB**, maintainer-approved)
+and the relative speed rows ("10x / 1.5x" — no runnable baseline exists;
+the absolute overhead is measured instead). The "-0.30 nats" perplexity
+table had no measurement behind it at all; the A/B harness now measures
+the layer on a real GPT-2 (`docs/VERIFICATION.md`).
