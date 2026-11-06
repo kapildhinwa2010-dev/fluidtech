@@ -174,7 +174,7 @@ def verify_perplexity(tokens):
                     tid = current["ids"].cpu().numpy()
                     new_h, _ = layer.forward(arr, arr.copy(), tid)
                     t = torch.from_numpy(new_h.astype(np.float32)).to(hs.device)
-                return (t.unsqueeze(0),)
+                return t.unsqueeze(0)
 
             hook_handle = model.transformer.drop.register_forward_hook(hook)
 
