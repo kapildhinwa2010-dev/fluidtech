@@ -1,114 +1,114 @@
 ======================================================================
-LAYER COMPARISON RUN  sha=b756e5c0ed4c58cc8c6e329349ab04bd9f91959c
+LAYER COMPARISON RUN  sha=aae6de7473361a19914b7137b44b9689be65979c
 ======================================================================
 corpus tokens: 2000
 comparing: base (main), mamba (experiments), ultra (experiments), kv (kv_cache), combined (all 4)
 
 --- base (main) ---
-INFO:fluidlayer.bulletproof:Session init: b5f90e1f... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 3d509595... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 13b97af4... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: b61ac046... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: addbd788... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 4bbf8538... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: f2606c80... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 6b23af01... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 770140bb... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: a124c93c... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 43e9f918... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: f0465b51... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: c9efe3a1... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: b577ecb4... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: d00d4b11... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 47dcf9ec... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: b168a0af... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: bcf8222e... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
 
 --- mamba (experiments) ---
-INFO:superfluid_mamba:Session initialized: 719f2747... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: c3f16a5f... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 02b452a8... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: ddeba43f... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: eefd63e7... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 41a5f385... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: d274597d... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 0efdd290... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 1c99cf40... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 3fc0257e... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 8412a7dd... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 72608a7d... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: db88c0c8... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 5b4ca4e8... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 1ac3e145... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: c860d548... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: fa54536c... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: b81775d5... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -117,7 +117,7 @@ INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
 
 --- ultra (experiments) ---
-INFO:superfluid_mamba:Session initialized: 47469108... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: cd3c7556... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -126,26 +126,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: a27552b5... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 3ee43e52... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 10423e12... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 0c4940be... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -155,7 +136,7 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: c10d0112... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 3260fe45... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -164,26 +145,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: b4880e01... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 0ea2baf4... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 6b22aa20... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: dced8a6d... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -193,7 +155,7 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 0c26ee9d... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 5ed9fffb... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -202,26 +164,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: a2acad71... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 3333e5e3... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: c0ec1906... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 8fedcb71... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -231,7 +174,7 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 124a9b04... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 637ddd1c... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -240,26 +183,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: ded3893f... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 4d70f0d2... (Level: STANDARD)
-INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
-INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
-INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
-INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
-INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
-INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
-INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
-INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: ffb6611a... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: ce4706a7... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -269,7 +193,7 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: fda203ac... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 2296700b... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -278,7 +202,83 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: ffdaa330... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 7eea9420... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
+INFO:superfluid_mamba:Session initialized: f0dbb1f8... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:superfluid_mamba:Session initialized: f36262f6... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
+INFO:superfluid_mamba:Session initialized: c688c5f7... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:superfluid_mamba:Session initialized: ef432874... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
+INFO:superfluid_mamba:Session initialized: 22bde56a... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:superfluid_mamba:Session initialized: ca2fea6a... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
+INFO:superfluid_mamba:Session initialized: d9581ef5... (Level: STANDARD)
+INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
+INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
+INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
+INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
+INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
+INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
+INFO:ultra_fluid:UltraFluidLayer initialized successfully!
+INFO:superfluid_mamba:Session initialized: 79930394... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -290,45 +290,45 @@ INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
 
 --- kv (kv_cache) ---
-INFO:superfluid_mamba:Session initialized: 82b40144... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: ed88cb49... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:superfluid_mamba:Session initialized: e366e369... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 18f20641... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:superfluid_mamba:Session initialized: 8c8ad679... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: b619ed5d... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:superfluid_mamba:Session initialized: 5c7b8412... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: c40a5f70... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:superfluid_mamba:Session initialized: 4dc5a1ed... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: e35130c5... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:superfluid_mamba:Session initialized: 4a947b3a... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 591a4593... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
 
 --- combined (all 4) ---
-INFO:fluidlayer.bulletproof:Session init: 94947228... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: ecc62e88... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 53b79f43... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 1358ae73... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 51a2de1b... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: fb9f5b4b... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -337,7 +337,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 9b9f626f... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 9e6732e8... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -347,19 +347,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: 2323ac67... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: f7443de7... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 180fb500... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 2a3c0ec5... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 18fd7518... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 83b2bc96... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -368,7 +368,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: af797f8e... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 32576b5e... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -378,19 +378,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: 3098e13b... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: da9caaa4... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 9d493722... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 36bb6afe... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 5d17c467... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 6f64e5b6... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -399,7 +399,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: af44580e... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 63fc4db3... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -409,19 +409,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: 50d9875c... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 2edf7a57... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 3be1445b... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 84e18766... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 82b52851... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 9ae27cbd... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -430,7 +430,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 652f90ae... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: affd44e7... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -440,19 +440,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: d6a5de11... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: cff030cc... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: b55aba57... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: c610ad5d... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: b6ea768d... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 7282c6e1... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -461,7 +461,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 557bfebb... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 7173e6e1... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -471,19 +471,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: e799508f... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 9ad7dc74... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: d892f81c... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 65f00f09... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 050eb898... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: d596faa8... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -492,7 +492,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 27d6c969... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: ad8d2b6c... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -502,19 +502,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: 7946c114... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: d6fcb544... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 6b730647... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: d2d98955... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 9b5a5edc... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 192868a5... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -523,7 +523,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: db70c401... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: b5671118... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -533,19 +533,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: 818b5d56... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: ebe99036... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: ce88644f... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: b7517337... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: eb0978a9... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 9d40570c... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -554,7 +554,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 7ebd9407... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: cfd69996... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -564,19 +564,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: 411f77ff... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: dc7984b2... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: c50920f2... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 0fbcd930... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 88c3a1fc... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 8d533faa... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -585,7 +585,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 707b01ac... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 773860f2... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -595,19 +595,19 @@ INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:fluidlayer.bulletproof:Session init: f2b48a8c... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: e9c6528d... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 32cb6784... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 9a309e78... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=16, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=16, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: acd84a5c... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 73013380... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -616,7 +616,7 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=16, components=4)
 INFO:ultra_fluid:CrossAttentionFusion initialized (d=16, heads=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=16, compressed_d=8)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: a1868524... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 382f6a3f... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=16, d_state=16, d_conv=4)
@@ -635,7 +635,8 @@ INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-g
 INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/29 [00:00<?, ?it/s]Loading weights: 100%|██████████| 29/29 [00:00<00:00, 31068.92it/s]
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2 "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/29 [00:00<?, ?it/s]Loading weights: 100%|██████████| 29/29 [00:00<00:00, 17326.90it/s]
 [transformers] [1mGPT2LMHeadModel LOAD REPORT[0m from: sshleifer/tiny-gpt2
 Key                                   | Status     |  | 
 --------------------------------------+------------+--+-
@@ -650,29 +651,28 @@ transformer.h.{0, 1}.attn.masked_bias | UNEXPECTED |  |
 
 Notes:
 - UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/main "HTTP/1.1 200 OK"
 [transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (3407 > 1024). Running this sequence through the model will result in indexing errors
 WARNING:transformers.tokenization_utils_base:Token indices sequence length is longer than the specified maximum sequence length for this model (3407 > 1024). Running this sequence through the model will result in indexing errors
 [transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
 WARNING:transformers.modeling_utils:`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
-INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2 "HTTP/1.1 200 OK"
-INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/main "HTTP/1.1 200 OK"
 INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/discussions?p=0 "HTTP/1.1 200 OK"
-INFO:fluidlayer.bulletproof:Session init: 1cb4c6d6... (Level: NONE)
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/refs%2Fpr%2F2 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors "HTTP/1.1 302 Found"
+INFO:fluidlayer.bulletproof:Session init: 8901eadb... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=2)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/refs%2Fpr%2F2 "HTTP/1.1 200 OK"
-INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors.index.json "HTTP/1.1 404 Not Found"
-INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors "HTTP/1.1 302 Found"
-INFO:superfluid_mamba:Session initialized: 59c06339... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 83b47554... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=2, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=2, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=2, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 9cd1d984... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: c5d5473d... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=2, d_state=16, d_conv=4)
@@ -680,7 +680,7 @@ INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=2, k=8)
 INFO:ultra_fluid:AdaptiveRouter initialized (d=2, components=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=2, compressed_d=1)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: ffd0e28e... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 37e7bb48... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=2, d_state=16, d_conv=4)
@@ -689,23 +689,23 @@ INFO:ultra_fluid:AdaptiveRouter initialized (d=2, components=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=2, compressed_d=1)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
 INFO:ultra_fluid:UltraFluidStack initialized with 2 layers
-INFO:superfluid_mamba:Session initialized: 79fd11ac... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 3bf30643... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: d30a562e... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 0c94e850... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=2)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 354eaddf... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 6d208476... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=2, d_state=16, d_conv=4)
 INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=2, k=8)
 INFO:superfluid_mamba:GatedFusion initialized (d=2, tiers=4)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: 4e0bdd3a... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 9d76219f... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=2, d_state=16, d_conv=4)
@@ -713,7 +713,7 @@ INFO:superfluid_mamba:SuperfluidDiffusion initialized (M=16, d=2, k=8)
 INFO:ultra_fluid:AdaptiveRouter initialized (d=2, components=4)
 INFO:ultra_fluid:MemoryCompressor initialized (d=2, compressed_d=1)
 INFO:ultra_fluid:UltraFluidLayer initialized successfully!
-INFO:superfluid_mamba:Session initialized: a7fbeacf... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 5b97ec34... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:MambaSSM initialized (d_model=2, d_state=16, d_conv=4)
