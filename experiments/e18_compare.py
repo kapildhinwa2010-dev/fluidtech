@@ -444,9 +444,27 @@ def main():
     ap.add_argument("--out", default="results/comparison")
     args = ap.parse_args()
 
+    os.makedirs(args.out, exist_ok=True)
+
+    def flush(status, error=None):
+        payload = {
+            "sha": args.sha,
+            "branch": "combined-layer",
+            "status": status,
+            "baseline": {k: v for k, v in BASELINE.items() if k != "per_layer"},
+            "configs": CONFIGS,
+            "winners": WINNERS,
+        }
+        if error:
+            payload["error"] = error
+        payload["log"] = NL.join(LOG_LINES)
+        with open(os.path.join(args.out, "run.json"), "w") as f:
+            json.dump(payload, f, indent=2, default=str)
+
     log("=" * 70)
     log("LAYER COMPARISON RUN  sha=" + args.sha)
     log("=" * 70)
+    flush("running")
 
     tokens = load_corpus_tokens()[:2000]
     log("corpus tokens: " + str(len(tokens)))
@@ -479,14 +497,19 @@ def main():
             log("ERROR in " + name + ": " + err)
             cfg["error"] = err.splitlines()[-1]
         CONFIGS[name] = cfg
+        flush("config-done: " + name)
 
     log("")
     log("--- real GPT-2 A/B (all layers) ---")
-    ab = gpt2_ab(builders, d)
-    BASELINE.update(ab)
-    for name in names:
-        if name in ab.get("per_layer", {}):
-            CONFIGS[name]["gpt2"] = ab["per_layer"][name]
+    try:
+        ab = gpt2_ab(builders, d)
+        BASELINE.update(ab)
+        for name in names:
+            if name in ab.get("per_layer", {}):
+                CONFIGS[name]["gpt2"] = ab["per_layer"][name]
+    except Exception:
+        BASELINE["gpt2_error"] = traceback.format_exc()
+        log("gpt2 A/B failed: " + BASELINE["gpt2_error"])
 
     # ---- winners ----
     def num(name, key):
@@ -552,6 +575,7 @@ def main():
     log("")
     log("Wrote " + args.out + "/run.json and " + args.out + "/comparison.md")
     log("COMPARISON RUN COMPLETE")
+    flush("complete")
 
 
 if __name__ == "__main__":

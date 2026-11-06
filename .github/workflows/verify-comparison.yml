@@ -40,8 +40,10 @@ jobs:
       - name: Run the layer comparison
         run: |
           set +e
-          python experiments/e18_compare.py --sha "$GITHUB_SHA" --out comparison-results 2>&1 | tee compare.log
-          echo "e18 exit: ${PIPESTATUS[0]}" >> compare.log
+          mkdir -p comparison-results
+          python experiments/e18_compare.py --sha "$GITHUB_SHA" --out comparison-results 2>&1 | tee comparison-results/compare.log
+          echo "e18 exit: ${PIPESTATUS[0]}" >> comparison-results/compare.log
+          ls -la >> comparison-results/compare.log 2>&1
           exit 0
 
       - name: Publish comparison to verification-results (no clobber)
@@ -51,6 +53,7 @@ jobs:
           git config user.email "actions@github.com"
           # stash logs outside the tree before switching branches
           mkdir -p /tmp/pub/logs
+          { date -u; pwd; ls -la; } > /tmp/pub/logs/workspace.txt 2>&1 || true
           cp -f comparison-results/* /tmp/pub/ 2>/dev/null || true
           cp -f compare.log ruff.log /tmp/pub/logs/ 2>/dev/null || true
           git checkout -- . 2>/dev/null || true
