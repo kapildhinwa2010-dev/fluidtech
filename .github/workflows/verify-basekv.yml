@@ -35,15 +35,15 @@ jobs:
           set +e
           ruff check experiments/e19_base_kv.py combined --line-length 100 --fix --unsafe-fixes --output-format=concise 2>&1 | tee ruff.log
           ruff check experiments/e19_base_kv.py combined --line-length 100 --output-format=concise 2>&1 | tee -a ruff.log
-          echo "ruff exit: ' + D + '{PIPESTATUS[0]}" >> ruff.log
+          echo "ruff exit: ${PIPESTATUS[0]}" >> ruff.log
           exit 0
 
       - name: Run the base+kv wrapper verification
         run: |
           set +e
           mkdir -p basekv-results
-          python experiments/e19_base_kv.py --sha "' + D + '{GITHUB_SHA}" --out basekv-results 2>&1 | tee basekv-results/compare.log
-          echo "e19 exit: ' + D + '{PIPESTATUS[0]}" >> basekv-results/compare.log
+          python experiments/e19_base_kv.py --sha "$GITHUB_SHA" --out basekv-results 2>&1 | tee basekv-results/compare.log
+          echo "e19 exit: ${PIPESTATUS[0]}" >> basekv-results/compare.log
           ls -la >> basekv-results/compare.log 2>&1
           exit 0
 
