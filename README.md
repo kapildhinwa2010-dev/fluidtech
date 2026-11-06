@@ -214,6 +214,20 @@ e21 measurement) and **e20-finetune** (on e20 changes).
 
 ---
 
+### Verification runs (for the skeptical)
+
+| Run | What it measured | Where |
+|---|---|---|
+| e17 | combined layer, 9/9 claims | measured on the combined-layer branch before the merge; the layer is now the optional combined module |
+| e18 | all 5 layers, one harness | [results/comparison/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/comparison/run.json) |
+| e19 | base + kv cache (this layer) | [results/base-kv/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.json) |
+| e21 | quantization + multi-GPU + acceleration (the 3 coming-soon features) | [results/e21-features/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json) |
+| e20 | short-budget fine-tune + KV wrapper (tiny-gpt2, 5-min LoRA) | [results/e20-finetune/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/run.json) |
+
+Reproduce any of them: the scripts live on `main` — `experiments/e18_compare.py`, `experiments/e19_base_kv.py` — each is a standalone script that measures, prints, and publishes its own results (e18/e19 re-run on every push to main).
+
+---
+
 ### e20: short-budget fine-tune + KV wrapper (measured on main)
 
 Idea: model par base+KV wrapper layer lagao, 5-10 min ka LoRA
@@ -290,16 +304,4 @@ SO THIS IS WASTE
 
 
 🌟 STAR IT IF YOU FIND THIS USEFUL
-### Verification runs (for the skeptical)
-
-| Run | What it measured | Where |
-|---|---|---|
-| e17 | combined layer, 9/9 claims | measured on the combined-layer branch before the merge; the layer is now the optional combined module |
-| e18 | all 5 layers, one harness | [results/comparison/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/comparison/run.json) |
-| e19 | base + kv cache (this layer) | [results/base-kv/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.json) |
-| e21 | quantization + multi-GPU + acceleration (the 3 coming-soon features) | [results/e21-features/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json) |
-| e20 | short-budget fine-tune + KV wrapper (tiny-gpt2, 5-min LoRA) | [results/e20-finetune/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/run.json) |
-
-Reproduce any of them: the scripts live on `main` — `experiments/e18_compare.py`, `experiments/e19_base_kv.py` — each is a standalone script that measures, prints, and publishes its own results (e18/e19 re-run on every push to main).
-
 
