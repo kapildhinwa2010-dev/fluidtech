@@ -1,0 +1,78 @@
+name: Verify base+kv wrapper
+
+# E19: attaches the kv_cache branch's wrapper (bounded KV + long-term
+# memory) to the main branch's base layer and measures it in the same
+# harness as e18. Publishes under results/base-kv/ (main and comparison
+# results are never touched).
+
+on:
+  push:
+    branches: [combined-layer]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  basekv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install "numpy>=1.23,<3" cryptography
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers ruff
+
+      - name: Lint (ruff, log only)
+        run: |
+          set +e
+          ruff check experiments/e19_base_kv.py combined --line-length 100 --fix --unsafe-fixes --output-format=concise 2>&1 | tee ruff.log
+          ruff check experiments/e19_base_kv.py combined --line-length 100 --output-format=concise 2>&1 | tee -a ruff.log
+          echo "ruff exit: ' + D + '{PIPESTATUS[0]}" >> ruff.log
+          exit 0
+
+      - name: Run the base+kv wrapper verification
+        run: |
+          set +e
+          mkdir -p basekv-results
+          python experiments/e19_base_kv.py --sha "' + D + '{GITHUB_SHA}" --out basekv-results 2>&1 | tee basekv-results/compare.log
+          echo "e19 exit: ' + D + '{PIPESTATUS[0]}" >> basekv-results/compare.log
+          ls -la >> basekv-results/compare.log 2>&1
+          exit 0
+
+      - name: Publish base+kv results to verification-results (no clobber)
+        if: always()
+        run: |
+          git config user.name "fluidtech-verification-bot"
+          git config user.email "actions@github.com"
+          mkdir -p /tmp/pub/logs
+          { date -u; pwd; ls -la; } > /tmp/pub/logs/workspace.txt 2>&1 || true
+          cp -f basekv-results/* /tmp/pub/ 2>/dev/null || true
+          cp -f ruff.log /tmp/pub/logs/ 2>/dev/null || true
+          git checkout -- . 2>/dev/null || true
+          git fetch origin verification-results
+          git checkout -f -b publish origin/verification-results
+          mkdir -p results/base-kv/logs
+          cp -f /tmp/pub/run.json results/base-kv/ 2>/dev/null || true
+          cp -f /tmp/pub/basekv.md results/base-kv/ 2>/dev/null || true
+          cp -f /tmp/pub/compare.log results/base-kv/logs/ 2>/dev/null || true
+          cp -f /tmp/pub/logs/* results/base-kv/logs/ 2>/dev/null || true
+          git add results/base-kv
+          if git diff --cached --quiet; then
+            echo "nothing to publish"
+            exit 0
+          fi
+          git commit -m "Base+KV wrapper verification run (e19, from combined-layer branch)"
+          for i in 1 2 3 4 5; do
+            if git push origin publish:verification-results; then exit 0; fi
+            git fetch origin verification-results
+            git rebase origin/verification-results || { git rebase --abort; exit 1; }
+          done
+          exit 1
