@@ -680,7 +680,7 @@ We're continuously improving FluidLayer. Stay tuned for:
 - ✅ **Fernet MILITARY encryption** - MEASURED in CI
 - ✅ **Quantization support** - MEASURED in CI: int8, 4x smaller, round-trip error 0.39% — [e21 results](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json)
 - ✅ **Multi-GPU support** - MEASURED in CI: device detection + sharded bounded KV, shards stay balanced — [e21 results](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json)
-- ✅ **Hardware acceleration** - MEASURED in CI: framework detection + vectorized fast path, ~34x faster on CI CPU — [e21 results](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json)
+- ✅ **Hardware acceleration** - MEASURED in CI: framework detection + vectorized fast path, ~40x faster on CI CPU — [e21 results](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json)
 
 ---
 
@@ -1184,20 +1184,20 @@ verification-results par publish karta hai. KV wrapper training
 ke dauraan OFF hai (evictions training context corrupt karti) --
 sirf fine-tune ke baad attach hota hai.
 
-**CI measured (GitHub Actions CPU, commit 4f73284b):**
+**CI measured (GitHub Actions CPU, commit 4912034e):**
 
 | Metric | Before fine-tune | After fine-tune |
 |---|---|---|
-| plain eval loss (nats) | 10.826 | 10.8253 |
-| wrapped eval loss (nats) | 10.826 | 10.8253 |
+| plain eval loss (nats) | 10.826 | 10.8254 |
+| wrapped eval loss (nats) | 10.826 | 10.8254 |
 | attach delta (nats) | 0.0 | 0.0 |
 
-- Train: 1066 steps / 300.3 s (5 min budget), loss flat
+- Train: 840 steps / 300.3 s (5 min budget), loss flat
 - LoRA: 128 / 102842 params (0.12% trainable)
 - KV after fine-tune: max 256, 1280 evictions -- bounded
 
 Honest reading: tiny-gpt2 (2-dim hidden, ~100k params) + 128
-LoRA params me 5 min ka measurable effect nahi (eval delta 0.0007
+LoRA params me 5 min ka measurable effect nahi (eval delta 0.0006
 nats = noise-level). Attach delta 0 = wrapper loss-neutral,
 e19 ke GPT-2 A/B (delta 0.0) se consistent. Real fine-tune test:
 `--model Qwen/Qwen2.5-1.5B --minutes 10` on a GPU (Colab T4).
@@ -1220,13 +1220,13 @@ sab results positive mile, isliye main me merge kiya. Modules:
 workflow [features-test.yml](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/.github/workflows/features-test.yml)
 har push par inko re-run + re-publish karta hai.
 
-**CI measured (GitHub Actions CPU, commit e539e4ad):**
+**CI measured (GitHub Actions CPU, commit 4912034e):**
 
 | Feature | Measured |
 |---|---|
 | quantization (int8) | float32 -> int8 = **4.0x smaller**; round-trip error **0.3936%** (theoretical bound < 0.4%) |
 | multi-GPU | device detection (cuda -> mps -> cpu fallback); 4 shards me 1000 inserts -> size 256, 744 evictions, shard sizes [64, 64, 64, 64] balanced, insertion order preserved |
-| hardware acceleration | torch 2.15 (CPU) detected, cuda/mps/numba/cupy flags honest; vectorized fast path loop se **34.24x faster** (0.000668 s -> 0.00002 s), outputs bit-consistent |
+| hardware acceleration | torch 2.15 (CPU) detected, cuda/mps/numba/cupy flags honest; vectorized fast path loop se **40.34x faster** (0.000674 s -> 0.000017 s), outputs bit-consistent |
 
 Honest reading: CI runners par GPU nahi hai — multi-GPU ka
 sharding + eviction logic CPU virtual shards par verify hua

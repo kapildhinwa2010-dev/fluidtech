@@ -6,6 +6,23 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- The three "coming soon" features, implemented and CI-measured (e21,
+  verification-results): `fluidlayer/quantization.py` (int8, 4.0x
+  smaller, round-trip error 0.3936%), `fluidlayer/multi_gpu.py` (device
+  detection + a sharded bounded KV cache, shards stay balanced on 4
+  virtual devices), `fluidlayer/acceleration.py` (framework detection +
+  a vectorized fast path, 40.34x faster than the loop path on CI CPU),
+  plus their unit tests (11/11 PASS) and the features-test workflow that
+  re-measures them on every push.
+- e20: the short-budget fine-tune + KV wrapper experiment
+  (`experiments/e20_finetune_kv.py` + workflow). Measured on CI: a
+  5-minute LoRA fine-tune on tiny-gpt2 keeps the KV cache bounded
+  (max 256, 1280 evictions) and the wrapper loss-neutral (attach delta
+  0.0); the train loss stays flat on the ~100k-param model
+  (noise-level, as the README notes).
+
 ## [2.3.0] - 2026-11-06
 
 ### Added
