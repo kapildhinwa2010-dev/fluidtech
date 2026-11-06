@@ -1208,3 +1208,12 @@ Full results:
 and
 [finetune.md](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/finetune.md)
 on the verification-results branch.
+
+
+>THIS SHOWS THAT TARNING DOEST WORK ON SMALL MODLE 
+SO THIS IS WASTE 
+
+>YOU CAN TRY TRANING OR FINE TUNING ON LARGE MODLES IF YOU ARE INTERESTED 
+
+
+🌟 STAR IT IF YOU FIND THIS USEFUL
