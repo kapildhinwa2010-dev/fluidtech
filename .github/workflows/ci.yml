@@ -33,6 +33,8 @@ jobs:
         run: python fluidlayer_single.py --selftest
       - name: The unit tests
         run: python -m pytest -q tests
+      - name: The bulletproof layer's own suite (numpy only)
+        run: python test_bulletproof.py
       - name: The quickstart example
         run: python examples/quickstart.py
       - name: Optional backend command help

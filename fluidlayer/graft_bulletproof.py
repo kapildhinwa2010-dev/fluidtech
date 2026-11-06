@@ -1,13 +1,22 @@
 """
-ULTIMATE BULLETPROOF FLUIDLAYER - 100% Recall + All Fixes
+FLUIDLAYER (the "bulletproof" variant) -- the hardened store, the session
+masking, the adaptive sheaf and the GGUF exporter.
 
-This is the ULTIMATE version with:
-✅ 100% 12-gram recall (guaranteed)
-✅ Maximum perplexity improvement
-✅ Full Llama.cpp/GGUF support
-✅ 100% security & tenant isolation
-✅ All bugs & loopholes closed
-✅ Thread-safe & production-ready
+WHAT IS MEASURED (docs/REVIEW-bulletproof.md, test_bulletproof.py):
+  * the exact tier's recall is 100% for ctx_len=1 -- MEASURED and now
+    ASSERTED by the test (it used to pass with a 0.0% recall);
+  * a 12-GRAM key recalls ONLY when the context is DISTINCTIVE: the
+    project's own E9 measured 0/6 facts recalled with a COMMON 12-gram
+    key, against 6/6 with a distinctive one;
+  * a hash is not a perfect hash: the key is a digest, so a collision is
+    astronomically unlikely but NOT impossible -- the store therefore
+    verifies the context signature and FAILS LOUD on a collision;
+  * the GGUF file is a valid container, but llama.cpp cannot execute a
+    CUSTOM architecture without a backend patch;
+  * the tenant isolation masks the VALUE with a fixed XOR -- it is
+    separation, NOT encryption (token ids are not secret).
+
+Nothing here is called "guaranteed" unless it was measured.
 """
 
 from __future__ import annotations
@@ -42,11 +51,16 @@ logger = logging.getLogger("fluidlayer.bulletproof")
 # =============================================================================
 
 class HashMode(Enum):
-    """Hash modes for different recall guarantees."""
-    FAST_32 = "fast_32"          # 32-bit hash (fast, 95% recall)
-    PERFECT_64 = "perfect_64"    # 64-bit hash (100% recall)
-    DOUBLE_64 = "double_64"      # Double 64-bit hash (100% recall, collision-resistant)
-    CRYPTO_256 = "crypto_256"    # 256-bit cryptographic hash (100% recall, secure)
+    """The key-derivation modes.
+
+    NOTE: none of them is a PERFECT hash.  A digest can collide; the
+    probability is negligible at these sizes, but it is not zero, so
+    the store verifies the context signature and fails loud.
+    """
+    FAST_32 = "fast_32"          # 32-bit digest (fast, collisions are plausible)
+    PERFECT_64 = "perfect_64"    # 64-bit digest (the NAME is historical)
+    DOUBLE_64 = "double_64"      # two digests combined (collision-resistant, not collision-proof)
+    CRYPTO_256 = "crypto_256"    # a full 256-bit digest
 
 
 # =============================================================================
@@ -197,17 +211,20 @@ class CryptographicSession:
 
 
 # =============================================================================
-# PERFECT HASH STORE (100% Recall Guaranteed)
+# THE STORE (a digest-keyed, session-scoped, thread-safe store)
 # =============================================================================
 
 class PerfectHashStore:
     """
-    Store with 100% recall guarantee using:
-    ✅ Double hashing for collision resolution
-    ✅ Adaptive capacity (grows as needed)
-    ✅ Smart eviction (LRU + Frequency + Priority)
-    ✅ Thread-safe operations
-    ✅ Cryptographic security
+    A thread-safe, session-scoped store with:
+    * a 64/256-bit digest key (NOT a perfect hash -- a collision is
+      astronomically unlikely, not impossible; the store therefore
+      verifies the context signature and FAILS LOUD on a collision)
+    * the eviction policy measured in E11: the LEAST corroborated entry
+      goes first (the corroboration count is the frequency counter)
+    * a fixed capacity (it does NOT grow)
+    * an XOR session mask on the value (tenant separation, NOT
+      encryption -- the token ids are not secret)
     """
     
     def __init__(
@@ -229,6 +246,7 @@ class PerfectHashStore:
         self._priority: Dict[int, float] = {}
         self._lru_order: List[int] = []
         self._access_time: Dict[int, float] = {}
+        self._signature: Dict[int, int] = {}   # the context digest per key
         
         # Statistics
         self.hits = 0
@@ -239,12 +257,20 @@ class PerfectHashStore:
         logger.info(f"PerfectHashStore initialized (Capacity: {initial_capacity}, Max: {max_capacity})")
     
     def _generate_key(self, tokens: List[int]) -> int:
-        """Generate perfect hash key with collision resolution."""
+        """The digest key of a context.
+
+        The session id is MIXED IN, so two tenants can never address the
+        same slot: without this, tenant B would read tenant A's entry
+        (the value is masked, so it would be garbage -- not a leak, but
+        a broken recall).
+        """
         if not tokens:
             return 0
         
         # Convert to string for hashing
         token_str = ",".join(str(t) for t in tokens).encode()
+        if self.session is not None:
+            token_str = self.session.session_id.encode() + b"|" + token_str
         
         if self.hash_mode == HashMode.FAST_32:
             h = hashlib.md5(token_str).digest()
@@ -269,8 +295,14 @@ class PerfectHashStore:
         
         return 0
     
-    def put(self, key: int, value: int, priority: float = 1.0) -> None:
-        """Store a key-value pair with priority."""
+    def put(self, key: int, value: int, priority: float = 1.0,
+            signature: Optional[int] = None) -> None:
+        """Store a key-value pair with priority.
+
+        `signature` is the full-width digest of the context.  When it is
+        given, a collision (two different contexts with the same key) is
+        DETECTED instead of silently overwriting the entry.
+        """
         with self._lock:
             # Apply session masking
             if self.session:
@@ -293,16 +325,41 @@ class PerfectHashStore:
                 self._evict()
             
             # Add new entry
+            if signature is not None:
+                old = self._signature.get(key)
+                if old is not None and old != signature:
+                    # A REAL COLLISION: two different contexts, one key.
+                    self.collisions += 1
+                    logger.warning(
+                        "a key collision was detected -- the entry is kept "
+                        "and the colliding context is rejected")
+                    return
+                self._signature[key] = signature
             self._data[key] = value
             self._frequency[key] = 1
             self._priority[key] = priority
             self._lru_order.append(key)
             self._access_time[key] = time.time()
     
-    def get(self, key: int, default: int = -1) -> int:
-        """Get value for key, with session unmasking."""
+    def get(self, key: int, default: int = -1,
+            signature: Optional[int] = None) -> int:
+        """Get the value for a key, with the session unmasking.
+
+        With a `signature`, a collision is detected: the entry is
+        REJECTED (a miss) instead of returning another context's value.
+        """
         with self._lock:
-            value = self._data.get(key, default)
+            if key not in self._data:
+                self.misses += 1
+                return default
+            if signature is not None:
+                old = self._signature.get(key)
+                if old is not None and old != signature:
+                    self.collisions += 1
+                    self.misses += 1
+                    return default
+            self.hits += 1
+            value = self._data[key]
             if value >= 0 and self.session:
                 value = self.session.unmask_token(value)
             return value
@@ -336,6 +393,7 @@ class PerfectHashStore:
                 del self._priority[worst_key]
                 self._lru_order.remove(worst_key)
                 del self._access_time[worst_key]
+                self._signature.pop(worst_key, None)
                 self.evictions += 1
                 logger.debug(f"Evicted key: {worst_key}")
     
@@ -428,11 +486,17 @@ class AdaptiveGatedSheaf:
             
             # Normalize
             row_sums = self.adjacency.sum(axis=1, keepdims=True)
-            self.adjacency = np.divide(
+            # `out=` is REQUIRED: without it numpy leaves the untouched
+            # entries UNINITIALIZED (a UserWarning that is easy to miss),
+            # which silently corrupts the diffusion state.
+            norm = np.zeros_like(self.adjacency)
+            np.divide(
                 self.adjacency,
                 row_sums + 1e-12,
+                out=norm,
                 where=row_sums + 1e-12 != 0
             )
+            self.adjacency = norm
             
             # Build Laplacian: L = D - A
             self.L = np.diag(self.adjacency.sum(axis=1)) - self.adjacency
@@ -614,13 +678,13 @@ import time
 
 class SAABranchBulletproof:
     """
-    ULTIMATE BULLETPROOF FLUIDLAYER with:
-    ✅ 100% 12-gram recall (guaranteed)
-    ✅ Maximum perplexity improvement
-    ✅ Full Llama.cpp/GGUF support
-    ✅ 100% security & tenant isolation
-    ✅ All bugs & loopholes closed
-    ✅ Thread-safe & production-ready
+    The hardened variant of the layer: the digest-keyed store, the
+    session masking, the adaptive gated sheaf and the GGUF exporter.
+
+    Measured (docs/REVIEW-bulletproof.md): the exact tier's recall is
+    100% for ctx_len=1; the perplexity improvement is NOT measured for
+    this variant; the GGUF file is a valid container but llama.cpp
+    cannot execute a CUSTOM architecture without a backend patch.
     """
     
     def __init__(
@@ -717,8 +781,22 @@ class SAABranchBulletproof:
         self.gguf_exporter.add_metadata("fluidlayer.recall_guarantee", "100%")
     
     def _generate_context_key(self, tokens: List[int]) -> int:
-        """Generate context key using perfect hashing."""
+        """The digest key of a context."""
         return self.store._generate_key(tokens)
+
+    def _context_signature(self, tokens: List[int]) -> int:
+        """The full-width digest of a context: it lets the store DETECT
+        a key collision instead of silently overwriting an entry."""
+        if not tokens:
+            return 0
+        import hashlib as _h
+        raw = ",".join(str(t) for t in tokens).encode()
+        # the STORE's session -- the same one that derives the key, so
+        # the signature and the key always agree
+        sess = getattr(self.store, "session", None)
+        if sess is not None:
+            raw = sess.session_id.encode() + b"|" + raw
+        return int.from_bytes(_h.sha256(raw).digest(), "big")
     
     def forward(
         self,
@@ -787,7 +865,8 @@ class SAABranchBulletproof:
                 
                 # Try to retrieve
                 if curr_key is not None:
-                    value = self.store.get(curr_key, -1)
+                    value = self.store.get(curr_key, -1,
+                                           signature=self._context_signature(curr_tokens))
                     if value >= 0:
                         retrieved[t] = value
                         confidences[t] = 1.0
@@ -807,7 +886,8 @@ class SAABranchBulletproof:
                 
                 # Write previous context -> current token
                 if prev_key is not None:
-                    self.store.put(prev_key, int(token_ids[t]), priority=1.0)
+                    self.store.put(prev_key, int(token_ids[t]), priority=1.0,
+                                   signature=self._context_signature(prev_tokens))
                 
                 # Router tier
                 if anchor_max is not None and t < len(anchor_max):

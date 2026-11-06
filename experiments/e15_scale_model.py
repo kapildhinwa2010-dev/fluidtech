@@ -2,9 +2,9 @@
 """
 experiments/e15_scale_model.py -- E15: the graft on a BIGGER real model.
 
-E14 ran the protocol on GPT-2 (124M). This runs the same protocol on
+E14 ran the protocol on GPT-2 (124M).  This runs the SAME protocol on
 Qwen2.5-0.5B (494M, a different architecture: RoPE + RMSNorm + GQA +
-SwiGLU), with a forward pass written from scratch in
+SwiGLU, tied embeddings), with a forward pass written from scratch in
 `fluidlayer/qwen2_model.py` (no `transformers` at inference time).
 
 WHY THIS MATTERS
@@ -68,8 +68,7 @@ def _need_torch():
         except ImportError:
             raise SystemExit(
                 "this experiment needs torch: "
-                "pip install torch --index-url https://download.pytorch.org/whl/cpu"
-            ) from None
+                "pip install torch --index-url https://download.pytorch.org/whl/cpu")
     return torch
 
 
@@ -90,14 +89,13 @@ def main():
     t0 = time.time()
     res = {"model": args.model, "config": vars(args)}
 
-    from transformers import AutoTokenizer
-
     from fluidlayer.qwen2_model import Qwen2Model
+    from fluidlayer.gpt2_tokenizer import GPT2Tokenizer
     from fluidlayer.torch_graft import SAABranchTorch
 
     log("[1/4] loading the real checkpoint ...")
     model = Qwen2Model(args.model, dtype=torch.bfloat16)
-    tok = AutoTokenizer.from_pretrained(args.model, local_files_only=True)
+    tok = GPT2Tokenizer.from_pretrained(args.model)
     n_params = model.wte.numel()
     for L in model.layers:
         for k in ("q", "k", "v", "o", "gate", "up", "down"):

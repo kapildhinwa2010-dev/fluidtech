@@ -52,8 +52,11 @@ def _install_shim():
         return deco
 
     class _Raises:
-        def __init__(self, expected):
+        """`pytest.raises` as a CONTEXT MANAGER and as a DECORATOR."""
+
+        def __init__(self, expected, match=None):
             self.expected = expected
+            self.match = match
             self.value = None
 
         def __enter__(self):
@@ -64,12 +67,48 @@ def _install_shim():
                 raise AssertionError(f"DID NOT RAISE {self.expected}")
             if not issubclass(exc_type, self.expected):
                 return False
+            if self.match is not None:
+                import re
+                if not re.search(self.match, str(exc)):
+                    raise AssertionError(
+                        f"the message {str(exc)!r} does not match {self.match!r}")
             self.value = exc
             return True
 
+        def __call__(self, func):
+            """the decorator form: @pytest.raises(ValueError)"""
+            import functools
+
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                with _Raises(self.expected, self.match):
+                    return func(*args, **kwargs)
+            return wrapper
+
+    def _parametrize(argnames, argvalues, **kwargs):
+        """`pytest.mark.parametrize` -- the shim RUNS every case."""
+        if isinstance(argnames, str):
+            names = [a.strip() for a in argnames.split(",") if a.strip()]
+        else:
+            names = list(argnames)
+
+        def deco(func):
+            import functools
+
+            @functools.wraps(func)
+            def wrapper(*args, **kw):
+                for vals in argvalues:
+                    if not isinstance(vals, (tuple, list)):
+                        vals = (vals,)
+                    merged = dict(kw)
+                    merged.update(dict(zip(names, vals)))
+                    func(*args, **merged)
+            return wrapper
+        return deco
+
     mod.fixture = fixture
     mod.raises = _Raises
-    mod.mark = types.SimpleNamespace(parametrize=lambda *a, **k: (lambda f: f))
+    mod.mark = types.SimpleNamespace(parametrize=_parametrize)
     mod.importorskip = lambda name: _import_or_skip(name, _Skipped)
     sys.modules["pytest"] = mod
     return "the built-in shim", _Skipped

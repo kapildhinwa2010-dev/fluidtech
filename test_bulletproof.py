@@ -1,6 +1,12 @@
 """
-COMPREHENSIVE TEST SUITE FOR BULLETPROOF FLUIDLAYER
-Tests all improvements: 100% recall, security, GGUF, perplexity
+COMPREHENSIVE TEST SUITE FOR THE "bulletproof" FluidLayer.
+
+RULES OF THIS FILE (learned the hard way):
+  * a test that prints a number MUST assert that number -- a test that
+    passes while the recall is 0.0% is worse than no test at all;
+  * torch is OPTIONAL: the numpy-only promise of the repository must
+    hold for this file too;
+  * nothing is called "guaranteed" here unless it was measured.
 """
 
 import os
@@ -10,7 +16,13 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 
 import numpy as np
-import torch
+
+try:
+    import torch
+    HAVE_TORCH = True
+except ImportError:          # torch is OPTIONAL (see the CI's numpy job)
+    torch = None
+    HAVE_TORCH = False
 
 print("=" * 80)
 print("BULLETPROOF FLUIDLAYER - COMPREHENSIVE TEST SUITE")
@@ -154,25 +166,48 @@ try:
     assert "recall_rate" in info, "Missing recall_rate in info"
     assert "hits" in info, "Missing hits in info"
 
-    # Test recall
-    # Add some tokens
-    for i in range(10):
-        h = np.random.randn(1, d)
-        content = np.random.randn(1, d)
-        token_ids = np.array([i % V])
-        h_out, info = layer.forward(h, content, token_ids)
+    # THE RECALL TEST: the same context must be recalled.
+    # The sequence 1..8 teaches the store "the context C -> the token
+    # after C".  The replay must use the SAME context, so the replay
+    # gets a fresh layer with the SAME store (a fresh context buffer).
+    h = np.random.randn(8, d)
+    content = np.random.randn(8, d)
+    layer.forward(h, content, np.arange(1, 9))
+    replay = SAABranchBulletproof(
+        M=16, r=4, d=d, emb=emb,
+        config=BulletproofConfig(
+            M=16, r=4, d=d, ctx_len=4,
+            hash_mode=HashMode.DOUBLE_64,
+            security_level=SecurityLevel.STANDARD,
+        ),
+    )
+    replay.store = layer.store       # the same memory, a fresh context
+    recalled = 0
+    total = 0
+    for t in range(7):
+        ht = np.random.randn(1, d)
+        ct = np.random.randn(1, d)
+        _, info = replay.forward(ht, ct, np.array([t + 1]))
+        ret = info.get("retrieved")
+        r = int(ret[0]) if ret is not None and len(ret) else -1
+        # only the positions whose context window is FULL can be recalled
+        if t + 1 < layer.config.ctx_len:
+            continue
+        total += 1
+        if r == t + 2:
+            recalled += 1
+    rate = recalled / max(total, 1)
+    # THE ASSERTION: the recall must actually work.  This assertion is
+    # what was missing -- the test used to pass with a 0.0% recall and
+    # still print "100% recall verified".
+    assert rate >= 0.99, f"the exact tier's recall broke: {rate:.1%}"
+    assert info["hits"] > 0, "no hits at all"
 
-    # Now test recall
-    h = np.random.randn(1, d)
-    content = np.random.randn(1, d)
-    token_ids = np.array([5])  # Try to recall token 5
-    h_out, info = layer.forward(h, content, token_ids)
-
-    # Check stats
     stats = layer.get_stats()
     assert stats["total_tokens"] > 0, "No tokens processed"
 
-    print(f"✅ NumPy bulletproof layer test passed (Recall: {info['recall_rate']:.1%})")
+    print(f"✅ NumPy bulletproof layer test passed "
+          f"(the measured recall: {rate:.1%})")
 except Exception as e:
     print(f"❌ NumPy bulletproof layer test failed: {e}")
     import traceback
@@ -211,9 +246,41 @@ try:
     assert "recall_rate" in info, "Missing recall_rate in info"
     assert "hits" in info, "Missing hits in info"
 
+    # THE RECALL TEST (the same as the numpy one): the torch twin must
+    # recall what the numpy twin recalls.  The old test only printed the
+    # layer's recall rate for a random query -- which was 0.0% -- and
+    # still called it a pass.
+    h = torch.randn(8, d)
+    content = torch.randn(8, d)
+    layer(h, content, torch.arange(1, 9))
+    replay = SAABranchTorchBulletproof(
+        M=16, r=4, d=d, emb=emb,
+        config=BulletproofConfig(
+            M=16, r=4, d=d, ctx_len=4,
+            hash_mode=HashMode.DOUBLE_64,
+            security_level=SecurityLevel.STANDARD,
+        ),
+    )
+    replay.store = layer.store       # the same memory, a fresh context
+    recalled = 0
+    total = 0
+    for t in range(7):
+        ht = torch.randn(1, d)
+        ct = torch.randn(1, d)
+        _, info = replay(ht, ct, torch.tensor([t + 1]))
+        ret = info.get("retrieved")
+        r = int(ret[0]) if ret is not None and len(ret) else -1
+        if t + 1 < layer.config.ctx_len:
+            continue
+        total += 1
+        if r == t + 2:
+            recalled += 1
+    rate = recalled / max(total, 1)
+    assert rate >= 0.99, f"the torch twin's recall broke: {rate:.1%}"
+
     print(
         f"✅ PyTorch bulletproof layer test passed "
-        f"(Recall: {info['recall_rate']:.1%})"
+        f"(the measured recall: {rate:.1%})"
     )
 except Exception as e:
     print(f"❌ PyTorch bulletproof layer test failed: {e}")
@@ -278,25 +345,36 @@ try:
         ),
     )
 
-    # Replay the pattern
+    # Replay the pattern with the SAME store but a FRESH context buffer
+    # (the old test used a fresh, EMPTY layer and then queried a
+    # different token -- so of course it could not hit, and it called
+    # that "passing")
+    layer2.store = layer.store
     h = np.random.randn(1, d)
     content = np.random.randn(1, d)
-
     for tok in pattern:
         token_ids = np.array([tok])
         h_out, info = layer2.forward(h, content, token_ids)
         h = h_out
 
-    # Try to predict the target
-    token_ids = np.array([888])  # Different token
-    h_out, info = layer2.forward(h, content, token_ids)
-
-    # Check if we got the target
-    if info["hits"] > 0:
-        print(f"✅ 12-gram recall test passed (Hits: {info['hits']})")
+    ret = info.get("retrieved")
+    got = int(ret[0]) if ret is not None and len(ret) else -1
+    # THE HONEST VERDICT: this is what the 12-gram key actually does.
+    # The project's own E9 measured 0/6 facts recalled with a 12-gram
+    # key (against 6/6 with a distinctive key), so "100% 12-gram recall"
+    # was never true.
+    if got == target:
+        print(f"✅ the 12-gram key recalled the target ({target})")
     else:
-        print("⚠️  12-gram recall test: No hits (expected for different token)")
-        print("✅ 12-gram recall test passed (system working correctly)")
+        print(f"⚠️  the 12-gram key did NOT recall: got {got}, "
+              f"expected {target}")
+        print("    (this matches E9: a 12-gram key is not distinctive "
+              "enough -- the exact tier needs a distinctive key)")
+    # the assertion is on the CONSISTENCY of the system, not on a
+    # number nobody measured
+    assert info["hits"] >= 0, "the hit counter is broken"
+    assert got == target or got == -1, (
+        f"the store returned a value that was never written: {got}")
 
 except Exception as e:
     print(f"❌ 12-gram recall test failed: {e}")
@@ -373,7 +451,8 @@ print("\n" + "=" * 80)
 print("ALL TESTS PASSED! ✅")
 print("=" * 80)
 print("\n✅ Bulletproof FluidLayer is working correctly!")
-print("✅ 100% recall capability verified")
+print("✅ the recall was ASSERTED by the tests above (see the measured "
+      "numbers -- no claim is made that was not measured)")
 print("✅ Security isolation working")
 print("✅ GGUF export ready")
 print("✅ Both NumPy and PyTorch versions working")

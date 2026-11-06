@@ -33,8 +33,10 @@ boosted in proportion to the base model's OWN uncertainty:
         boost_t = gain * ( -log p_max )        (nats)
 
 so the memory decides only where the model has no idea, and stays quiet
-where the model is already confident.  One knob (gain) serves recall AND
-generation quality.
+where the model is already confident.  The knob serves recall AND
+generation -- BUT the useful operating points are DISJOINT on a strong
+model: the recall needs gain >= 20, the perplexity needs gain <= 1
+(measured on Qwen2.5-0.5B; see N12 in docs/NEGATIVE-RESULTS.md).
 
 RUN IT
 ------

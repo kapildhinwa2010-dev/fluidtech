@@ -634,3 +634,40 @@ python3 train.py                                     # N4
 ```
 
 Everything is CPU-only, pure NumPy, no downloads.
+
+
+---
+
+## N13 — a test that passes at a 0.0% recall (the "bulletproof" review)
+
+The second AI pass added `fluidlayer/graft_bulletproof.py` and
+`test_bulletproof.py`. The layer itself turned out to be **good** — its
+exact tier recalls **100 %** (measured, 7/7, in both the numpy and the
+torch twin).
+
+The **test** was not. It asserted only that the key `"recall_rate"`
+existed in the returned info — never that the recall was positive. The
+run printed:
+
+```
+✅ NumPy bulletproof layer test passed (Recall: 0.0%)
+...
+✅ 100% recall capability verified
+```
+
+**A test that passes while the metric is zero is worse than no test at
+all: it launders a failure into a green tick.** The 12-gram test was
+worse still — it wrote into one layer, replayed into a *fresh, empty*
+layer, queried a *different* token, and printed "✅ … passed (system
+working correctly)" on zero hits.
+
+**Fixed** (`docs/REVIEW-bulletproof.md` has the full list): the test now
+builds a real recall scenario and asserts `rate >= 0.99`; the claims in
+the docstrings were rewritten to what was measured; three real bugs were
+fixed along the way — an `np.divide` without `out=` (uninitialised
+memory in the diffusion state), a dead collision counter (collisions
+were never detected, only hoped away), and an unscoped store key (two
+tenants could address the same slot).
+
+**The lesson, written down because it is easy to repeat:** *a number
+that is printed must be asserted.*
