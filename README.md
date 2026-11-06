@@ -1,4 +1,6 @@
-# FluidLayer (FluidTech) — the measured memory layer for language models
+<p align="center">
+  <img src="assets/logo.svg" alt="FluidLayer — the measured memory layer for language models" width="620">
+</p>
 
 [![CI](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml/badge.svg)](https://github.com/kapildhinwa2010-dev/fluidtech/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/fluidlayer)](https://pypi.org/project/fluidlayer/)
