@@ -1,5 +1,5 @@
 {
-  "sha": "aae6de7473361a19914b7137b44b9689be65979c",
+  "sha": "c775de73584ad4b949c3514e2702a480bf915976",
   "branch": "main",
   "status": "complete",
   "baseline": {
@@ -77,5 +77,5 @@
     "gpt2_delta_small": true,
     "speed_overhead_vs_base": 1.69
   },
-  "log": "======================================================================\nBASE + KV WRAPPER RUN (e19)  sha=aae6de7473361a19914b7137b44b9689be65979c\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), base+kv (e19)\n\n--- base (main) ---\n\n--- base+kv (e19) ---\n\n--- real GPT-2 A/B (base vs base+kv) ---\n\nWrote e19-out/run.json and e19-out/basekv.md\nBASE+KV RUN COMPLETE"
+  "log": "======================================================================\nBASE + KV WRAPPER RUN (e19)  sha=c775de73584ad4b949c3514e2702a480bf915976\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), base+kv (e19)\n\n--- base (main) ---\n\n--- base+kv (e19) ---\n\n--- real GPT-2 A/B (base vs base+kv) ---\n\nWrote e19-out/run.json and e19-out/basekv.md\nBASE+KV RUN COMPLETE"
 }

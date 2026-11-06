@@ -1,8 +1,8 @@
 # Base + KV wrapper (e19)
 
-- commit: aae6de7473361a19914b7137b44b9689be65979c
+- commit: c775de73584ad4b949c3514e2702a480bf915976
 - branch: combined-layer
-- date: 2026-11-06 14:33:08 UTC
+- date: 2026-11-06 14:47:24 UTC
 - same harness as e18: d=16, ctx_len=12, capacity 25k/100k, KV_MAX=256
 - question: does base+kv give the combined layer's bounded-KV
   + long-term features at close-to-base speed and memory?
@@ -42,7 +42,7 @@ behaviour; base was 2.9 ms and 10.7 MB.
 
 ```
 ======================================================================
-BASE + KV WRAPPER RUN (e19)  sha=aae6de7473361a19914b7137b44b9689be65979c
+BASE + KV WRAPPER RUN (e19)  sha=c775de73584ad4b949c3514e2702a480bf915976
 ======================================================================
 corpus tokens: 2000
 comparing: base (main), base+kv (e19)
