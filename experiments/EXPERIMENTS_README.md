@@ -371,4 +371,28 @@ python experiments/e20_finetune_kv.py --model Qwen/Qwen2.5-1.5B \
 before/after, attach delta before/after, train loss curve, KV
 bounded check, wrapper recall rate.
 
+**CI measured (GitHub Actions CPU, commit 4f73284b):**
+
+| Metric | Before fine-tune | After fine-tune |
+|---|---|---|
+| plain eval loss (nats) | 10.826 | 10.8253 |
+| wrapped eval loss (nats) | 10.826 | 10.8253 |
+| attach delta (nats) | 0.0 | 0.0 |
+
+- Train: 1066 steps in 300.3 s (5 min budget), loss flat
+  (10.8249 -> 10.8259)
+- LoRA: 128 / 102842 params (0.12%)
+- KV after fine-tune: max 256 tokens, 1280 evictions, bounded
+- Honest reading: tiny-gpt2 (2-dim hidden, ~100k params) + sirf
+  128 LoRA params -- itna chhote setup me 5 min fine-tune ka
+  measurable effect nahi mila (eval delta 0.0007 nats = noise).
+  Attach delta 0 = wrapper loss-neutral (e19 ke GPT-2 A/B se
+  consistent). Real test ke liye:
+  --model Qwen/Qwen2.5-1.5B --minutes 10 (Colab T4).
+
+Full results: verification-results branch ka
+results/e20-finetune/run.json + finetune.md (har e20 push par
+CI khud refresh karta hai).
+
+
 ---
