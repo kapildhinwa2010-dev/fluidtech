@@ -13,12 +13,12 @@
     {
       "name": "P2  Chebyshev degree m = O(sqrt(kappa) log(1/eps))",
       "pass": true,
-      "detail": "kappa=14.8 predicted m=16 bound m<=56 errors=[(4, '5.14e-01'), (8, '1.65e-02'), (12, '2.24e-04'), (16, '9.37e-07'), (24, '1.44e-12'), (32, '1.63e-14')]"
+      "detail": "kappa=14.8 predicted m=16 bound m<=56 errors=[(4, '5.14e-01'), (8, '1.65e-02'), (12, '2.24e-04'), (16, '9.37e-07'), (24, '1.44e-12'), (32, '1.62e-14')]"
     },
     {
       "name": "P3  pure-linear model CANNOT fit XOR",
       "pass": true,
-      "detail": "accuracy=0.50 mse=0.500  (a hyperplane cannot separate XOR)"
+      "detail": "accuracy=0.25 mse=0.500  (a hyperplane cannot separate XOR)"
     },
     {
       "name": "P3  + one pointwise nonlinearity CAN fit XOR",
@@ -254,7 +254,7 @@
   "rank_trap": {
     "rank_frozen": 6,
     "err_frozen": 0.9615765468915559,
-    "err_bands": 2.8325490776202763e-06
+    "err_bands": 2.8325490776134742e-06
   },
   "n_pass": 50,
   "n_total": 50,

@@ -1,0 +1,38 @@
+running the tests with the built-in shim
+
+  [PASS] test_bpe.py::test_a_tiny_tokenizer_round_trips
+  [PASS] test_bpe.py::test_the_vocabulary_is_the_size_we_asked_for
+  [PASS] test_bpe.py::test_unseen_text_still_round_trips
+  [PASS] test_graft.py::test_a_reset_clears_the_memory
+  [PASS] test_graft.py::test_attaching_is_bit_identical
+  [PASS] test_graft.py::test_bad_arguments_are_refused
+  [PASS] test_graft.py::test_ctx_hash_is_stable
+  [PASS] test_graft.py::test_the_exact_tier_returns_the_stored_id
+  [PASS] test_graft.py::test_the_layer_local_head_produces_logits
+  [PASS] test_graft.py::test_the_rebuild_state_is_the_diffusion_of_the_history_writes
+  [PASS] test_graft.py::test_the_state_stays_bounded
+  [PASS] test_graft.py::test_the_store_tracks_the_majority_continuation
+  [PASS] test_memory.py::test_a_recalled_value_is_bit_exact
+  [PASS] test_memory.py::test_a_round_trip_through_bytes
+  [PASS] test_memory.py::test_a_signature_mismatch_fails_loud
+  [PASS] test_memory.py::test_overflow_is_refused
+  [PASS] test_memory.py::test_the_budget_law_never_over_commits
+  [PASS] test_memory.py::test_the_register_is_append_only
+  [PASS] test_memory.py::test_the_slot_is_20_bytes
+  [SKIP] test_qwen2_model.py: No module named 'torch'
+  [PASS] test_selftest.py::test_the_bundle_passes
+  [PASS] test_selftest.py::test_the_whole_suite_passes
+  [PASS] test_session_registry.py::test_active_leases_are_not_expired
+  [PASS] test_session_registry.py::test_blank_session_identifiers_are_rejected
+  [PASS] test_session_registry.py::test_capacity_is_a_hard_bound_and_expired_sessions_are_reclaimed
+  [PASS] test_session_registry.py::test_configuration_is_validated
+  [PASS] test_session_registry.py::test_requests_for_one_session_are_serialized
+  [PASS] test_session_registry.py::test_reset_and_close_require_an_idle_session
+  [PASS] test_session_registry.py::test_sessions_are_isolated_by_tenant_and_session
+  [PASS] test_topology.py::test_the_frustration_index_matches_a_global_section
+  [PASS] test_topology.py::test_the_hodge_embedding_is_finite
+  [PASS] test_topology.py::test_the_persistence_landmarks_are_ordered
+  [SKIP] test_torch_parity.py: No module named 'torch'
+
+31 passed, 0 failed, 2 skipped
+run_without_pytest exit: 0

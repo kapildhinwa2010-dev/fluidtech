@@ -1,0 +1,116 @@
+================================================================================
+FLUIDLAYER REFACTORED - COMPREHENSIVE TEST SUITE
+================================================================================
+
+================================================================================
+TEST 1: Dynamic Compressed Key-Hashing
+================================================================================
+
+1.1 Testing deterministic hashing...
+   ✓ Deterministic: PASSED
+
+1.2 Testing different inputs produce different hashes...
+   ✓ Unique hashes: PASSED
+
+1.3 Testing compression to different bit lengths...
+   ✓ Compression levels: PASSED
+
+1.4 Testing with different ngram ranges...
+   ✓ Ngram ranges: PASSED
+
+1.5 Testing edge cases...
+   ✓ Edge cases: PASSED
+
+✓ All compressed hashing tests PASSED
+
+================================================================================
+TEST 2: Session Security (XOR-Masking)
+================================================================================
+
+2.1 Testing masking reversibility...
+   ✓ Reversibility: PASSED
+
+2.2 Testing different sessions have different masks...
+   ✓ Session isolation: PASSED
+
+2.3 Testing mask properties...
+   ✓ Mask properties: PASSED (mask=0x5994471A)
+
+2.4 Testing with various token IDs...
+   ✓ Various tokens: PASSED
+
+✓ All session security tests PASSED
+
+================================================================================
+TEST 3: Gated Decay Sheaf
+================================================================================
+
+3.1 Testing initialization...
+   ✓ Initialization: PASSED
+
+3.2 Testing diffusion...
+   ✓ Diffusion: PASSED
+
+3.3 Testing Laplacian properties...
+   ✓ Laplacian properties: PASSED
+
+3.4 Testing spectral properties...
+   ✓ Spectral properties: PASSED (λ_max=1.2963)
+
+✓ All gated sheaf tests PASSED
+
+================================================================================
+TEST 4: GGUF Compatibility
+================================================================================
+
+4.1 Testing initialization...
+   ✓ Initialization: PASSED
+
+4.2 Testing parameter registration...
+   ✓ Parameter registration: PASSED
+
+4.3 Testing state registration...
+   ✓ State registration: PASSED
+
+4.4 Testing schema generation...
+   ✓ Schema generation: PASSED
+
+✓ All GGUF compatibility tests PASSED
+
+================================================================================
+TEST 5: Full Layer Integration (NumPy)
+================================================================================
+
+5.1 Testing initialization...
+   ✓ Initialization: PASSED
+
+5.2 Testing forward pass...
+   ✓ Forward pass: PASSED
+
+5.3 Testing no-op initialization...
+   ✓ No-op initialization: PASSED
+
+5.4 Testing store operations...
+   ✓ Store operations: PASSED (stored 11 entries)
+
+5.5 Testing session security integration...
+   ✓ Session security integration: PASSED
+
+5.6 Testing GGUF compatibility integration...
+   ✓ GGUF compatibility integration: PASSED
+
+5.7 Testing gated logits...
+   ✓ Gated logits: PASSED
+
+✓ All full layer (NumPy) tests PASSED
+
+================================================================================
+TEST 6: Full Layer Integration (PyTorch)
+================================================================================
+
+   ⏭️  skipped: torch is not installed (numpy-only run)
+
+================================================================================
+numpy-only run: Tests 1-5 PASSED; Test 6 needs torch (optional)
+================================================================================
+test_refactored exit: 0
