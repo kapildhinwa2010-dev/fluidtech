@@ -103,7 +103,6 @@ def main() -> None:
     os.makedirs(out, exist_ok=True)
     names = list(NEEDED)
     # the weight file may be sharded
-    idx = os.path.join(out, "model.safetensors.index.json")
     try:
         with urllib.request.urlopen(BASE.format(repo=repo, name="model.safetensors.index.json"), timeout=60) as r:
             data = json.load(r)

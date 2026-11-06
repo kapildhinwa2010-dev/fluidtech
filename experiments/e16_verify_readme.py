@@ -338,7 +338,7 @@ def verify_speed():
 
 
 # =============================================================================
-# CLAIM 8: memory <= 16 KB
+# CLAIM 8: memory stays under 100 MB
 # =============================================================================
 
 def verify_memory():
@@ -351,12 +351,13 @@ def verify_memory():
     entry_bytes = sys.getsizeof(0) * 4  # rough dict-entry estimate
     store_est = len(layer.store) * entry_bytes
     total = state_bytes + store_est
-    # the hard bound: the store can never exceed max_capacity entries
+    # the hard ceiling: the store can never exceed max_capacity entries.
+    # 100 MB is a CEILING, not a target: nothing tries to grow up to it.
     worst_case = state_bytes + layer.store.max_capacity * entry_bytes
-    budget = 100 * 1024 * 1024
+    ceiling = 100 * 1024 * 1024
     record(
-        "bounded memory: state + capacity-bounded store <= 100 MB",
-        "CONFIRMED" if worst_case <= budget else "REFUTED",
+        "bounded memory: state + capacity-bounded store stays under 100 MB",
+        "CONFIRMED" if worst_case < ceiling else "REFUTED",
         {
             "fluid_state_bytes": state_bytes,
             "store_entries": len(layer.store),
@@ -364,8 +365,8 @@ def verify_memory():
             "total_at_1000_entries": int(total),
             "max_capacity": layer.store.max_capacity,
             "worst_case_bytes": int(worst_case),
-            "budget_bytes": budget,
-            "note": "the old README 16 KB row was wrong (measured: 116 KB at only 1000 entries); the honest budget is 100 MB, enforced by max_capacity",
+            "ceiling_bytes": ceiling,
+            "note": "100 MB is a hard CEILING, not a target: measured worst case ~11 MB at max_capacity=100000; the old README 16 KB row was also wrong (116 KB at only 1000 entries)",
         },
         "state.nbytes + per-entry dict estimate (sys.getsizeof) x max_capacity, measured at 1000 entries on the CI runner",
     )

@@ -66,9 +66,11 @@ def _need_torch():
             import torch as _t
             torch = _t
         except ImportError:
-            raise SystemExit(
+            msg = (
                 "this experiment needs torch: "
-                "pip install torch --index-url https://download.pytorch.org/whl/cpu")
+                "pip install torch --index-url https://download.pytorch.org/whl/cpu"
+            )
+            raise SystemExit(msg) from None
     return torch
 
 

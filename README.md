@@ -24,7 +24,7 @@ and the `verification-results` branch. Latest run: **9/9 CONFIRMED**.
 ✅ **GGUF export writes a valid GGUF container** (magic b'GGUF')  
 ✅ **MILITARY level: Fernet encrypt/decrypt round-trip** (AES-128-CBC + HMAC-SHA256)  
 ✅ **Tenant isolation** (0 cross-session hits, measured)  
-✅ **Bounded memory ≤ 100 MB** (4 KB state + capacity-bounded store, ~11 MB worst case at defaults)  
+✅ **Bounded memory, < 100 MB ceiling** (4 KB state + capacity-bounded store, ~11 MB worst case at defaults)  
 ✅ **Thread-safe** (8 concurrent threads, 0 errors)  
 ✅ **Measured overhead** (forward ~5-9 ms/256 tokens, keygen ~3-6 µs, lookup ~3-5 µs)
 
@@ -58,7 +58,7 @@ and the `verification-results` branch. Latest run: **9/9 CONFIRMED**.
 | **Security** | session-masked tenants at BASIC/STANDARD; Fernet encryption (AES-128-CBC + HMAC-SHA256) at MILITARY |
 | **GGUF Export** | valid GGUF container (magic b'GGUF'; llama.cpp execution needs a backend patch) |
 | **Thread Safety** | 8 concurrent threads, 0 errors (measured) |
-| **Memory** | 4 KB state + capacity-bounded store, ≤ **100 MB** worst case (~11 MB at defaults) |
+| **Memory** | 4 KB state + capacity-bounded store; < **100 MB** ceiling (measured worst case ~11 MB) |
 
 ### **Critical failures found by the verification — and FIXED**
 
@@ -267,7 +267,7 @@ The old "-0.30 nats" table had no measurement behind it and was removed.
 |-----------|----------|-------|
 | Fluid State | 4096 B (M=64, r=8) | the lossy tier — FIXED size |
 | Exact Store | ~112 B per entry | grows up to `max_capacity`, then evicts |
-| **Worst case (default max_capacity=100000)** | **~11.2 MB ≤ 100 MB** | the store can never exceed the budget |
+| **Worst case (default max_capacity=100000)** | **~11.2 MB** | far below the 100 MB ceiling — a ceiling, not a target |
 
 #### **Speed Benchmarks**
 

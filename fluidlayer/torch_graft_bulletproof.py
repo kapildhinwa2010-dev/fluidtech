@@ -38,7 +38,11 @@ logger = logging.getLogger("fluidlayer.torch_bulletproof")
 class CryptographicSessionTorch:
     """PyTorch-compatible cryptographic session."""
     
-    def __init__(self, session_id: Optional[str] = None, security_level: SecurityLevel = SecurityLevel.STANDARD):
+    def __init__(
+        self,
+        session_id: Optional[str] = None,
+        security_level: SecurityLevel = SecurityLevel.STANDARD,
+    ):
         self.crypto_session = CryptographicSession(session_id, security_level)
     
     def mask_token(self, token_id: int) -> int:
@@ -166,7 +170,9 @@ class AdaptiveGatedSheafTorch(nn.Module):
         from .diffusion import power_iteration_lmax
         self.lam_max = power_iteration_lmax(self.L.detach().cpu().numpy())
     
-    def apply_diffusion(self, state: torch.Tensor, t: float = 1.0, cheb_m: int = 12) -> torch.Tensor:
+    def apply_diffusion(
+        self, state: torch.Tensor, t: float = 1.0, cheb_m: int = 12
+    ) -> torch.Tensor:
         """Apply adaptive gated diffusion."""
         if self.lam_max <= 0:
             return state
@@ -326,8 +332,12 @@ class SAABranchTorchBulletproof(nn.Module):
     def _register_gguf_params(self) -> None:
         """Register parameters with GGUF exporter."""
         self.gguf_exporter.add_static_param("protos", self.sheaf.protos)
-        self.gguf_exporter.add_static_param("attention_weights", self.sheaf.attention_weights)
-        self.gguf_exporter.add_static_param("positional_gates", self.sheaf.positional_gates)
+        self.gguf_exporter.add_static_param(
+            "attention_weights", self.sheaf.attention_weights
+        )
+        self.gguf_exporter.add_static_param(
+            "positional_gates", self.sheaf.positional_gates
+        )
         self.gguf_exporter.add_static_param("decay_rates", self.sheaf.decay_rates)
         self.gguf_exporter.add_dynamic_state("state", self.state)
         self.gguf_exporter.add_metadata("fluidlayer.version", "2.0.0")
@@ -385,9 +395,14 @@ class SAABranchTorchBulletproof(nn.Module):
             # Update context buffer
             for t in range(T):
                 # Generate previous context key
-                prev_tokens = self._context_buffer[-(self.config.ctx_len):] if self._context_buffer else []
+                if self._context_buffer:
+                    prev_tokens = self._context_buffer[-(self.config.ctx_len):]
+                else:
+                    prev_tokens = []
                 if len(prev_tokens) >= self.config.ctx_len:
-                    prev_key = self._generate_context_key(prev_tokens[-self.config.ctx_len:])
+                    prev_key = self._generate_context_key(
+                        prev_tokens[-self.config.ctx_len:]
+                    )
                 else:
                     prev_key = None
                 
@@ -444,7 +459,10 @@ class SAABranchTorchBulletproof(nn.Module):
             
             execution_time = time.time() - start_time
             
-            logger.debug(f"Forward pass: T={T}, hits={hits}, recall={recall_rate:.2%}, time={execution_time:.4f}s")
+            logger.debug(
+                f"Forward pass: T={T}, hits={hits}, recall={recall_rate:.2%}, "
+                f"time={execution_time:.4f}s"
+            )
             
             return h_out, {
                 "retrieved": retrieved,
@@ -476,22 +494,28 @@ class SAABranchTorchBulletproof(nn.Module):
     def _get_Wq(self) -> torch.Tensor:
         """Get Wq matrix."""
         torch.manual_seed(0)
-        return torch.randn(self.config.d, self.config.d, device=self.sheaf.protos.device) * self.config.d ** -0.5
+        d = self.config.d
+        return torch.randn(d, d, device=self.sheaf.protos.device) * d ** -0.5
     
     def _get_Wk(self) -> torch.Tensor:
         """Get Wk matrix."""
         torch.manual_seed(1)
-        return torch.randn(self.config.d, self.config.d, device=self.sheaf.protos.device) * self.config.d ** -0.5
+        d = self.config.d
+        return torch.randn(d, d, device=self.sheaf.protos.device) * d ** -0.5
     
     def _get_Wv(self) -> torch.Tensor:
         """Get Wv matrix."""
         torch.manual_seed(2)
-        return torch.randn(self.config.d, self.config.r, device=self.sheaf.protos.device) * self.config.d ** -0.5
+        d = self.config.d
+        scale = d ** -0.5
+        return torch.randn(d, self.config.r, device=self.sheaf.protos.device) * scale
     
     def _get_Wr(self) -> torch.Tensor:
         """Get Wr matrix."""
         torch.manual_seed(3)
-        return torch.randn(self.config.r, self.config.d, device=self.sheaf.protos.device) * self.config.r ** -0.5
+        r = self.config.r
+        scale = r ** -0.5
+        return torch.randn(r, self.config.d, device=self.sheaf.protos.device) * scale
     
     def reset(self) -> None:
         """Reset the layer."""

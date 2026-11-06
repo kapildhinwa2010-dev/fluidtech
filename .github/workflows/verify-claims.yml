@@ -4,6 +4,11 @@ name: Verify README claims
 # This workflow is the executor: it runs the test suites and the claim
 # verification script on every push to main, and publishes the measured
 # results to the 'verification-results' branch.
+#
+# It also keeps the tree lint-clean: ruff violations that can be fixed
+# mechanically are fixed and committed to main inside this run.  The
+# results always describe the code that was ACTUALLY run (VERIFIED_SHA),
+# which may be one style commit ahead of the triggering push.
 
 on:
   push:
@@ -28,13 +33,34 @@ jobs:
         run: |
           pip install "numpy>=1.23,<3" cryptography
 
-      - name: Lint check (ruff, log only)
+      - name: Lint (ruff, log only)
         run: |
           pip install ruff
           set +e
           ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --output-format=concise 2>&1 | tee ruff.log
-          echo "ruff exit: ${PIPESTATUS[0]}" >> ruff.log
+          echo "ruff exit (before autofix): ${PIPESTATUS[0]}" >> ruff.log
           exit 0
+
+      - name: Lint autofix (mechanical fixes only)
+        run: |
+          set +e
+          for i in 1 2 3; do
+            ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --fix --unsafe-fixes --output-format=concise 2>&1 | tee -a ruff.log
+          done
+          ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --output-format=concise 2>&1 | tee -a ruff.log
+          echo "ruff exit (after autofix): ${PIPESTATUS[0]}" >> ruff.log
+          exit 0
+
+      - name: Commit lint fixes to main (if any) and record the verified SHA
+        run: |
+          git config user.name "fluidtech-verification-bot"
+          git config user.email "actions@github.com"
+          if ! git diff --quiet; then
+            git add fluidlayer experiments tools tests examples selftest.py run_without_pytest.py
+            git commit -m "style: ruff --fix --unsafe-fixes (keep the CI lint job green)"
+            git push origin HEAD:main
+          fi
+          echo "VERIFIED_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Run repo test suites (numpy-only)
         run: |
@@ -55,7 +81,7 @@ jobs:
       - name: Run claim verification (real model A/B included)
         run: |
           set +e
-          python experiments/e16_verify_readme.py --sha "$GITHUB_SHA" --out results/verification 2>&1 | tee verify.log
+          python experiments/e16_verify_readme.py --sha "$VERIFIED_SHA" --out results/verification 2>&1 | tee verify.log
           exit 0
 
       - name: Push measured results to verification-results branch

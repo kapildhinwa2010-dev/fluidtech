@@ -24,6 +24,7 @@ from __future__ import annotations
 import numpy as np
 import hashlib
 import threading
+import time
 import uuid
 import logging
 from typing import Optional, Tuple, List, Dict, Any
@@ -59,7 +60,8 @@ class HashMode(Enum):
     """
     FAST_32 = "fast_32"          # 32-bit digest (fast, collisions are plausible)
     PERFECT_64 = "perfect_64"    # 64-bit digest (the NAME is historical)
-    DOUBLE_64 = "double_64"      # two digests combined (collision-resistant, not collision-proof)
+    DOUBLE_64 = "double_64"      # two digests combined
+    # (collision-resistant, not collision-proof)
     CRYPTO_256 = "crypto_256"    # a full 256-bit digest
 
 
@@ -127,7 +129,7 @@ class BulletproofConfig:
         if self.capacity <= 0:
             raise ValueError(f"capacity must be positive, got {self.capacity}")
         if self.max_capacity < self.capacity:
-            raise ValueError(f"max_capacity must be >= capacity")
+            raise ValueError("max_capacity must be >= capacity")
 
 
 # =============================================================================
@@ -144,7 +146,11 @@ class CryptographicSession:
     ✅ Secure memory wiping
     """
     
-    def __init__(self, session_id: Optional[str] = None, security_level: SecurityLevel = SecurityLevel.STANDARD):
+    def __init__(
+        self,
+        session_id: Optional[str] = None,
+        security_level: SecurityLevel = SecurityLevel.STANDARD,
+    ):
         self.security_level = security_level
         self.session_id = session_id or str(uuid.uuid4())
         self._lock = threading.Lock()
@@ -152,7 +158,9 @@ class CryptographicSession:
         # Generate cryptographic keys
         self._init_keys()
         
-        logger.info(f"Session initialized: {self.session_id[:8]}... (Level: {security_level.name})")
+        logger.info(
+            f"Session init: {self.session_id[:8]}... (Level: {security_level.name})"
+        )
     
     def _init_keys(self) -> None:
         """Initialize cryptographic keys."""
@@ -261,7 +269,9 @@ class PerfectHashStore:
         self.collisions = 0
         self.evictions = 0
         
-        logger.info(f"PerfectHashStore initialized (Capacity: {initial_capacity}, Max: {max_capacity})")
+        logger.info(
+            f"PerfectHashStore init (Capacity: {initial_capacity}, Max: {max_capacity})"
+        )
     
     def _generate_key(self, tokens: List[int]) -> int:
         """The digest key of a context.
@@ -388,7 +398,8 @@ class PerfectHashStore:
                 access_time = self._access_time.get(key, 0)
                 
                 # Score: lower frequency + lower priority + older access = worse
-                score = (1.0 / (freq + 1)) * (1.0 / (priority + 0.1)) * (time.time() - access_time + 1)
+                recency = time.time() - access_time + 1
+                score = (1.0 / (freq + 1)) * (1.0 / (priority + 0.1)) * recency
                 
                 if score < worst_score:
                     worst_score = score
@@ -476,7 +487,8 @@ class AdaptiveGatedSheaf:
             k = min(8, M // 2)
             
             # Compute cosine similarity
-            Pn = self.protos / (np.linalg.norm(self.protos, axis=1, keepdims=True) + 1e-12)
+            norms = np.linalg.norm(self.protos, axis=1, keepdims=True) + 1e-12
+            Pn = self.protos / norms
             S = Pn @ Pn.T
             np.fill_diagonal(S, -np.inf)
             
@@ -513,7 +525,9 @@ class AdaptiveGatedSheaf:
             
             logger.debug(f"Graph built (λ_max={self.lam_max:.4f})")
     
-    def apply_diffusion(self, state: np.ndarray, t: float = 1.0, cheb_m: int = 12) -> np.ndarray:
+    def apply_diffusion(
+        self, state: np.ndarray, t: float = 1.0, cheb_m: int = 12
+    ) -> np.ndarray:
         """Apply adaptive gated diffusion with O(M) complexity."""
         with self._lock:
             if self.lam_max <= 0:
@@ -565,7 +579,9 @@ class GGUFExporter:
     ✅ Memory-mapped files
     """
     
-    GGUF_MAGIC = 0x46554747  # "GGUF" in little-endian (0x46465547 wrote the bytes REVERSED -- "GUFF"; caught by e16 verify_gguf)
+    # "GGUF" in little-endian.  (0x46465547 wrote the bytes REVERSED
+    # -- "GUFF"; caught by e16 verify_gguf.)
+    GGUF_MAGIC = 0x46554747
     GGUF_VERSION = 1
     
     def __init__(self, d: int, V: int = 0):
@@ -598,7 +614,8 @@ class GGUFExporter:
             # Write header
             f.write(struct.pack('<I', self.GGUF_MAGIC))
             f.write(struct.pack('<I', self.GGUF_VERSION))
-            f.write(struct.pack('<Q', len(self.metadata)))  # Number of metadata KV pairs
+            # Number of metadata KV pairs
+            f.write(struct.pack('<Q', len(self.metadata)))
             
             # Write metadata
             for key, value in self.metadata.items():
@@ -679,8 +696,6 @@ class GGUFExporter:
 # =============================================================================
 # MAIN CLASS: SAABranchBulletproof
 # =============================================================================
-
-import time
 
 
 class SAABranchBulletproof:
@@ -789,8 +804,12 @@ class SAABranchBulletproof:
         """Register parameters with GGUF exporter."""
         # Register static parameters
         self.gguf_exporter.add_static_param("protos", self.sheaf.protos)
-        self.gguf_exporter.add_static_param("attention_weights", self.sheaf.attention_weights)
-        self.gguf_exporter.add_static_param("positional_gates", self.sheaf.positional_gates)
+        self.gguf_exporter.add_static_param(
+            "attention_weights", self.sheaf.attention_weights
+        )
+        self.gguf_exporter.add_static_param(
+            "positional_gates", self.sheaf.positional_gates
+        )
         self.gguf_exporter.add_static_param("decay_rates", self.sheaf.decay_rates)
         
         # Register dynamic state
@@ -799,7 +818,10 @@ class SAABranchBulletproof:
         # Add metadata
         self.gguf_exporter.add_metadata("fluidlayer.version", "2.0.0")
         self.gguf_exporter.add_metadata("fluidlayer.bulletproof", True)
-        self.gguf_exporter.add_metadata("fluidlayer.recall", "verbatim replay, measured; fresh text recalls 0 by construction")
+        self.gguf_exporter.add_metadata(
+            "fluidlayer.recall",
+            "verbatim replay, measured; fresh text recalls 0 by construction",
+        )
     
     def _generate_context_key(self, tokens: List[int]) -> int:
         """The digest key of a context."""
@@ -826,7 +848,8 @@ class SAABranchBulletproof:
         token_ids: np.ndarray,
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
-        Forward pass (the exact tier recalls stored contexts verbatim; fresh text recalls 0 by construction).
+        Forward pass (the exact tier recalls stored contexts verbatim;
+        fresh text recalls 0 by construction).
         
         Returns:
             h_out: Output hidden states
@@ -868,9 +891,14 @@ class SAABranchBulletproof:
             # Update context buffer
             for t in range(T):
                 # Generate previous context key
-                prev_tokens = self._context_buffer[-(self.config.ctx_len):] if self._context_buffer else []
+                if self._context_buffer:
+                    prev_tokens = self._context_buffer[-(self.config.ctx_len):]
+                else:
+                    prev_tokens = []
                 if len(prev_tokens) >= self.config.ctx_len:
-                    prev_key = self._generate_context_key(prev_tokens[-self.config.ctx_len:])
+                    prev_key = self._generate_context_key(
+                        prev_tokens[-self.config.ctx_len:]
+                    )
                 else:
                     prev_key = None
                 
@@ -886,8 +914,10 @@ class SAABranchBulletproof:
                 
                 # Try to retrieve
                 if curr_key is not None:
-                    value = self.store.get(curr_key, -1,
-                                           signature=self._context_signature(curr_tokens))
+                    value = self.store.get(
+                        curr_key, -1,
+                        signature=self._context_signature(curr_tokens),
+                    )
                     if value >= 0:
                         retrieved[t] = value
                         confidences[t] = 1.0
@@ -927,7 +957,10 @@ class SAABranchBulletproof:
             
             execution_time = time.time() - start_time
             
-            logger.debug(f"Forward pass: T={T}, hits={hits}, recall={recall_rate:.2%}, time={execution_time:.4f}s")
+            logger.debug(
+                f"Forward pass: T={T}, hits={hits}, recall={recall_rate:.2%}, "
+                f"time={execution_time:.4f}s"
+            )
             
             return h_out, {
                 "retrieved": retrieved,
@@ -1020,8 +1053,6 @@ class SAABranchBulletproof:
 # =============================================================================
 # UTILITY: Time-based operations
 # =============================================================================
-
-import time
 
 
 def current_timestamp() -> float:

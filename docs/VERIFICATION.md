@@ -8,7 +8,7 @@ The raw verdicts are published to the `verification-results` branch:
 
 * `results/verification/run.json` — machine-readable verdicts
 * `results/verification/run.md` — the same, as a table + the full log
-* `results/logs/*.log` — the three test suites' output
+* `results/logs/*.log` — the test suites' output, the claim-run log and the ruff lint log
 
 Verdicts: **CONFIRMED** (the measurement matched the claim, and where a
 bound is meaningful the number is *asserted*, not merely printed) /
@@ -27,7 +27,7 @@ bound is meaningful the number is *asserted*, not merely printed) /
 | MILITARY level: Fernet encrypt/decrypt round-trip | CONFIRMED | round-trip ok at STANDARD and MILITARY; Fernet is AES-128-CBC + HMAC-SHA256 (not AES-256) |
 | Tenant isolation: no cross-session reads | CONFIRMED | tenant_2 replays tenant_1's tokens on a fresh layer: **0 hits** |
 | Measured overhead (forward < 50 ms/256 tok, keygen < 50 µs, lookup < 50 µs) | CONFIRMED | forward **4.6–9.4 ms**/256 tokens (~18–37 µs/token), keygen **3–6 µs**, lookup **3–5 µs** (CI runner CPU; varies run to run) |
-| Bounded memory: state + capacity-bounded store ≤ 100 MB | CONFIRMED | state **4096 B**; store ~**112 B/entry**; worst case at max_capacity 100000 ≈ **11.2 MB ≤ 100 MB** (the old "≤ 16 KB" row was REFUTED: 116 KB at only 1000 entries) |
+| Bounded memory: state + capacity-bounded store stays under 100 MB | CONFIRMED | state **4096 B**; store ~**112 B/entry**; worst case at max_capacity 100000 ≈ **11.2 MB** — far below the 100 MB ceiling (the old "≤ 16 KB" row was REFUTED: 116 KB at only 1000 entries) |
 | Thread safety (8 concurrent threads) | CONFIRMED | 8 threads × 50 forwards, **0 errors**, 6400 tokens |
 
 ---
@@ -64,9 +64,10 @@ point of running claims instead of reading them:
 ## Honest corrections, made with the maintainer's approval
 
 * the **"≤ 16 KB" memory budget** was REFUTED (the exact store grows
-  with entries: 116 KB at 1000 entries). The honest budget is a
-  **bounded 100 MB** — 4 KB state + a store that can never exceed
-  `max_capacity` entries (~11.2 MB at the defaults).
+  with entries: 116 KB at 1000 entries). 100 MB is a hard **ceiling,
+  not a target** — 4 KB state + a store that can never exceed
+  `max_capacity` entries (measured worst case ~11.2 MB at the
+  defaults, far below the ceiling).
 * the **relative speed claims** (10x hash, 1.5x faster) were UNVERIFIABLE:
   after the review fixes there is no runnable "original" baseline. The
   README states the measured absolute overhead instead.
@@ -83,6 +84,7 @@ point of running claims instead of reading them:
 | 3 | 795dbe5b | recall 100% replay CONFIRMED; GGUF + MILITARY CONFIRMED after bugs 1–3 |
 | 4 | 6027fe61 | 8/9 CONFIRMED (memory ≤ 100 MB + isolation + speed in); perplexity harness error (hook returned a tuple) |
 | 5 | 311e3184 | **9/9 CONFIRMED** — the table above |
+| 6 | dc2b32fd | 9/9 CONFIRMED again (docs-only honesty pass) |
 
 ## Rerun it
 
