@@ -1172,3 +1172,39 @@ print("ALL TESTS PASSED" if all(results) else "SOME TESTS FAILED — read the li
 n.json) |
 
 Reproduce any of them: the scripts live on `main` — `experiments/e18_compare.py`, `experiments/e19_base_kv.py` — each is a standalone script that measures, prints, and publishes its own results (e18/e19 re-run on every push to main).
+
+
+### e20: short-budget fine-tune + KV wrapper (experiments branch)
+
+**Idea:** model par base+KV wrapper layer lagao, 5-10 min ka LoRA
+fine-tune karo, aur MEASURE karo ki kya badalta hai. Script:
+[e20_finetune_kv.py](https://github.com/kapildhinwa2010-dev/fluidtech/blob/experiments/experiments/e20_finetune_kv.py);
+CI workflow [e20-finetune.yml](https://github.com/kapildhinwa2010-dev/fluidtech/blob/experiments/.github/workflows/e20-finetune.yml)
+har e20 change par GitHub Actions par run hota hai aur results
+verification-results par publish karta hai. KV wrapper training
+ke dauraan OFF hai (evictions training context corrupt karti) --
+sirf fine-tune ke baad attach hota hai.
+
+**CI measured (GitHub Actions CPU, commit 4f73284b):**
+
+| Metric | Before fine-tune | After fine-tune |
+|---|---|---|
+| plain eval loss (nats) | 10.826 | 10.8253 |
+| wrapped eval loss (nats) | 10.826 | 10.8253 |
+| attach delta (nats) | 0.0 | 0.0 |
+
+- Train: 1066 steps / 300.3 s (5 min budget), loss flat
+- LoRA: 128 / 102842 params (0.12% trainable)
+- KV after fine-tune: max 256, 1280 evictions -- bounded
+
+Honest reading: tiny-gpt2 (2-dim hidden, ~100k params) + 128
+LoRA params me 5 min ka measurable effect nahi (eval delta 0.0007
+nats = noise-level). Attach delta 0 = wrapper loss-neutral,
+e19 ke GPT-2 A/B (delta 0.0) se consistent. Real fine-tune test:
+`--model Qwen/Qwen2.5-1.5B --minutes 10` on a GPU (Colab T4).
+
+Full results:
+[run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/run.json)
+and
+[finetune.md](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/finetune.md)
+on the verification-results branch.
