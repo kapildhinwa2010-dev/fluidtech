@@ -1,0 +1,104 @@
+======================================================================
+E20: FINE-TUNE + KV WRAPPER  sha=4912034e539ce13b0d874db0a24fb2339dbcbacf
+model=sshleifer/tiny-gpt2  budget=5.0 min
+======================================================================
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/config.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fconfig.json=&etag=%222c81a6c4c984e95a45338c64a7445c1f0f88077f%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/config.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fconfig.json=&etag=%222c81a6c4c984e95a45338c64a7445c1f0f88077f%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/tokenizer_config.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Ftokenizer_config.json=&etag=%22be4d21d94f3b4687e5a54d84bf6ab46ed0f8defd%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/tokenizer_config.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Ftokenizer_config.json=&etag=%22be4d21d94f3b4687e5a54d84bf6ab46ed0f8defd%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/vocab.json "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/vocab.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fvocab.json=&etag=%22b00361fece0387ca34b4b8b8539ed830d644dbeb%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/vocab.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fvocab.json=&etag=%22b00361fece0387ca34b4b8b8539ed830d644dbeb%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/merges.txt "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/merges.txt?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fmerges.txt=&etag=%22226b0752cac7789c48f0cb3ec53eda48b7be36cc%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/merges.txt?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fmerges.txt=&etag=%22226b0752cac7789c48f0cb3ec53eda48b7be36cc%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/added_tokens.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/special_tokens_map.json "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/special_tokens_map.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fspecial_tokens_map.json=&etag=%22817762d631ad6f9c799f6b9dc713c46420e65546%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/resolve-cache/models/sshleifer/tiny-gpt2/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/special_tokens_map.json?%2Fsshleifer%2Ftiny-gpt2%2Fresolve%2F5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be%2Fspecial_tokens_map.json=&etag=%22817762d631ad6f9c799f6b9dc713c46420e65546%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/tokenizer.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/chat_template.jinja "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/adapter_config.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/model.safetensors "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/pytorch_model.bin "HTTP/1.1 302 Found"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/xet-read-token/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2 "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/29 [00:00<?, ?it/s]Loading weights: 100%|██████████| 29/29 [00:00<00:00, 13905.89it/s]
+[transformers] [1mGPT2LMHeadModel LOAD REPORT[0m from: sshleifer/tiny-gpt2
+Key                                   | Status     |  | 
+--------------------------------------+------------+--+-
+transformer.h.{0, 1}.attn.masked_bias | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+WARNING:transformers.modeling_utils:[1mGPT2LMHeadModel LOAD REPORT[0m from: sshleifer/tiny-gpt2
+Key                                   | Status     |  | 
+--------------------------------------+------------+--+-
+transformer.h.{0, 1}.attn.masked_bias | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/main "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/generation_config.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/discussions?p=0 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/refs%2Fpr%2F2 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors "HTTP/1.1 302 Found"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/xet-read-token/d1856183d08a67c27a8e4ca1492d1d32b96c7c1a "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md?%2Fdatasets%2FSalesforce%2Fwikitext%2Fresolve%2Fmain%2FREADME.md=&etag=%222a4fec2bc8df76c9d4da1c8e8865b625eb221c76%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md?%2Fdatasets%2FSalesforce%2Fwikitext%2Fresolve%2Fmain%2FREADME.md=&etag=%222a4fec2bc8df76c9d4da1c8e8865b625eb221c76%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/wikitext/wikitext.py "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext_wikistext2/resolve/main/README.md "HTTP/1.1 401 Unauthorized"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/Salesforce/wikitext/b08601e04326c79dfdd32d625aee71d232d685c3/README.md?%2Fdatasets%2FSalesforce%2Fwikitext%2Fresolve%2Fmain%2FREADME.md=&etag=%222a4fec2bc8df76c9d4da1c8e8865b625eb221c76%22 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 307 Temporary Redirect"
+INFO:httpx2:HTTP Request: HEAD https://huggingface.co/datasets/Salesforce/wikitext/resolve/b08601e04326c79dfdd32d625aee71d232d685c3/wikitext.py "HTTP/1.1 404 Not Found"
+INFO:httpx2:HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/wikitext/wikitext.py "HTTP/1.1 200 OK"
+datasets/wikitext unavailable: no wikitext variant loaded
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (17985 > 1024). Running this sequence through the model will result in indexing errors
+WARNING:transformers.tokenization_utils_base:Token indices sequence length is longer than the specified maximum sequence length for this model (17985 > 1024). Running this sequence through the model will result in indexing errors
+data: corpus.txt fallback (60k chars) -> 128 train / 12 eval chunks
+
+--- Phase A: before fine-tune ---
+[transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+WARNING:transformers.modeling_utils:`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+INFO:fluidlayer.bulletproof:Session init: c41c9e78... (Level: NONE)
+INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
+INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
+INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=2)
+INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
+plain loss: 10.826  wrapped loss: 10.826
+
+--- Phase B: fine-tune (5.0 min budget, wrapper OFF) ---
+/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/peft/tuners/lora/layer.py:2760: UserWarning: fan_in_fan_out is set to False but the target module is `Conv1D`. Setting fan_in_fan_out to True.
+  warnings.warn(
+lora used: True  trainable: 0.1245%
+steps: 840  seconds: 300.3  loss: 10.8249 -> 10.825
+
+--- Phase C: after fine-tune ---
+INFO:fluidlayer.bulletproof:Session init: 9905318b... (Level: NONE)
+INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
+INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
+INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=2)
+INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
+plain loss: 10.8254  wrapped loss: 10.8254
+kv max: 256  evictions: 1280
+
+Wrote e20-out/run.json and e20-out/finetune.md
+E20 COMPLETE

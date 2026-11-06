@@ -1,6 +1,6 @@
 {
-  "sha": "4f73284bf31b0e5fd6b952ae321ae875acca2488",
-  "branch": "experiments",
+  "sha": "4912034e539ce13b0d874db0a24fb2339dbcbacf",
+  "branch": "main",
   "experiment": "e20-finetune-kv",
   "status": "complete",
   "model": "sshleifer/tiny-gpt2",
@@ -23,11 +23,11 @@
       "trainable_pct": 0.1245
     },
     "train": {
-      "steps": 1066,
+      "steps": 840,
       "train_seconds": 300.3,
       "budget_minutes": 5.0,
       "first_step_loss": 10.8249,
-      "last_step_loss": 10.8259,
+      "last_step_loss": 10.825,
       "loss_curve": [
         {
           "step": 1,
@@ -37,538 +37,428 @@
         {
           "step": 10,
           "loss": 10.8259,
-          "elapsed_s": 2.8
+          "elapsed_s": 3.5
         },
         {
           "step": 20,
           "loss": 10.825,
-          "elapsed_s": 5.6
+          "elapsed_s": 7.1
         },
         {
           "step": 30,
           "loss": 10.8251,
-          "elapsed_s": 8.5
+          "elapsed_s": 10.7
         },
         {
           "step": 40,
           "loss": 10.8252,
-          "elapsed_s": 11.3
+          "elapsed_s": 14.3
         },
         {
           "step": 50,
           "loss": 10.8251,
-          "elapsed_s": 14.1
+          "elapsed_s": 17.9
         },
         {
           "step": 60,
           "loss": 10.8256,
-          "elapsed_s": 16.9
+          "elapsed_s": 21.5
         },
         {
           "step": 70,
           "loss": 10.8249,
-          "elapsed_s": 19.8
+          "elapsed_s": 25.2
         },
         {
           "step": 80,
           "loss": 10.8263,
-          "elapsed_s": 22.6
+          "elapsed_s": 28.7
         },
         {
           "step": 90,
           "loss": 10.8245,
-          "elapsed_s": 25.4
+          "elapsed_s": 32.3
         },
         {
           "step": 100,
           "loss": 10.8244,
-          "elapsed_s": 28.3
+          "elapsed_s": 35.9
         },
         {
           "step": 110,
           "loss": 10.8262,
-          "elapsed_s": 31.1
+          "elapsed_s": 39.5
         },
         {
           "step": 120,
           "loss": 10.8258,
-          "elapsed_s": 33.9
+          "elapsed_s": 43.2
         },
         {
           "step": 130,
           "loss": 10.8247,
-          "elapsed_s": 36.7
+          "elapsed_s": 46.8
         },
         {
           "step": 140,
           "loss": 10.8249,
-          "elapsed_s": 39.5
+          "elapsed_s": 50.4
         },
         {
           "step": 150,
           "loss": 10.8248,
-          "elapsed_s": 42.4
+          "elapsed_s": 54.0
         },
         {
           "step": 160,
           "loss": 10.8254,
-          "elapsed_s": 45.2
+          "elapsed_s": 57.6
         },
         {
           "step": 170,
           "loss": 10.8254,
-          "elapsed_s": 48.0
+          "elapsed_s": 61.2
         },
         {
           "step": 180,
           "loss": 10.8246,
-          "elapsed_s": 50.8
+          "elapsed_s": 64.8
         },
         {
           "step": 190,
           "loss": 10.8247,
-          "elapsed_s": 53.6
+          "elapsed_s": 68.4
         },
         {
           "step": 200,
           "loss": 10.8251,
-          "elapsed_s": 56.4
+          "elapsed_s": 72.0
         },
         {
           "step": 210,
           "loss": 10.8246,
-          "elapsed_s": 59.3
+          "elapsed_s": 75.5
         },
         {
           "step": 220,
           "loss": 10.8241,
-          "elapsed_s": 62.1
+          "elapsed_s": 79.1
         },
         {
           "step": 230,
           "loss": 10.8256,
-          "elapsed_s": 64.9
+          "elapsed_s": 82.6
         },
         {
           "step": 240,
           "loss": 10.8252,
-          "elapsed_s": 67.7
+          "elapsed_s": 86.2
         },
         {
           "step": 250,
           "loss": 10.8248,
-          "elapsed_s": 70.5
+          "elapsed_s": 89.8
         },
         {
           "step": 260,
           "loss": 10.8247,
-          "elapsed_s": 73.4
+          "elapsed_s": 93.3
         },
         {
           "step": 270,
           "loss": 10.8248,
-          "elapsed_s": 76.2
+          "elapsed_s": 96.9
         },
         {
           "step": 280,
           "loss": 10.8258,
-          "elapsed_s": 79.0
+          "elapsed_s": 100.5
         },
         {
           "step": 290,
           "loss": 10.8246,
-          "elapsed_s": 81.8
+          "elapsed_s": 104.1
         },
         {
           "step": 300,
           "loss": 10.8253,
-          "elapsed_s": 84.6
+          "elapsed_s": 107.6
         },
         {
           "step": 310,
           "loss": 10.8249,
-          "elapsed_s": 87.5
+          "elapsed_s": 111.2
         },
         {
           "step": 320,
           "loss": 10.8244,
-          "elapsed_s": 90.3
+          "elapsed_s": 114.8
         },
         {
           "step": 330,
           "loss": 10.8243,
-          "elapsed_s": 93.1
+          "elapsed_s": 118.3
         },
         {
           "step": 340,
           "loss": 10.8258,
-          "elapsed_s": 96.0
+          "elapsed_s": 121.9
         },
         {
           "step": 350,
           "loss": 10.8251,
-          "elapsed_s": 98.8
+          "elapsed_s": 125.5
         },
         {
           "step": 360,
           "loss": 10.8237,
-          "elapsed_s": 101.6
+          "elapsed_s": 129.0
         },
         {
           "step": 370,
           "loss": 10.8256,
-          "elapsed_s": 104.4
+          "elapsed_s": 132.6
         },
         {
           "step": 380,
           "loss": 10.8253,
-          "elapsed_s": 107.2
+          "elapsed_s": 136.2
         },
         {
           "step": 390,
           "loss": 10.8245,
-          "elapsed_s": 110.0
+          "elapsed_s": 139.8
         },
         {
           "step": 400,
           "loss": 10.8251,
-          "elapsed_s": 112.9
+          "elapsed_s": 143.3
         },
         {
           "step": 410,
           "loss": 10.826,
-          "elapsed_s": 115.7
+          "elapsed_s": 146.9
         },
         {
           "step": 420,
           "loss": 10.825,
-          "elapsed_s": 118.5
+          "elapsed_s": 150.5
         },
         {
           "step": 430,
           "loss": 10.8257,
-          "elapsed_s": 121.3
+          "elapsed_s": 154.0
         },
         {
           "step": 440,
           "loss": 10.8243,
-          "elapsed_s": 124.1
+          "elapsed_s": 157.7
         },
         {
           "step": 450,
           "loss": 10.8238,
-          "elapsed_s": 126.9
+          "elapsed_s": 161.3
         },
         {
           "step": 460,
           "loss": 10.8249,
-          "elapsed_s": 129.8
+          "elapsed_s": 164.9
         },
         {
           "step": 470,
           "loss": 10.8242,
-          "elapsed_s": 132.6
+          "elapsed_s": 168.4
         },
         {
           "step": 480,
           "loss": 10.8254,
-          "elapsed_s": 135.4
+          "elapsed_s": 172.0
         },
         {
           "step": 490,
           "loss": 10.8249,
-          "elapsed_s": 138.2
+          "elapsed_s": 175.6
         },
         {
           "step": 500,
           "loss": 10.8245,
-          "elapsed_s": 141.0
+          "elapsed_s": 179.1
         },
         {
           "step": 510,
           "loss": 10.8255,
-          "elapsed_s": 143.8
+          "elapsed_s": 182.7
         },
         {
           "step": 520,
           "loss": 10.8247,
-          "elapsed_s": 146.6
+          "elapsed_s": 186.3
         },
         {
           "step": 530,
           "loss": 10.8253,
-          "elapsed_s": 149.4
+          "elapsed_s": 189.8
         },
         {
           "step": 540,
           "loss": 10.8258,
-          "elapsed_s": 152.3
+          "elapsed_s": 193.4
         },
         {
           "step": 550,
           "loss": 10.8253,
-          "elapsed_s": 155.1
+          "elapsed_s": 196.9
         },
         {
           "step": 560,
           "loss": 10.8241,
-          "elapsed_s": 157.9
+          "elapsed_s": 200.5
         },
         {
           "step": 570,
           "loss": 10.8262,
-          "elapsed_s": 160.7
+          "elapsed_s": 204.0
         },
         {
           "step": 580,
           "loss": 10.8257,
-          "elapsed_s": 163.5
+          "elapsed_s": 207.6
         },
         {
           "step": 590,
           "loss": 10.8253,
-          "elapsed_s": 166.4
+          "elapsed_s": 211.1
         },
         {
           "step": 600,
           "loss": 10.8248,
-          "elapsed_s": 169.1
+          "elapsed_s": 214.7
         },
         {
           "step": 610,
           "loss": 10.8237,
-          "elapsed_s": 172.0
+          "elapsed_s": 218.3
         },
         {
           "step": 620,
           "loss": 10.8256,
-          "elapsed_s": 174.8
+          "elapsed_s": 221.8
         },
         {
           "step": 630,
           "loss": 10.8258,
-          "elapsed_s": 177.6
+          "elapsed_s": 225.4
         },
         {
           "step": 640,
           "loss": 10.8249,
-          "elapsed_s": 180.4
+          "elapsed_s": 229.0
         },
         {
           "step": 650,
           "loss": 10.825,
-          "elapsed_s": 183.2
+          "elapsed_s": 232.5
         },
         {
           "step": 660,
           "loss": 10.8248,
-          "elapsed_s": 186.0
+          "elapsed_s": 236.1
         },
         {
           "step": 670,
           "loss": 10.8243,
-          "elapsed_s": 188.8
+          "elapsed_s": 239.6
         },
         {
           "step": 680,
           "loss": 10.8259,
-          "elapsed_s": 191.6
+          "elapsed_s": 243.2
         },
         {
           "step": 690,
           "loss": 10.8247,
-          "elapsed_s": 194.4
+          "elapsed_s": 246.8
         },
         {
           "step": 700,
           "loss": 10.825,
-          "elapsed_s": 197.3
+          "elapsed_s": 250.4
         },
         {
           "step": 710,
           "loss": 10.8247,
-          "elapsed_s": 200.1
+          "elapsed_s": 253.9
         },
         {
           "step": 720,
           "loss": 10.8246,
-          "elapsed_s": 202.9
+          "elapsed_s": 257.5
         },
         {
           "step": 730,
           "loss": 10.8246,
-          "elapsed_s": 205.7
+          "elapsed_s": 261.1
         },
         {
           "step": 740,
           "loss": 10.8242,
-          "elapsed_s": 208.5
+          "elapsed_s": 264.6
         },
         {
           "step": 750,
           "loss": 10.8246,
-          "elapsed_s": 211.3
+          "elapsed_s": 268.2
         },
         {
           "step": 760,
           "loss": 10.8249,
-          "elapsed_s": 214.1
+          "elapsed_s": 271.8
         },
         {
           "step": 770,
           "loss": 10.8246,
-          "elapsed_s": 217.0
+          "elapsed_s": 275.3
         },
         {
           "step": 780,
           "loss": 10.8246,
-          "elapsed_s": 219.8
+          "elapsed_s": 278.9
         },
         {
           "step": 790,
           "loss": 10.8255,
-          "elapsed_s": 222.6
+          "elapsed_s": 282.5
         },
         {
           "step": 800,
           "loss": 10.8257,
-          "elapsed_s": 225.4
+          "elapsed_s": 286.0
         },
         {
           "step": 810,
           "loss": 10.8248,
-          "elapsed_s": 228.2
+          "elapsed_s": 289.6
         },
         {
           "step": 820,
           "loss": 10.8246,
-          "elapsed_s": 231.1
+          "elapsed_s": 293.2
         },
         {
           "step": 830,
           "loss": 10.8241,
-          "elapsed_s": 233.9
+          "elapsed_s": 296.7
         },
         {
           "step": 840,
           "loss": 10.825,
-          "elapsed_s": 236.7
-        },
-        {
-          "step": 850,
-          "loss": 10.8253,
-          "elapsed_s": 239.6
-        },
-        {
-          "step": 860,
-          "loss": 10.8253,
-          "elapsed_s": 242.4
-        },
-        {
-          "step": 870,
-          "loss": 10.8254,
-          "elapsed_s": 245.2
-        },
-        {
-          "step": 880,
-          "loss": 10.8257,
-          "elapsed_s": 248.0
-        },
-        {
-          "step": 890,
-          "loss": 10.8247,
-          "elapsed_s": 250.8
-        },
-        {
-          "step": 900,
-          "loss": 10.8248,
-          "elapsed_s": 253.6
-        },
-        {
-          "step": 910,
-          "loss": 10.8248,
-          "elapsed_s": 256.5
-        },
-        {
-          "step": 920,
-          "loss": 10.8255,
-          "elapsed_s": 259.3
-        },
-        {
-          "step": 930,
-          "loss": 10.8243,
-          "elapsed_s": 262.1
-        },
-        {
-          "step": 940,
-          "loss": 10.8244,
-          "elapsed_s": 264.9
-        },
-        {
-          "step": 950,
-          "loss": 10.8249,
-          "elapsed_s": 267.7
-        },
-        {
-          "step": 960,
-          "loss": 10.8256,
-          "elapsed_s": 270.5
-        },
-        {
-          "step": 970,
-          "loss": 10.8245,
-          "elapsed_s": 273.3
-        },
-        {
-          "step": 980,
-          "loss": 10.825,
-          "elapsed_s": 276.1
-        },
-        {
-          "step": 990,
-          "loss": 10.825,
-          "elapsed_s": 278.9
-        },
-        {
-          "step": 1000,
-          "loss": 10.8242,
-          "elapsed_s": 281.7
-        },
-        {
-          "step": 1010,
-          "loss": 10.8246,
-          "elapsed_s": 284.5
-        },
-        {
-          "step": 1020,
-          "loss": 10.8247,
-          "elapsed_s": 287.3
-        },
-        {
-          "step": 1030,
-          "loss": 10.8249,
-          "elapsed_s": 290.1
-        },
-        {
-          "step": 1040,
-          "loss": 10.8247,
-          "elapsed_s": 293.0
-        },
-        {
-          "step": 1050,
-          "loss": 10.8253,
-          "elapsed_s": 295.8
-        },
-        {
-          "step": 1060,
-          "loss": 10.8249,
-          "elapsed_s": 298.6
+          "elapsed_s": 300.3
         }
       ]
     },
     "phase_c": {
-      "plain_eval_loss_nats": 10.8253,
-      "wrapped_eval_loss_nats": 10.8253,
+      "plain_eval_loss_nats": 10.8254,
+      "wrapped_eval_loss_nats": 10.8254,
       "attach_delta_nats": 0.0,
       "kv": {
         "kv_max": 256,
@@ -584,12 +474,12 @@
     "within_time_budget": true,
     "train_loss_decreased": false,
     "eval_loss_improved": true,
-    "eval_improvement_nats": 0.0007,
+    "eval_improvement_nats": 0.0006,
     "attach_delta_before_nats": 0.0,
     "attach_delta_after_nats": 0.0,
     "kv_stays_bounded_after_finetune": true,
     "wrapper_recall_after_finetune": 0.0,
     "lora_used": true
   },
-  "log": "======================================================================\nE20: FINE-TUNE + KV WRAPPER  sha=4f73284bf31b0e5fd6b952ae321ae875acca2488\nmodel=sshleifer/tiny-gpt2  budget=5.0 min\n======================================================================\ndatasets/wikitext unavailable: no wikitext variant loaded\ndata: corpus.txt fallback (60k chars) -> 128 train / 12 eval chunks\n\n--- Phase A: before fine-tune ---\nplain loss: 10.826  wrapped loss: 10.826\n\n--- Phase B: fine-tune (5.0 min budget, wrapper OFF) ---\nlora used: True  trainable: 0.1245%\nsteps: 1066  seconds: 300.3  loss: 10.8249 -> 10.8259\n\n--- Phase C: after fine-tune ---\nplain loss: 10.8253  wrapped loss: 10.8253\nkv max: 256  evictions: 1280\n\nWrote e20-out/run.json and e20-out/finetune.md\nE20 COMPLETE"
+  "log": "======================================================================\nE20: FINE-TUNE + KV WRAPPER  sha=4912034e539ce13b0d874db0a24fb2339dbcbacf\nmodel=sshleifer/tiny-gpt2  budget=5.0 min\n======================================================================\ndatasets/wikitext unavailable: no wikitext variant loaded\ndata: corpus.txt fallback (60k chars) -> 128 train / 12 eval chunks\n\n--- Phase A: before fine-tune ---\nplain loss: 10.826  wrapped loss: 10.826\n\n--- Phase B: fine-tune (5.0 min budget, wrapper OFF) ---\nlora used: True  trainable: 0.1245%\nsteps: 840  seconds: 300.3  loss: 10.8249 -> 10.825\n\n--- Phase C: after fine-tune ---\nplain loss: 10.8254  wrapped loss: 10.8254\nkv max: 256  evictions: 1280\n\nWrote e20-out/run.json and e20-out/finetune.md\nE20 COMPLETE"
 }
