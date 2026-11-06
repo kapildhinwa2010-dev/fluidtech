@@ -303,11 +303,18 @@ except Exception as e:
     sys.exit(1)
 
 # =============================================================================
-# Test 6: Full Layer Integration (PyTorch)if not HAVE_TORCH:
-    print("\n   ⏭️  skipped: torch is not installed (numpy-only run)")
-else:
-
+# Test 6: Full Layer Integration (PyTorch)
 # =============================================================================
+
+if not HAVE_TORCH:
+    print("\n" + "=" * 80)
+    print("TEST 6: Full Layer Integration (PyTorch)")
+    print("=" * 80)
+    print("\n   ⏭️  skipped: torch is not installed (numpy-only run)")
+    print("\n" + "=" * 80)
+    print("numpy-only run: Tests 1-5 PASSED; Test 6 needs torch (optional)")
+    print("=" * 80)
+    sys.exit(0)
 
 print("\n" + "=" * 80)
 print("TEST 6: Full Layer Integration (PyTorch)")

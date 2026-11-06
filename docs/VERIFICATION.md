@@ -34,7 +34,7 @@ bound is meaningful the number is *asserted*, not merely printed) /
 
 ## Bugs the verification found (and fixed)
 
-The runs of this pipeline found **six real bugs** — which is the
+The runs of this pipeline found **seven real bugs** — which is the
 point of running claims instead of reading them:
 
 1. **The GGUF magic was b'GUFF'** — `0x46465547` packs the bytes in the
@@ -67,6 +67,14 @@ point of running claims instead of reading them:
    the import placement by hand, the mechanical rest by
    `ruff --fix --unsafe-fixes`, committed by this very workflow
    (the published lint log now ends with "All checks passed!").
+7. **A broken test was hiding behind a false exit code** — the
+   torch-optional edit in test_refactored_simple.py mangled the
+   Test 6 guard (an IndentationError), so the suite crashed — yet
+   the published log still said `test_refactored exit: 0`, because
+   `$?` recorded `tee`'s exit code, not the test's. Fixed: the
+   guard now skips loudly (`sys.exit(0)`) when torch is absent, and
+   the workflow records `${PIPESTATUS[0]}`, so a failed suite can
+   never print `exit: 0` again.
 
 ## Honest corrections, made with the maintainer's approval
 

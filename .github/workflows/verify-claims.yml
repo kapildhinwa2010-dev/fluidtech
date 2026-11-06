@@ -66,11 +66,11 @@ jobs:
         run: |
           set +e
           python run_without_pytest.py 2>&1 | tee tests_numpy.log
-          echo "run_without_pytest exit: $?" >> tests_numpy.log
+          echo "run_without_pytest exit: ${PIPESTATUS[0]}" >> tests_numpy.log
           python test_bulletproof.py 2>&1 | tee tests_bulletproof.log
-          echo "test_bulletproof exit: $?" >> tests_bulletproof.log
+          echo "test_bulletproof exit: ${PIPESTATUS[0]}" >> tests_bulletproof.log
           python test_refactored_simple.py 2>&1 | tee tests_refactored.log
-          echo "test_refactored exit: $?" >> tests_refactored.log
+          echo "test_refactored exit: ${PIPESTATUS[0]}" >> tests_refactored.log
           exit 0
 
       - name: Install model deps (CPU torch)
