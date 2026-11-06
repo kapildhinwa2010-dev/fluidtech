@@ -16,7 +16,7 @@ bound is meaningful the number is *asserted*, not merely printed) /
 
 ---
 
-## The claims, as measured (run on commit 311e3184 — 9/9 CONFIRMED)
+## The claims, as measured (run on commit 2d511480 — 9/9 CONFIRMED)
 
 | Claim | Verdict | Measured |
 |---|---|---|
@@ -34,7 +34,7 @@ bound is meaningful the number is *asserted*, not merely printed) /
 
 ## Bugs the verification found (and fixed)
 
-The first runs of this pipeline found **five real bugs** — which is the
+The runs of this pipeline found **six real bugs** — which is the
 point of running claims instead of reading them:
 
 1. **The GGUF magic was b'GUFF'** — `0x46465547` packs the bytes in the
@@ -60,6 +60,13 @@ point of running claims instead of reading them:
 5. **torch was a hard import in the numpy-only suites** —
    test_bulletproof.py and test_refactored_simple.py crashed the CI's
    numpy-only jobs. torch is now optional; the torch tests skip loudly.
+6. **The CI lint job had been red since Nov 5** — 335 ruff violations
+   (over-long lines, imports in the middle of the file, unused imports,
+   unsorted import blocks, trailing whitespace) were hiding behind the
+   red X while the other jobs stayed green. Fixed: the long lines and
+   the import placement by hand, the mechanical rest by
+   `ruff --fix --unsafe-fixes`, committed by this very workflow
+   (the published lint log now ends with "All checks passed!").
 
 ## Honest corrections, made with the maintainer's approval
 
@@ -85,6 +92,8 @@ point of running claims instead of reading them:
 | 4 | 6027fe61 | 8/9 CONFIRMED (memory ≤ 100 MB + isolation + speed in); perplexity harness error (hook returned a tuple) |
 | 5 | 311e3184 | **9/9 CONFIRMED** — the table above |
 | 6 | dc2b32fd | 9/9 CONFIRMED again (docs-only honesty pass) |
+| 7 | 340bd5d2 | memory claim reworded ("< 100 MB ceiling, not a target"); 28 over-long lines + mid-file imports + B904 + F841 fixed by hand |
+| 8 | 2d511480 | **9/9 CONFIRMED + lint clean** — the workflow autofixed the 304 remaining mechanical violations, committed them, and verified the result (ruff exit 0) |
 
 ## Rerun it
 

@@ -62,11 +62,12 @@ and the `verification-results` branch. Latest run: **9/9 CONFIRMED**.
 
 ### **Critical failures found by the verification — and FIXED**
 
-The verification pipeline itself found five real bugs (the GGUF magic
+The verification pipeline itself found six real bugs (the GGUF magic
 bytes were REVERSED, the MILITARY Fernet key was invalid, the
 constructor's `d` was silently ignored next to a config, the numpy-only
-suites hard-imported torch, and the first verification run was a green
-job with zero output). All fixed — see
+suites hard-imported torch, the first verification run was a green
+job with zero output, and the CI lint job hid 335 ruff violations
+behind a red X). All fixed — see
 [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
 ---
