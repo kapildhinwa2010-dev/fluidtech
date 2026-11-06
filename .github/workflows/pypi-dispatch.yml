@@ -1,6 +1,6 @@
 name: pypi-release-dispatch
 
-# Triggered: 2026-11-06 — release v2.3.0 (base+kv main layer).
+# Triggered: 2026-11-06, retry 2 — release v2.3.0 (dispatch needs actions: write).
 # THE PyPI RELEASE BUTTON (no tag, no PAT in the repo).
 # Tags cannot be created from the chat tooling, so this workflow is
 # the trigger: pushing a commit that touches THIS FILE (or clicking
@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 jobs:
   dispatch:

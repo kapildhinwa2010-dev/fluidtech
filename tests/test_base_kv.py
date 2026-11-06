@@ -40,7 +40,9 @@ RESULTS = []
 
 def check(name, ok, info=""):
     RESULTS.append(bool(ok))
-    print(("PASS" if ok else "FAIL") + "  " + name + ("  [" + str(info) + "]" if info else ""))
+    tag = "PASS" if ok else "FAIL"
+    line = tag + "  " + name + ("  [" + str(info) + "]" if info else "")
+    print(line)
 
 
 def main():
@@ -101,7 +103,8 @@ def main():
         t.start()
     for t in threads:
         t.join()
-    check("5. thread safe (8x20, 0 errors)", len(errs) == 0, str(len(errs)) + " errors")
+    n_err = str(len(errs)) + " errors"
+    check("5. thread safe (8x20, 0 errors)", len(errs) == 0, n_err)
 
     # 6: worst-case memory estimate (same accounting as e19)
     entry = sys.getsizeof(0) * 4

@@ -72,7 +72,7 @@ select = ["E", "F", "W", "I", "UP", "B"]
 ignore = ["E741", "B008"]
 
 [tool.ruff.lint.per-file-ignores]
-"experiments/*.py" = ["E402", "E501"]
+"experiments/*.py" = ["E402", "E501", "B007"]
 "tools/*.py" = ["E501"]
 "fluidlayer_single.py" = ["E501", "F401", "F821"]
 "tests/test_base_kv.py" = ["E402"]
