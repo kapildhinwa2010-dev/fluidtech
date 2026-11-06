@@ -32,6 +32,7 @@ import numpy as np
 RESULTS = {}
 LOG_LINES = []
 FENCE = chr(96) * 3
+NL = chr(10)
 
 
 def log(msg):
@@ -451,8 +452,7 @@ def main():
         lines.append("| " + claim + " | **" + r["verdict"] + "** | " + m + " |")
     lines += ["", "## Full log", "", FENCE] + LOG_LINES + [FENCE]
     with open(os.path.join(args.out, "run.md"), "w") as f:
-        f.write("
-".join(lines))
+        f.write(NL.join(lines))
 
     log("")
     log("Wrote " + args.out + "/run.json and " + args.out + "/run.md")

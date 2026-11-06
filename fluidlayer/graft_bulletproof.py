@@ -72,7 +72,7 @@ class SecurityLevel(Enum):
     NONE = 0          # No security (single-tenant)
     BASIC = 1         # XOR masking (multi-tenant)
     STANDARD = 2      # AES encryption (enterprise)
-    MILITARY = 3      # Military-grade (AES-256 + HMAC)
+    MILITARY = 3      # Military-grade (Fernet: AES-128-CBC + HMAC-SHA256)
 
 
 # =============================================================================
@@ -139,7 +139,7 @@ class CryptographicSession:
     Military-grade session security with:
     ✅ UUID v4 for unpredictable session IDs
     ✅ HMAC-SHA256 for message authentication
-    ✅ AES-256 for encryption
+    ✅ Fernet encryption (AES-128-CBC + HMAC-SHA256, not AES-256)
     ✅ Constant-time operations
     ✅ Secure memory wiping
     """
@@ -162,11 +162,18 @@ class CryptographicSession:
             self.mask_32 = self._hash_to_int(session_bytes, 32)
             self.mask_64 = self._hash_to_int(session_bytes, 64)
             
-            # For higher security levels
+            # For higher security levels: the Fernet keys are DERIVED from
+            # the session id.  A Fernet key must be 32 url-safe-base64-ENCODED
+            # bytes -- the raw 32 bytes previously used here are an INVALID
+            # key and made every MILITARY encrypt/decrypt crash.
             if self.security_level.value >= SecurityLevel.STANDARD.value:
-                import secrets
-                self.aes_key = secrets.token_bytes(32)  # AES-256 key
-                self.hmac_key = secrets.token_bytes(32)  # HMAC key
+                import base64
+                self.aes_key = base64.urlsafe_b64encode(
+                    hashlib.sha256(b"fluidlayer-aes|" + session_bytes).digest()
+                )
+                self.hmac_key = base64.urlsafe_b64encode(
+                    hashlib.sha256(b"fluidlayer-hmac|" + session_bytes).digest()
+                )
     
     @staticmethod
     def _hash_to_int(data: bytes, bits: int) -> int:
