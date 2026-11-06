@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fluidlayer"
-version = "2.2.0"
-description = "A research memory layer for language models with optional GPT-2 and Qwen2 adapters"
+version = "2.3.0"
+description = "A research memory layer for language models: base + bounded KV cache (the main layer), with optional mamba/ultra/combined variants and GPT-2/Qwen2 adapters"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -15,6 +15,7 @@ keywords = [
     "memory",
     "long-context",
     "kv-cache",
+    "bounded-kv-cache",
     "retrieval",
     "cellular-sheaves",
     "persistent-homology",
@@ -50,7 +51,7 @@ Issues = "https://github.com/kapildhinwa2010-dev/fluidtech/issues"
 Changelog = "https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/docs/CHANGELOG.md"
 
 [tool.setuptools]
-packages = ["fluidlayer", "deployment"]
+packages = ["fluidlayer", "deployment", "experiments", "kv_cache", "combined"]
 include-package-data = true
 
 [tool.setuptools.package-data]
@@ -74,3 +75,4 @@ ignore = ["E741", "B008"]
 "experiments/*.py" = ["E402", "E501"]
 "tools/*.py" = ["E501"]
 "fluidlayer_single.py" = ["E501", "F401", "F821"]
+"tests/test_base_kv.py" = ["E402"]

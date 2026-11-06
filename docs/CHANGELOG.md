@@ -6,6 +6,36 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-11-06
+
+### Added
+
+- The MAIN layer: base + bounded KV cache (`fluidlayer.base_kv_layer` →
+  `BaseKVLayer` / `BaseKVConfig`). Digest-keyed exact tier (12-gram context
+  keys) + a KV window that never grows past `kv_max_size` + long-term
+  memory fed by every KV eviction (REAL hidden states). Measured on CI
+  (e19, verification-results): replay recall 0.9945, KV max 256 while
+  2000 tokens streamed, 1744 evictions all kept, worst-case ~21.4 MB,
+  0 thread errors, tiny-gpt2 loss delta 0.0000.
+- `tests/test_base_kv.py`: a CPU self-test for the main layer (skips
+  when torch is absent, like tests/test_torch_parity.py).
+- The optional layers (superfluid mamba, ultra, combined) ship in the
+  wheel: the `experiments`, `kv_cache`, and `combined` companions are
+  now packaged, so `from fluidlayer import BaseKVLayer` works from an
+  installed wheel.
+- `from fluidlayer import BaseKVLayer` via a PEP 562 lazy import (the
+  package itself stays numpy-only at import time).
+- A PyPI release trigger workflow: pushing a commit that touches
+  `.github/workflows/pypi-dispatch.yml` (or "Run workflow") dispatches
+  release.yml, which re-runs all checks and publishes with trusted
+  publishing (no tag needed, no token in the repo).
+
+### Changed
+
+- verify-claims CI measures the new README claims with the main
+  layer's own self-test instead of the retired e16 harness.
+
+
 ## [2.2.0] - 2026-11-03
 
 ### Added
@@ -56,7 +86,8 @@ uses [Semantic Versioning](https://semver.org/).
 - `fluidlayer/torch_graft.py`: optional PyTorch adapter for pretrained
   language models.
 - Graft benchmarks for attach behavior, perplexity, and cross-window recall.
-- A byte-level BPE tokenizer and real-text experiments.
+- A byte-level BPE tokeniz
+er and real-text experiments.
 - Self-verification groups for the memory register, logit override, budget
   law, frustration index, Hodge participation, and graft.
 

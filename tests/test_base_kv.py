@@ -11,6 +11,10 @@ Checks (measured in THIS run; mirrors the e19 CI claims):
   4. 12-gram replay recall: fresh ~0, replay ~0.99
   5. thread safety: 8 threads x 20 forwards, 0 errors
   6. worst-case memory estimate under the 100 MB ceiling
+
+The layer needs torch; this test SKIPS (exit 0) when torch is absent,
+so the numpy-only test suite stays green (tests/test_torch_parity.py
+uses the same convention).
 """
 
 from __future__ import annotations
@@ -22,9 +26,14 @@ import threading
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
-import torch
 
-from fluidlayer.base_kv_layer import BaseKVConfig, BaseKVLayer
+try:
+    import torch
+except ImportError:  # the repo is numpy-only by default
+    torch = None
+
+if torch is not None:
+    from fluidlayer.base_kv_layer import BaseKVConfig, BaseKVLayer
 
 RESULTS = []
 
@@ -35,6 +44,9 @@ def check(name, ok, info=""):
 
 
 def main():
+    if torch is None:
+        print("SKIP: torch is not installed (numpy-only environment)")
+        sys.exit(0)
     d, kv_max = 16, 256
     layer = BaseKVLayer(BaseKVConfig(d=d, kv_max_size=kv_max))
     rng = np.random.default_rng(0)

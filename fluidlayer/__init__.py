@@ -70,7 +70,7 @@ from .topology import (
                     unique_edges,
 )
 
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 version = __version__
 
 __all__ = [
@@ -93,4 +93,21 @@ __all__ = [
     # --- the exact tier -------------------------------------------------
     "FrozenRegister", "SheafMemoryAdapter", "logit_override", "budget_split",
     "ctx_key", "fnv1a64", "embedding_signature", "SLOT_BYTES",
+    # --- the main layer (base + kv cache, needs torch) ------------------
+    "BaseKVConfig", "BaseKVLayer",
 ]
+
+
+def __getattr__(name):
+    """PEP 562 lazy import: the MAIN layer needs torch, the package does not.
+
+    fluidlayer stays numpy-only at import time; `BaseKVLayer` /
+    `BaseKVConfig` live in fluidlayer.base_kv_layer and pull in the
+    packaged experiments/ and kv_cache/ companions on first access.
+    """
+    if name in ("BaseKVConfig", "BaseKVLayer"):
+        from .base_kv_layer import BaseKVConfig, BaseKVLayer
+        return {"BaseKVConfig": BaseKVConfig, "BaseKVLayer": BaseKVLayer}[name]
+    raise AttributeError(
+        "module " + repr(__name__) + " has no attribute " + repr(name)
+    )
