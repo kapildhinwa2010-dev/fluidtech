@@ -46,11 +46,14 @@ jobs:
           exit 0
 
       - name: Publish results to verification-results (no clobber)
+        if: always()
         run: |
           git config user.name "fluidtech-verification-bot"
           git config user.email "actions@github.com"
+          # ruff --fix may have dirtied tracked files; discard them first
+          git checkout -- . 2>/dev/null || true
           git fetch origin verification-results
-          git checkout -b publish origin/verification-results
+          git checkout -f -b publish origin/verification-results
           mkdir -p results/combined/logs
           cp -f combined-results/* results/combined/ 2>/dev/null || true
           cp -f combined.log ruff.log results/combined/logs/ 2>/dev/null || true
