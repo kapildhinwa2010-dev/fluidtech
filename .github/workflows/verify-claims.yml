@@ -1,0 +1,65 @@
+name: Verify README claims
+
+# Codespec (.github/copilot-instructions.md): claims must be MEASURED.
+# This workflow is the executor: it runs the test suites and the claim
+# verification script on every push to main, and publishes the measured
+# results to the 'verification-results' branch.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install base deps
+        run: |
+          pip install "numpy>=1.23,<3" cryptography
+
+      - name: Run repo test suites (numpy-only)
+        run: |
+          set +e
+          python run_without_pytest.py 2>&1 | tee tests_numpy.log
+          echo "run_without_pytest exit: $?" >> tests_numpy.log
+          python test_bulletproof.py 2>&1 | tee tests_bulletproof.log
+          echo "test_bulletproof exit: $?" >> tests_bulletproof.log
+          python test_refactored_simple.py 2>&1 | tee tests_refactored.log
+          echo "test_refactored exit: $?" >> tests_refactored.log
+          exit 0
+
+      - name: Install model deps (CPU torch)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers
+
+      - name: Run claim verification (real model A/B included)
+        run: |
+          set +e
+          python experiments/e16_verify_readme.py --sha "$GITHUB_SHA" --out results/verification 2>&1 | tee verify.log
+          exit 0
+
+      - name: Push measured results to verification-results branch
+        run: |
+          git config user.name "fluidtech-verification-bot"
+          git config user.email "actions@github.com"
+          mkdir -p results/logs
+          cp -f tests_numpy.log tests_bulletproof.log tests_refactored.log verify.log results/logs/ 2>/dev/null || true
+          git add results/ || true
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "Verification run: tests + README claims"
+          git push --force origin HEAD:verification-results
