@@ -1,5 +1,8 @@
 running the tests with the built-in shim
 
+  [PASS] test_acceleration.py::test_detection_report_shape
+  [PASS] test_acceleration.py::test_speedup_positive
+  [PASS] test_acceleration.py::test_vectorized_matches_loop
   [PASS] test_bpe.py::test_a_tiny_tokenizer_round_trips
   [PASS] test_bpe.py::test_the_vocabulary_is_the_size_we_asked_for
   [PASS] test_bpe.py::test_unseen_text_still_round_trips
@@ -19,6 +22,11 @@ running the tests with the built-in shim
   [PASS] test_memory.py::test_the_budget_law_never_over_commits
   [PASS] test_memory.py::test_the_register_is_append_only
   [PASS] test_memory.py::test_the_slot_is_20_bytes
+  [SKIP] test_multi_gpu.py: No module named 'torch'
+  [PASS] test_quantization.py::test_memory_reduction_4x
+  [PASS] test_quantization.py::test_report_reasonable
+  [PASS] test_quantization.py::test_roundtrip_error_bounded
+  [PASS] test_quantization.py::test_zero_array_stable
   [SKIP] test_qwen2_model.py: No module named 'torch'
   [PASS] test_selftest.py::test_the_bundle_passes
   [PASS] test_selftest.py::test_the_whole_suite_passes
@@ -34,5 +42,5 @@ running the tests with the built-in shim
   [PASS] test_topology.py::test_the_persistence_landmarks_are_ordered
   [SKIP] test_torch_parity.py: No module named 'torch'
 
-31 passed, 0 failed, 2 skipped
+38 passed, 0 failed, 3 skipped
 run_without_pytest exit: 0

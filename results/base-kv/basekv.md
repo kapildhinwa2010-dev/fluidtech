@@ -1,8 +1,8 @@
 # Base + KV wrapper (e19)
 
-- commit: 1f09a9e6a4ebf81222d6aed0057c05ab118ee13c
+- commit: b756e5c0ed4c58cc8c6e329349ab04bd9f91959c
 - branch: combined-layer
-- date: 2026-11-06 12:09:50 UTC
+- date: 2026-11-06 12:38:42 UTC
 - same harness as e18: d=16, ctx_len=12, capacity 25k/100k, KV_MAX=256
 - question: does base+kv give the combined layer's bounded-KV
   + long-term features at close-to-base speed and memory?
@@ -11,8 +11,8 @@
 
 | Layer | 12-gram replay recall | fresh recall | ms / 256 tok | worst-case MB | threads | KV bounded | GPT-2 delta (nats) |
 |---|---|---|---|---|---|---|---|
-| base (main) | 0.9945 / 0.0 | 3.9 | 10.7 | 0 | - | 0.0 |
-| base+kv (e19) | 0.9945 / 0.0 | 6.7 | 21.4 | 0 | yes | 0.0 |
+| base (main) | 0.9945 / 0.0 | 2.7 | 10.7 | 0 | - | 0.0 |
+| base+kv (e19) | 0.9945 / 0.0 | 4.6 | 21.4 | 0 | yes | 0.0 |
 
 ## Winners
 
@@ -32,7 +32,7 @@
 - **thread_safe**: True
 - **gpt2_attach_finite**: True
 - **gpt2_delta_small**: True
-- **speed_overhead_vs_base**: 1.72
+- **speed_overhead_vs_base**: 1.7
 
 Reference (e18, same harness): combined (all 4 branches) measured
 26.4 ms/256tok and 42.9 MB worst-case with the same bounded-KV
@@ -42,7 +42,7 @@ behaviour; base was 2.9 ms and 10.7 MB.
 
 ```
 ======================================================================
-BASE + KV WRAPPER RUN (e19)  sha=1f09a9e6a4ebf81222d6aed0057c05ab118ee13c
+BASE + KV WRAPPER RUN (e19)  sha=b756e5c0ed4c58cc8c6e329349ab04bd9f91959c
 ======================================================================
 corpus tokens: 2000
 comparing: base (main), base+kv (e19)
