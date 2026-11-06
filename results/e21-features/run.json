@@ -1,0 +1,69 @@
+{
+  "sha": "8aa5f0f8e087cb0a7f417f28b50ae05c2a0e243a",
+  "branch": "experiments",
+  "experiment": "e21-features",
+  "status": "complete",
+  "configs": {
+    "quantization": {
+      "layer_output_float32_bytes": 8192,
+      "layer_output_int8_bytes": 2048,
+      "reduction_x": 4.0,
+      "max_abs_error": 0.015349,
+      "relative_error_pct": 0.3936,
+      "embedding_float32_mb": 1.28,
+      "embedding_int8_mb": 0.32
+    },
+    "multi_gpu": {
+      "detected_devices": [
+        "cpu"
+      ],
+      "detected_count": 1,
+      "virtual_shards": 4,
+      "inserted": 1000,
+      "kv_max_size": 256,
+      "kv_evictions": 744,
+      "shard_sizes": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "order_preserved": true,
+      "bounded": true
+    },
+    "acceleration": {
+      "detected": {
+        "torch": "2.15.0+cpu",
+        "cuda": false,
+        "cuda_devices": 0,
+        "mps": false,
+        "numba": false,
+        "cupy": false,
+        "vectorized_numpy": true
+      },
+      "benchmark": {
+        "rows": 256,
+        "dim": 16,
+        "protos": 32,
+        "reps": 20,
+        "loop_s": 0.000556,
+        "vectorized_s": 1.1e-05,
+        "speedup": 51.18,
+        "outputs_match": true
+      }
+    }
+  },
+  "claims": {
+    "quantization_memory_4x": true,
+    "quantization_error_under_1pct": true,
+    "multi_gpu_detection_works": true,
+    "multi_gpu_shard_correct": true,
+    "multi_gpu_kv_bounded": true,
+    "acceleration_detection_ok": true,
+    "acceleration_outputs_match": true,
+    "acceleration_speedup": 51.18,
+    "acceleration_speedup_gt_1": true,
+    "all_features_positive": true
+  },
+  "log": "======================================================================\nE21: FEATURES (quantization + multi-gpu + acceleration)\n======================================================================\n\n--- Feature 1: quantization (int8) ---\nlayer output: 8192 B -> 2048 B\nround-trip error: 0.3936 %\n\n--- Feature 2: multi-gpu sharded KV ---\ndevices: ['cpu']\nkv: size=256 evictions=744 shards=[64, 64, 64, 64]\n\n--- Feature 3: hardware acceleration ---\nbackend: torch=2.15.0+cpu cuda=False mps=False\nbenchmark: loop=0.000556s vector=1.1e-05s speedup=51.18x\n\nWrote e21-out/run.json and e21-out/features.md\nE21 COMPLETE"
+}
