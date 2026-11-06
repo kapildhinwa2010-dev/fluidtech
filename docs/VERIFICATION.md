@@ -16,7 +16,7 @@ bound is meaningful the number is *asserted*, not merely printed) /
 
 ---
 
-## The claims, as measured (run on commit 2d511480 — 9/9 CONFIRMED)
+## The claims, as measured (run on commit 77831051 — 9/9 CONFIRMED)
 
 | Claim | Verdict | Measured |
 |---|---|---|
@@ -102,6 +102,7 @@ point of running claims instead of reading them:
 | 6 | dc2b32fd | 9/9 CONFIRMED again (docs-only honesty pass) |
 | 7 | 340bd5d2 | memory claim reworded ("< 100 MB ceiling, not a target"); 28 over-long lines + mid-file imports + B904 + F841 fixed by hand |
 | 8 | 2d511480 | **9/9 CONFIRMED + lint clean** — the workflow autofixed the 304 remaining mechanical violations, committed them, and verified the result (ruff exit 0) |
+| 9 | 77831051 | bug 7 fixed: Test 6 guard repaired, exit codes now real (`${PIPESTATUS[0]}`) — 9/9 CONFIRMED, test_refactored genuinely passes, and the CI workflow is green for the first time since Nov 5 |
 
 ## Rerun it
 
