@@ -1,0 +1,63 @@
+name: Verify combined layer
+
+# Verifies the combined-layer branch (all four branches fused into ONE
+# layer) by RUNNING it: unit checks + real GPT-2 A/B + generation with
+# a bounded KV cache.  Results are published to the verification-results
+# branch under results/combined/ WITHOUT clobbering the main results.
+
+on:
+  push:
+    branches: [combined-layer]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          pip install "numpy>=1.23,<3" cryptography
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers ruff
+
+      - name: Lint the combined-layer files (ruff, log only)
+        run: |
+          set +e
+          ruff check combined experiments/e17_combined.py --line-length 100 --fix --unsafe-fixes --output-format=concise 2>&1 | tee ruff.log
+          ruff check combined experiments/e17_combined.py --line-length 100 --output-format=concise 2>&1 | tee -a ruff.log
+          echo "ruff exit (after autofix): ${PIPESTATUS[0]}" >> ruff.log
+          exit 0
+
+      - name: Run combined-layer verification
+        run: |
+          set +e
+          python experiments/e17_combined.py --sha "$GITHUB_SHA" --out combined-results 2>&1 | tee combined.log
+          echo "e17 exit: ${PIPESTATUS[0]}" >> combined.log
+          exit 0
+
+      - name: Publish results to verification-results (no clobber)
+        run: |
+          git config user.name "fluidtech-verification-bot"
+          git config user.email "actions@github.com"
+          git fetch origin verification-results
+          git checkout -b publish origin/verification-results
+          mkdir -p results/combined/logs
+          cp -f combined-results/* results/combined/ 2>/dev/null || true
+          cp -f combined.log ruff.log results/combined/logs/ 2>/dev/null || true
+          git add results/combined
+          if git diff --cached --quiet; then
+            echo "nothing to publish"
+            exit 0
+          fi
+          git commit -m "Combined-layer verification run (from combined-layer branch)"
+          git push origin publish:verification-results

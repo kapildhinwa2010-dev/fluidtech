@@ -11,8 +11,8 @@ Branches combined:
 
 Honest status:
 - The fusion gates are untrained constants: an untrained layer cannot
-  IMPROVE a model's loss, it can only attach and run without breaking
-  it.
+  IMPROVE a model's loss, it can only attach and run without
+  breaking it.
 - The KV cache stores PROXY K/V tensors projected from the fused
   hidden states (the kv_cache branch stored random tensors); the
   bounded-size behaviour is real, the K/V VALUES are placeholders.
@@ -23,8 +23,10 @@ Honest status:
   2. the kv_cache branch stored torch.zeros() as the "hidden states"
      of evicted tokens; this module stores the REAL evicted states.
   3. ConstantKVCache.update() tracks evicted ids from the NEW chunk
-     instead of the evicted window (kept upstream; this module keeps
-     its own correct eviction bookkeeping).
+     instead of the evicted window (kept upstream); this module keeps
+     its own correct eviction bookkeeping.
+- Memory: the four stores share a budget (max_capacity=100000 each);
+  100 MB is a hard CEILING, not a target.
 """
 
 from __future__ import annotations
@@ -64,8 +66,8 @@ class CombinedFluidConfig:
     ctx_len: int = 12
     M: int = 16
     r: int = 4
-    capacity: int = 50000
-    max_capacity: int = 200000
+    capacity: int = 25000
+    max_capacity: int = 100000
     kv_max_size: int = 256
     num_heads: int = 4
     ultra_layers: int = 2
@@ -73,10 +75,10 @@ class CombinedFluidConfig:
     gate_ultra: float = 0.5
 
     def validate(self) -> None:
-        assert self.d > 0, f"d must be positive, got {self.d}"
-        assert self.ctx_len > 0, f"ctx_len must be positive, got {self.ctx_len}"
+        assert self.d > 0, "d must be positive"
+        assert self.ctx_len > 0, "ctx_len must be positive"
         assert self.d % self.num_heads == 0, "d must be divisible by num_heads"
-        assert 0 < self.kv_max_size, "kv_max_size must be positive"
+        assert self.kv_max_size > 0, "kv_max_size must be positive"
         assert self.ultra_layers >= 1, "ultra_layers must be >= 1"
 
 
@@ -227,7 +229,7 @@ class CombinedFluidLayer(nn.Module):
             "components": [
                 "base (main)",
                 "superfluid-mamba (experiments)",
-                f"ultra x{self.config.ultra_layers} (experiments)",
+                "ultra x" + str(self.config.ultra_layers) + " (experiments)",
                 "constant-kv-cache (kv_cache)",
                 "superfluid long-term memory (kv_cache)",
             ],
@@ -264,7 +266,9 @@ def create_combined_layer(
     """Factory: one layer with all four branches inside."""
     return CombinedFluidLayer(
         CombinedFluidConfig(
-            d=d, ctx_len=ctx_len, kv_max_size=kv_max_size,
+            d=d,
+            ctx_len=ctx_len,
+            kv_max_size=kv_max_size,
             ultra_layers=ultra_layers,
         )
     )
