@@ -735,8 +735,8 @@ rors (8×20) | 0 | **0** |
 | base (main) | 0.9945 | 3.9 | 10.7 | 0 | — | 0.0000 |
 | mamba (experiments) | 0.9940 | 8.8 | 10.7 | 0 | — | +0.0017 |
 | ultra (experiments) | 0.9940 | 24.7 | 21.4 | 0 | — | +0.0001 |
-| kv (kv_cache) | n/a (wrapper) | 3.7 | 10.7 | 0 | ✅ | 0.0000 |
-| combined (all 4) | 0.9945 | 26.4 | 42.9 | 0 | ✅ | +0.0001 |
+| kv (kv_cache) | n/a (wrapper) | 5.0 | 10.7 | 0 | ✅ | 0.0000 |
+| combined (all 4) | 0.9945 | 36.4 | 42.9 | 0 | ✅ | +0.0001 |
 
 Honest reading:
 - **fresh recall is 0 BY CONSTRUCTION** — the exact tier only recalls contexts it has seen before;
