@@ -1,23 +1,23 @@
 """
-🚀🚀 ULTRA-FLUID LAYER - NEXT GENERATION SUPERGLUED MAMBA
+ULTRA-FLUID LAYER - NEXT GENERATION SUPERGLUED MAMBA (experimental)
 
-This is the ULTIMATE experimental layer combining:
-✅ Superfluid-Mamba FluidLayer (base)
-✅ Multi-Layer Stacking (2-4 layers deep)
-✅ Residual Connections (better gradient flow)
-✅ Cross-Attention Fusion (enhanced mixing)
-✅ Adaptive Routing (learn which paths to use)
-✅ Memory Optimization (compressed state)
+Combines:
+- Superfluid-Mamba FluidLayer (base)
+- Multi-Layer Stacking (2-4 layers deep)
+- Residual Connections
+- Cross-Attention Fusion
+- Adaptive Routing
+- Memory Compression (currently a placeholder)
 
-Hypothetical Performance:
-- Perplexity improvement: -2.0 to -3.0 nats
-- Context length: 200K+ tokens
-- Long-range accuracy: 99.999%
-- Speed: 40% faster than attention
-- Memory: ~32 KB (optimized)
+Honest status (2026-11-06 review):
+- All headline performance numbers are HYPOTHETICAL and unmeasured.
+- The "compression" variant is currently a pass-through: it does not
+  reduce memory yet.
+- The cross-attention K/V projection is now a registered, trainable
+  module (it used to be a fresh random Linear created inside forward()).
 
 Author: FluidTech Research Team
-Version: 2.0.0 (Ultra-Experimental)
+Version: 2.1.0 (Ultra-Experimental)
 """
 
 from __future__ import annotations
@@ -103,10 +103,9 @@ class AdaptiveRouter(nn.Module):
     Adaptive router that learns which components to use.
     
     Features:
-    ✅ Learnable routing weights
-    ✅ Context-aware decisions
-    ✅ Sparse routing (optional)
-    ✅ Differentiable
+    - Learnable routing weights (softmax over components)
+    - Context-aware decisions
+    - Differentiable
     """
     
     def __init__(self, d: int, num_components: int = 4, hidden_size: int = 128):
@@ -135,9 +134,7 @@ class AdaptiveRouter(nn.Module):
         Returns:
             Routing weights of shape (seq_len, num_components)
         """
-        # x: (seq_len, d)
-        weights = self.router(x)
-        return weights
+        return self.router(x)
 
 
 # =============================================================================
@@ -146,13 +143,7 @@ class AdaptiveRouter(nn.Module):
 
 class CrossAttentionFusion(nn.Module):
     """
-    Cross-attention fusion for enhanced mixing of components.
-    
-    Features:
-    ✅ Multi-head attention
-    ✅ Query-Key-Value mechanism
-    ✅ Learnable attention patterns
-    ✅ Efficient implementation
+    Multi-head cross-attention over sequence positions.
     """
     
     def __init__(self, d: int, num_heads: int = 4, dropout: float = 0.1):
@@ -188,16 +179,17 @@ class CrossAttentionFusion(nn.Module):
         Returns:
             Fused output of shape (seq_len, d)
         """
+        seq_len = query.shape[0]
+        
         # Project to Q, K, V
         Q = self.q_proj(query)
         K = self.k_proj(key)
         V = self.v_proj(value)
         
-        # Reshape for multi-head attention
-        batch_size = query.shape[0]
-        Q = Q.view(batch_size, self.num_heads, self.head_dim).transpose(0, 1)
-        K = K.view(batch_size, self.num_heads, self.head_dim).transpose(0, 1)
-        V = V.view(batch_size, self.num_heads, self.head_dim).transpose(0, 1)
+        # Reshape for multi-head attention: (heads, seq_len, head_dim)
+        Q = Q.view(seq_len, self.num_heads, self.head_dim).transpose(0, 1)
+        K = K.view(seq_len, self.num_heads, self.head_dim).transpose(0, 1)
+        V = V.view(seq_len, self.num_heads, self.head_dim).transpose(0, 1)
         
         # Scaled dot-product attention
         scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(self.head_dim)
@@ -206,10 +198,9 @@ class CrossAttentionFusion(nn.Module):
         
         output = torch.matmul(attn_weights, V)
         
-        # Reshape back
-        output = output.transpose(0, 1).contiguous().view(batch_size, self.d)
+        # Reshape back: (seq_len, d)
+        output = output.transpose(0, 1).contiguous().view(seq_len, self.d)
         
-        # Output projection
         return self.out_proj(output)
 
 
@@ -219,13 +210,9 @@ class CrossAttentionFusion(nn.Module):
 
 class MemoryCompressor(nn.Module):
     """
-    Memory compressor for efficient state representation.
+    Learnable low-rank compression / decompression pair.
     
-    Features:
-    ✅ Learnable compression
-    ✅ Low-rank approximation
-    ✅ Sparse representation
-    ✅ Lossless decompression (optional)
+    Note: decompression is a learned projection, NOT lossless.
     """
     
     def __init__(self, d: int, compression_factor: float = 0.5):
@@ -246,7 +233,8 @@ class MemoryCompressor(nn.Module):
         Compress or decompress memory.
         
         Args:
-            x: Input tensor of shape (..., d)
+            x: Input tensor of shape (..., d) when compressing,
+               (..., compressed_d) when decompressing
             compress: If True, compress; else decompress
         
         Returns:
@@ -265,13 +253,6 @@ class MemoryCompressor(nn.Module):
 class UltraFluidLayer(nn.Module):
     """
     Single Ultra-Fluid layer with all enhancements.
-    
-    Features:
-    ✅ Superfluid-Mamba base
-    ✅ Adaptive routing
-    ✅ Cross-attention fusion
-    ✅ Residual connections
-    ✅ Memory compression
     """
     
     def __init__(self, config: UltraFluidConfig):
@@ -341,8 +322,13 @@ class UltraFluidLayer(nn.Module):
                 d=config.d,
                 num_heads=4,
             )
+            # FIX: the K/V projection used to be a fresh random nn.Linear
+            # created INSIDE forward() -- unregistered, untrained, and
+            # different on every call.  Register it here instead.
+            self.kv_proj = nn.Linear(3 * config.d, config.d)
         else:
             self.cross_attention = None
+            self.kv_proj = None
         
         # Memory compression
         if config.compress_state:
@@ -409,14 +395,15 @@ class UltraFluidLayer(nn.Module):
         # Process Superfluid tier
         h_for_sf = h.mean(dim=0, keepdim=True).expand(self.config.M, -1)
         state_sf = self.superfluid(h_for_sf, t=1.0)
-        out_sf = (state_sf.mean(dim=0) @ self.W_sf).expand(seq_len, -1)
+        # FIX: (state_sf.mean(dim=0) @ W_sf) is 1-D; .expand(seq_len, -1)
+        # on a 1-D tensor raises a RuntimeError.  Unsqueeze first.
+        sf_vec = state_sf.mean(dim=0) @ self.W_sf          # (d,)
+        out_sf = sf_vec.unsqueeze(0).expand(seq_len, -1)  # (seq_len, d)
         
         # Apply adaptive routing if enabled
         if self.router is not None:
-            # Get routing weights
             routing_weights = self.router(h)  # (seq_len, 4)
             
-            # Apply weights to each tier
             out_e = out_e * routing_weights[:, 0].unsqueeze(1)
             out_l = out_l * routing_weights[:, 1].unsqueeze(1)
             out_m = out_m * routing_weights[:, 2].unsqueeze(1)
@@ -424,22 +411,24 @@ class UltraFluidLayer(nn.Module):
         
         # Apply cross-attention fusion if enabled
         if self.cross_attention is not None:
-            # Use Mamba output as query
-            # Concatenate others along feature dimension for key/value
+            # Use Mamba output as query; exact/lossy/superfluid as K/V
             kv_input = torch.cat([out_e, out_l, out_sf], dim=-1)  # (seq_len, 3*d)
-            # Project to d dimension
-            kv_proj = nn.Linear(3 * self.config.d, self.config.d).to(out_m.device)
-            kv = kv_proj(kv_input)
-            # Cross-attention
-            fused = self.cross_attention(out_m, kv, kv)
-            out_m = fused
+            kv = self.kv_proj(kv_input)  # (seq_len, d)
+            out_m = self.cross_attention(out_m, kv, kv)
         
         # Combine all tiers
+        tiers = (
+            out_e @ self.W_e.T
+            + out_l @ self.W_l.T
+            + out_m @ self.W_m.T
+            + out_sf @ self.W_sf.T
+        )
+        # FIX: the use_residual True/False branches were IDENTICAL code;
+        # now the non-residual path actually omits the residual.
         if self.config.use_residual:
-            # Residual connection
-            h_prime = h + out_e @ self.W_e.T + out_l @ self.W_l.T + out_m @ self.W_m.T + out_sf @ self.W_sf.T
+            h_prime = h + tiers
         else:
-            h_prime = h + out_e @ self.W_e.T + out_l @ self.W_l.T + out_m @ self.W_m.T + out_sf @ self.W_sf.T
+            h_prime = tiers
         
         # Update statistics
         self.total_tokens += seq_len
@@ -540,11 +529,10 @@ class UltraFluidStack(nn.Module):
     """
     Stack of multiple Ultra-Fluid layers.
     
-    Features:
-    ✅ Multi-layer stacking (2-4 layers)
-    ✅ Skip connections between layers
-    ✅ Progressive memory refinement
-    ✅ Hierarchical feature extraction
+    Each UltraFluidLayer.forward() already adds its own residual
+    (h + tiers) when use_residual=True, so the stack applies the layer
+    output directly.  (The previous version added h + skip * h_layer on
+    top of the layer's internal residual, double-counting the input.)
     """
     
     def __init__(self, config: UltraFluidConfig):
@@ -559,11 +547,6 @@ class UltraFluidStack(nn.Module):
         # Layer normalization
         self.layer_norms = nn.ModuleList([
             nn.LayerNorm(config.d) for _ in range(config.num_layers)
-        ])
-        
-        # Skip connection weights
-        self.skip_weights = nn.ParameterList([
-            nn.Parameter(torch.ones(1)) for _ in range(config.num_layers)
         ])
         
         logger.info(f"UltraFluidStack initialized with {config.num_layers} layers")
@@ -587,18 +570,12 @@ class UltraFluidStack(nn.Module):
         """
         all_info = []
         
-        for i, (layer, norm, skip_weight) in enumerate(
-            zip(self.layers, self.layer_norms, self.skip_weights)
-        ):
-            # Layer normalization
+        for layer, norm in zip(self.layers, self.layer_norms):
             h_norm = norm(h)
-            
-            # Forward through layer
             h_layer, info = layer(h_norm, content, token_ids)
             all_info.append(info)
-            
-            # Skip connection
-            h = h + skip_weight * h_layer
+            # The layer already contains the residual connection.
+            h = h_layer
         
         return h, all_info
 
@@ -609,13 +586,10 @@ class UltraFluidStack(nn.Module):
 
 class CompressedUltraFluid(nn.Module):
     """
-    Memory-optimized Ultra-Fluid layer with compression.
-    
-    Features:
-    ✅ State compression (50-80% reduction)
-    ✅ Sparse attention patterns
-    ✅ Quantized representations
-    ✅ Low memory footprint
+    HONEST status: this variant is currently a PASS-THROUGH.  The
+    compressors are instantiated but the forward pass simply delegates to
+    the base layer; no memory reduction happens yet.  The earlier
+    "50-80% reduction" claim was not true.
     """
     
     def __init__(self, config: UltraFluidConfig):
@@ -625,7 +599,7 @@ class CompressedUltraFluid(nn.Module):
         # Create base Ultra-Fluid layer
         self.base_layer = UltraFluidLayer(config)
         
-        # Compression for each component
+        # Compression for each component (not yet used in forward)
         self.compressors = nn.ModuleDict({
             'exact': MemoryCompressor(config.d, config.compression_factor),
             'lossy': MemoryCompressor(config.r, config.compression_factor),
@@ -633,12 +607,10 @@ class CompressedUltraFluid(nn.Module):
             'superfluid': MemoryCompressor(config.d, config.compression_factor),
         })
         
-        logger.info("CompressedUltraFluid initialized with compression")
+        logger.info("CompressedUltraFluid initialized (pass-through; compression not wired)")
     
     def forward(self, h, content, token_ids):
-        """Forward pass with compression"""
-        # For now, just use base layer
-        # Full compression implementation would be more complex
+        """Forward pass (currently delegates to the base layer)"""
         return self.base_layer(h, content, token_ids)
 
 
@@ -657,18 +629,6 @@ def create_ultra_fluid_layer(
 ) -> UltraFluidStack:
     """
     Factory function to create Ultra-Fluid layer stack.
-    
-    Args:
-        d: Hidden dimension
-        M: Number of anchors
-        r: Rank for low-rank projections
-        num_layers: Number of stacked layers
-        use_residual: Use residual connections
-        use_cross_attention: Use cross-attention fusion
-        use_adaptive_routing: Use adaptive routing
-    
-    Returns:
-        Ultra-Fluid layer stack
     """
     config = UltraFluidConfig(
         M=M,
@@ -715,19 +675,18 @@ if __name__ == "__main__":
             use_adaptive_routing=True,
         )
         layer = UltraFluidLayer(config)
-        print("✅ Single layer initialized")
+        print("OK - Single layer initialized")
         
-        # Test forward pass
         h = torch.randn(5, 8)
         content = torch.randn(5, 8)
         token_ids = torch.randint(0, 100, (5,))
         
         output, info = layer(h, content, token_ids)
-        print(f"✅ Forward pass successful (input: {h.shape}, output: {output.shape})")
-        print(f"   Recall rate: {info['recall_rate']:.2%}")
+        print(f"OK - Forward pass successful (input: {h.shape}, output: {output.shape})")
+        print(f"   Recall rate (fresh sequence, expected low): {info['recall_rate']:.2%}")
         
     except Exception as e:
-        print(f"❌ Single layer test failed: {e}")
+        print(f"FAIL - Single layer test failed: {e}")
         import traceback
         traceback.print_exc()
     
@@ -745,24 +704,23 @@ if __name__ == "__main__":
             use_adaptive_routing=True,
         )
         stack = UltraFluidStack(config)
-        print("✅ Stack initialized")
+        print("OK - Stack initialized")
         
-        # Test forward pass
         h = torch.randn(5, 8)
         content = torch.randn(5, 8)
         token_ids = torch.randint(0, 100, (5,))
         
         output, all_info = stack(h, content, token_ids)
-        print(f"✅ Stack forward pass successful (input: {h.shape}, output: {output.shape})")
+        print(f"OK - Stack forward pass successful (input: {h.shape}, output: {output.shape})")
         print(f"   Layers: {len(all_info)}")
         
     except Exception as e:
-        print(f"❌ Stack test failed: {e}")
+        print(f"FAIL - Stack test failed: {e}")
         import traceback
         traceback.print_exc()
     
     # Test compressed version
-    print("\nTesting CompressedUltraFluid...")
+    print("\nTesting CompressedUltraFluid (pass-through)...")
     try:
         config = UltraFluidConfig(
             M=8,
@@ -774,27 +732,21 @@ if __name__ == "__main__":
             compression_factor=0.5,
         )
         compressed = CompressedUltraFluid(config)
-        print("✅ Compressed layer initialized")
+        print("OK - Compressed layer initialized")
         
-        # Test forward pass
         h = torch.randn(5, 8)
         content = torch.randn(5, 8)
         token_ids = torch.randint(0, 100, (5,))
         
         output, info = compressed(h, content, token_ids)
-        print(f"✅ Compressed forward pass successful (input: {h.shape}, output: {output.shape})")
+        print(f"OK - Compressed forward pass successful (input: {h.shape}, output: {output.shape})")
         
     except Exception as e:
-        print(f"❌ Compressed test failed: {e}")
+        print(f"FAIL - Compressed test failed: {e}")
         import traceback
         traceback.print_exc()
     
     print("\n" + "=" * 80)
-    print("TEST COMPLETE")
+    print("TEST COMPLETE (see test_ultra_fluid.py for assertions)")
     print("=" * 80)
-    print("\nHypothetical Performance:")
-    print("  🎯 Perplexity: -2.0 to -3.0 nats")
-    print("  🎯 Context: 200K+ tokens")
-    print("  🎯 Accuracy: 99.999%")
-    print("  🎯 Speed: 40% faster")
-    print("\nStatus: READY FOR EXPERIMENTATION")
+    print("\nAll performance numbers for this layer are HYPOTHETICAL (unmeasured).")
