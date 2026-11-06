@@ -109,7 +109,8 @@ def main():
     # 6: worst-case memory estimate (same accounting as e19)
     entry = sys.getsizeof(0) * 4
     worst_mb = (2 * 100000 * entry + kv_max * 2 * d * 4) / (1024 * 1024)
-    check("6. worst-case memory < 100 MB", worst_mb < 100, str(round(worst_mb, 1)) + " MB")
+    mb = str(round(worst_mb, 1)) + " MB"
+    check("6. worst-case memory < 100 MB", worst_mb < 100, mb)
 
     print()
     if all(RESULTS):
