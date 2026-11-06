@@ -1,21 +1,16 @@
 """
-🧪 COMPREHENSIVE TEST SUITE FOR ULTRA-FLUID LAYER
+TEST SUITE FOR ULTRA-FLUID LAYER
 
-Tests all Ultra-Fluid components:
-✅ Adaptive Router
-✅ Cross-Attention Fusion
-✅ Memory Compressor
-✅ Ultra-Fluid Layer (Single)
-✅ Ultra-Fluid Stack (Multi-Layer)
-✅ Compressed Ultra-Fluid
-✅ Residual Connections
-✅ Skip Connections
+Honest testing (2026-11-06 review):
+- The single-layer test now REPLAYS the same sequence twice and asserts
+  the measured exact-tier recall of the replay pass (the old suite
+  printed a recall without ever asserting it).
+- The hypothetical headline numbers are no longer printed as results.
 """
 
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import numpy as np
@@ -23,7 +18,7 @@ import torch
 import time
 
 print("=" * 80)
-print("ULTRA-FLUID LAYER - COMPREHENSIVE TEST SUITE")
+print("ULTRA-FLUID LAYER - TEST SUITE")
 print("=" * 80)
 
 # Test 1: Adaptive Router
@@ -33,15 +28,14 @@ try:
     
     router = AdaptiveRouter(d=64, num_components=4, hidden_size=128)
     
-    # Test forward pass
     h = torch.randn(10, 64)
     weights = router(h)
     assert weights.shape == (10, 4), f"Expected (10, 4), got {weights.shape}"
     assert torch.allclose(weights.sum(dim=1), torch.ones(10)), "Weights should sum to 1"
     
-    print("✅ Adaptive router test passed")
+    print("OK - Adaptive router test passed")
 except Exception as e:
-    print(f"❌ Adaptive router test failed: {e}")
+    print(f"FAIL - Adaptive router test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -53,7 +47,6 @@ try:
     
     fusion = CrossAttentionFusion(d=64, num_heads=4)
     
-    # Test forward pass
     query = torch.randn(10, 64)
     key = torch.randn(10, 64)
     value = torch.randn(10, 64)
@@ -61,9 +54,9 @@ try:
     output = fusion(query, key, value)
     assert output.shape == query.shape, f"Expected {query.shape}, got {output.shape}"
     
-    print("✅ Cross-attention fusion test passed")
+    print("OK - Cross-attention fusion test passed")
 except Exception as e:
-    print(f"❌ Cross-attention fusion test failed: {e}")
+    print(f"FAIL - Cross-attention fusion test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -75,24 +68,22 @@ try:
     
     compressor = MemoryCompressor(d=64, compression_factor=0.5)
     
-    # Test compression
     x = torch.randn(10, 64)
     compressed = compressor(x, compress=True)
     assert compressed.shape == (10, 32), f"Expected (10, 32), got {compressed.shape}"
     
-    # Test decompression
     decompressed = compressor(compressed, compress=False)
     assert decompressed.shape == (10, 64), f"Expected (10, 64), got {decompressed.shape}"
     
-    print("✅ Memory compressor test passed")
+    print("OK - Memory compressor test passed")
 except Exception as e:
-    print(f"❌ Memory compressor test failed: {e}")
+    print(f"FAIL - Memory compressor test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
 
-# Test 4: Ultra-Fluid Layer (Single)
-print("\n[4/10] Testing single Ultra-Fluid layer...")
+# Test 4: Ultra-Fluid Layer (Single), with ASSERTED recall
+print("\n[4/10] Testing single Ultra-Fluid layer (with recall assertions)...")
 try:
     from ultra_fluid_layer import UltraFluidLayer, UltraFluidConfig
     
@@ -109,17 +100,29 @@ try:
     
     layer = UltraFluidLayer(config)
     
-    # Test forward pass
-    h = torch.randn(5, 8)
-    content = torch.randn(5, 8)
-    token_ids = torch.randint(0, 100, (5,))
+    seq_len = 20
+    h = torch.randn(seq_len, 8)
+    content = torch.randn(seq_len, 8)
+    token_ids = torch.randint(0, 100, (seq_len,))
     
-    output, info = layer(h, content, token_ids)
-    assert output.shape == (5, 8), f"Expected (5, 8), got {output.shape}"
+    # Pass 1 (fresh): nothing stored yet -> recall must be 0.
+    output1, info1 = layer(h, content, token_ids)
+    assert output1.shape == (seq_len, 8), f"Expected ({seq_len}, 8), got {output1.shape}"
+    r1 = info1['exact_tier']['recall_rate']
+    assert r1 == 0.0, f"fresh pass should have 0 recall, got {r1}"
     
-    print(f"✅ Single Ultra-Fluid layer test passed (recall: {info['recall_rate']:.2%})")
+    # Pass 2 (replay): recall must match the computed expectation.
+    output2, info2 = layer(h, content, token_ids)
+    assert output2.shape == (seq_len, 8), f"Expected ({seq_len}, 8), got {output2.shape}"
+    r2 = info2['exact_tier']['recall_rate']
+    expected_recall = (seq_len - config.ctx_len) / seq_len
+    assert abs(r2 - expected_recall) < 0.01, \
+        f"replay recall {r2:.2f} != expected {expected_recall:.2f}"
+    
+    print(f"OK - Single layer: fresh recall {r1:.0%} (asserted 0), "
+          f"replay recall {r2:.0%} (asserted {expected_recall:.0%})")
 except Exception as e:
-    print(f"❌ Single Ultra-Fluid layer test failed: {e}")
+    print(f"FAIL - Single Ultra-Fluid layer test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -142,7 +145,6 @@ try:
     
     layer = UltraFluidLayer(config)
     
-    # Test forward pass
     h = torch.randn(5, 8)
     content = torch.randn(5, 8)
     token_ids = torch.randint(0, 100, (5,))
@@ -150,9 +152,15 @@ try:
     output, info = layer(h, content, token_ids)
     assert output.shape == (5, 8), f"Expected (5, 8), got {output.shape}"
     
-    print(f"✅ No-residual Ultra-Fluid layer test passed")
+    # The non-residual branch must actually differ from the residual one:
+    # with all-zero W matrices and no routing/cross-attention, the output
+    # should be exactly the tier sum (zero here), NOT h + 0.
+    assert torch.allclose(output, torch.zeros_like(output), atol=1e-6), \
+        "non-residual path still adds the residual"
+    
+    print("OK - No-residual Ultra-Fluid layer test passed (residual actually off)")
 except Exception as e:
-    print(f"❌ No-residual Ultra-Fluid layer test failed: {e}")
+    print(f"FAIL - No-residual Ultra-Fluid layer test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -175,7 +183,6 @@ try:
     
     stack = UltraFluidStack(config)
     
-    # Test forward pass
     h = torch.randn(5, 8)
     content = torch.randn(5, 8)
     token_ids = torch.randint(0, 100, (5,))
@@ -184,9 +191,9 @@ try:
     assert output.shape == (5, 8), f"Expected (5, 8), got {output.shape}"
     assert len(all_info) == 2, f"Expected 2 infos, got {len(all_info)}"
     
-    print(f"✅ Ultra-Fluid stack test passed (2 layers)")
+    print("OK - Ultra-Fluid stack test passed (2 layers)")
 except Exception as e:
-    print(f"❌ Ultra-Fluid stack test failed: {e}")
+    print(f"FAIL - Ultra-Fluid stack test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -209,7 +216,6 @@ try:
     
     stack = UltraFluidStack(config)
     
-    # Test forward pass
     h = torch.randn(5, 8)
     content = torch.randn(5, 8)
     token_ids = torch.randint(0, 100, (5,))
@@ -218,15 +224,15 @@ try:
     assert output.shape == (5, 8), f"Expected (5, 8), got {output.shape}"
     assert len(all_info) == 4, f"Expected 4 infos, got {len(all_info)}"
     
-    print(f"✅ Ultra-Fluid stack test passed (4 layers)")
+    print("OK - Ultra-Fluid stack test passed (4 layers)")
 except Exception as e:
-    print(f"❌ Ultra-Fluid stack test failed: {e}")
+    print(f"FAIL - Ultra-Fluid stack test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
 
-# Test 8: Compressed Ultra-Fluid
-print("\n[8/10] Testing compressed Ultra-Fluid...")
+# Test 8: Compressed Ultra-Fluid (pass-through)
+print("\n[8/10] Testing compressed Ultra-Fluid (currently a pass-through)...")
 try:
     from ultra_fluid_layer import CompressedUltraFluid, UltraFluidConfig
     
@@ -242,7 +248,6 @@ try:
     
     compressed = CompressedUltraFluid(config)
     
-    # Test forward pass
     h = torch.randn(5, 8)
     content = torch.randn(5, 8)
     token_ids = torch.randint(0, 100, (5,))
@@ -250,9 +255,9 @@ try:
     output, info = compressed(h, content, token_ids)
     assert output.shape == (5, 8), f"Expected (5, 8), got {output.shape}"
     
-    print(f"✅ Compressed Ultra-Fluid test passed")
+    print("OK - Compressed Ultra-Fluid test passed (no memory reduction claimed)")
 except Exception as e:
-    print(f"❌ Compressed Ultra-Fluid test failed: {e}")
+    print(f"FAIL - Compressed Ultra-Fluid test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -272,7 +277,6 @@ try:
         use_adaptive_routing=True,
     )
     
-    # Test forward pass
     h = torch.randn(5, 8)
     content = torch.randn(5, 8)
     token_ids = torch.randint(0, 100, (5,))
@@ -280,9 +284,9 @@ try:
     output, all_info = stack(h, content, token_ids)
     assert output.shape == (5, 8), f"Expected (5, 8), got {output.shape}"
     
-    print(f"✅ Factory function test passed")
+    print("OK - Factory function test passed")
 except Exception as e:
-    print(f"❌ Factory function test failed: {e}")
+    print(f"FAIL - Factory function test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
@@ -305,7 +309,6 @@ try:
     
     stack = UltraFluidStack(config)
     
-    # Test with longer sequence
     seq_len = 100
     h = torch.randn(seq_len, 16)
     content = torch.randn(seq_len, 16)
@@ -314,33 +317,25 @@ try:
     output, all_info = stack(h, content, token_ids)
     assert output.shape == (seq_len, 16), f"Expected ({seq_len}, 16), got {output.shape}"
     
-    print(f"✅ Long sequence test passed ({seq_len} tokens)")
+    print(f"OK - Long sequence test passed ({seq_len} tokens)")
 except Exception as e:
-    print(f"❌ Long sequence test failed: {e}")
+    print(f"FAIL - Long sequence test failed: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(1)
 
 # Summary
 print("\n" + "=" * 80)
-print("ALL TESTS PASSED! ✅")
+print("ALL TESTS PASSED")
 print("=" * 80)
-print("\nSummary:")
-print("  ✅ Adaptive router")
-print("  ✅ Cross-attention fusion")
-print("  ✅ Memory compressor")
-print("  ✅ Single Ultra-Fluid layer")
-print("  ✅ Ultra-Fluid stack (2 layers)")
-print("  ✅ Ultra-Fluid stack (4 layers)")
-print("  ✅ Compressed Ultra-Fluid")
-print("  ✅ Factory function")
-print("  ✅ Long sequence (100 tokens)")
-print("\nHypothetical Performance:")
-print("  🎯 Perplexity: -2.0 to -3.0 nats")
-print("  🎯 Context: 200K+ tokens")
-print("  🎯 Accuracy: 99.999%")
-print("  🎯 Speed: 40% faster than attention")
-print("  🎯 Memory: ~32 KB (optimized)")
-print("\nBranch: experiments")
-print("Status: READY FOR ADVANCED EXPERIMENTATION")
+print("\nWhat is verified:")
+print("  - Router / cross-attention / compressor shapes and normalisation")
+print("  - Single layer forward, with fresh recall asserted 0 and replay")
+print("    recall asserted against the computed expectation")
+print("  - The non-residual path actually omits the residual")
+print("  - Stack (2 and 4 layers) and factory forward shapes")
+print("\nWhat is NOT verified here:")
+print("  - The hypothetical perplexity / accuracy / speed / memory numbers:")
+print("    unmeasured, and the compression variant is a pass-through.")
+print("\nBranch: experiments (experimental code, not production-ready)")
 print("=" * 80)
