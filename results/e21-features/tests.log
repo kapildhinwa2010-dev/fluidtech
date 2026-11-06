@@ -17,4 +17,4 @@ tests/test_acceleration.py::test_detection_report_shape PASSED           [ 81%]
 tests/test_acceleration.py::test_vectorized_matches_loop PASSED          [ 90%]
 tests/test_acceleration.py::test_speedup_positive PASSED                 [100%]
 
-============================== 11 passed in 1.74s ==============================
+============================== 11 passed in 1.23s ==============================
