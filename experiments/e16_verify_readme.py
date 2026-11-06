@@ -50,7 +50,7 @@ def load_corpus_tokens(limit_words=6000):
     path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "corpus.txt")
     if not os.path.exists(path):
         return None
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+    with open(path, encoding="utf-8", errors="ignore") as f:
         text = f.read(400_000)
     words = re.findall(r"\w+", text.lower())
     words = words[:limit_words]
@@ -68,7 +68,12 @@ def load_corpus_tokens(limit_words=6000):
 # =============================================================================
 
 def verify_recall(tokens):
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, HashMode, SecurityLevel
+    from fluidlayer.graft_bulletproof import (
+        BulletproofConfig,
+        HashMode,
+        SAABranchBulletproof,
+        SecurityLevel,
+    )
 
     table = {}
     for n in (1, 4, 8, 12):
@@ -143,12 +148,16 @@ def verify_perplexity(tokens):
     model = AutoModelForCausalLM.from_pretrained(MODEL)
     model.eval()
     d = model.config.n_embd
-    with open("corpus.txt", "r", encoding="utf-8", errors="ignore") as f:
+    with open("corpus.txt", encoding="utf-8", errors="ignore") as f:
         text = f.read(30_000)
     ids = tok(text, return_tensors="pt").input_ids[0]
     chunks = [ids[i:i + 128] for i in range(0, len(ids) - 128, 128)][:200]
 
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
+    from fluidlayer.graft_bulletproof import (
+        BulletproofConfig,
+        SAABranchBulletproof,
+        SecurityLevel,
+    )
 
     current = {"ids": None}
 
@@ -212,7 +221,7 @@ def verify_perplexity(tokens):
 # =============================================================================
 
 def verify_gguf():
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig
+    from fluidlayer.graft_bulletproof import BulletproofConfig, SAABranchBulletproof
     layer = SAABranchBulletproof(M=16, r=4, d=16, config=BulletproofConfig())
     path = "/tmp/fluidlayer_bulletproof.gguf"
     layer.export_to_gguf(path)
@@ -263,7 +272,11 @@ def verify_security():
 # =============================================================================
 
 def verify_isolation():
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
+    from fluidlayer.graft_bulletproof import (
+        BulletproofConfig,
+        SAABranchBulletproof,
+        SecurityLevel,
+    )
     # h/c rows MUST equal len(token_ids): the exact tier emits one row per token
     pattern = np.arange(100, 112, dtype=np.int64)
     h = np.random.default_rng(1).normal(0, 1, (len(pattern), 16))
@@ -291,7 +304,11 @@ def verify_isolation():
 # =============================================================================
 
 def verify_speed():
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
+    from fluidlayer.graft_bulletproof import (
+        BulletproofConfig,
+        SAABranchBulletproof,
+        SecurityLevel,
+    )
     layer = SAABranchBulletproof(M=64, r=8, d=64,
         config=BulletproofConfig(ctx_len=12, d=64, security_level=SecurityLevel.NONE, use_gated_sheaf=True))
     h = np.random.default_rng(4).normal(0, 1, (256, 64))
@@ -342,7 +359,11 @@ def verify_speed():
 # =============================================================================
 
 def verify_memory():
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
+    from fluidlayer.graft_bulletproof import (
+        BulletproofConfig,
+        SAABranchBulletproof,
+        SecurityLevel,
+    )
     layer = SAABranchBulletproof(M=64, r=8, d=64,
         config=BulletproofConfig(ctx_len=12, d=64, security_level=SecurityLevel.NONE))
     state_bytes = int(layer.state.nbytes)
@@ -378,7 +399,12 @@ def verify_memory():
 
 def verify_threads():
     import threading
-    from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
+
+    from fluidlayer.graft_bulletproof import (
+        BulletproofConfig,
+        SAABranchBulletproof,
+        SecurityLevel,
+    )
     layer = SAABranchBulletproof(M=64, r=8, d=64,
         config=BulletproofConfig(ctx_len=12, d=64, security_level=SecurityLevel.NONE))
     errors = []

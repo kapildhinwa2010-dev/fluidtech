@@ -91,8 +91,8 @@ def main():
     t0 = time.time()
     res = {"model": args.model, "config": vars(args)}
 
-    from fluidlayer.qwen2_model import Qwen2Model
     from fluidlayer.gpt2_tokenizer import GPT2Tokenizer
+    from fluidlayer.qwen2_model import Qwen2Model
     from fluidlayer.torch_graft import SAABranchTorch
 
     log("[1/4] loading the real checkpoint ...")
