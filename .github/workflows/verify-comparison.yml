@@ -65,4 +65,9 @@ jobs:
             exit 0
           fi
           git commit -m "Layer comparison run (all branches, identical harness)"
-          git push origin publish:verification-results
+          for i in 1 2 3 4 5; do
+            if git push origin publish:verification-results; then exit 0; fi
+            git fetch origin verification-results
+            git rebase origin/verification-results || { git rebase --abort; exit 1; }
+          done
+          exit 1
