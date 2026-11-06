@@ -374,9 +374,15 @@ def memory_test(build):
     entry_bytes = sys.getsizeof(0) * 4
     stores_bytes = sum(s.max_capacity for s in a["stores"]) * entry_bytes
     params_bytes = 0
-    if a["torch_params"] is not None:
-        params_bytes = int(sum(p.numel() for p in a["torch_params"].parameters()) * 4)
-    total = int(a["state_bytes"]() + stores_bytes + params_bytes + a["extra_bytes"])
+    tp = a["torch_params"]
+    if tp is not None and hasattr(tp, "parameters"):
+        params_bytes = int(sum(p.numel() for p in tp.parameters()) * 4)
+    state_bytes = 0
+    try:
+        state_bytes = int(a["state_bytes"]())
+    except Exception:
+        state_bytes = 0
+    total = int(state_bytes + stores_bytes + params_bytes + a["extra_bytes"])
     return {
         "stores": len(a["stores"]),
         "torch_param_bytes": params_bytes,
@@ -395,6 +401,9 @@ def gpt2_ab(builders, d):
     tok = AutoTokenizer.from_pretrained(MODEL)
     model = AutoModelForCausalLM.from_pretrained(MODEL)
     model.eval()
+    # tiny-gpt2's n_embd is NOT 16: rebuild every adapter at the model's
+    # real width so the hooked hidden states match the layers (e17 pattern).
+    ab_builders = make_adapters(int(model.config.n_embd))
     with open(os.path.join(REPO_ROOT, "corpus.txt"), encoding="utf-8", errors="ignore") as f:
         text = f.read(12000)
     ids = tok(text, return_tensors="pt").input_ids[0]
@@ -423,7 +432,7 @@ def gpt2_ab(builders, d):
 
     baseline = run(None)
     deltas = {}
-    for name, build in builders.items():
+    for name, build in ab_builders.items():
         a = build()
         withl = run(a["fwd"])
         deltas[name] = {
