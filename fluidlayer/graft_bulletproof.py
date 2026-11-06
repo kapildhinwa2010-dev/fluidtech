@@ -565,7 +565,7 @@ class GGUFExporter:
     ✅ Memory-mapped files
     """
     
-    GGUF_MAGIC = 0x46465547  # "GGUF" in little-endian
+    GGUF_MAGIC = 0x46554747  # "GGUF" in little-endian (0x46465547 wrote the bytes REVERSED -- "GUFF"; caught by e16 verify_gguf)
     GGUF_VERSION = 1
     
     def __init__(self, d: int, V: int = 0):
@@ -702,8 +702,22 @@ class SAABranchBulletproof:
         emb: Optional[np.ndarray] = None,
         config: Optional[BulletproofConfig] = None,
     ):
-        # Load configuration
-        self.config = config or BulletproofConfig(M=M, r=r, d=d)
+        # Load configuration.  An EXPLICIT (non-default) constructor
+        # value wins over the config: a config whose d was left at its
+        # default while d was passed in the constructor used to be
+        # silently ignored, which crashed deep inside _route with a
+        # confusing matmul error (the README quickstart hits exactly
+        # this; found by e16's verification run).
+        if config is None:
+            config = BulletproofConfig(M=M, r=r, d=d)
+        else:
+            if M != 64:
+                config.M = M
+            if r != 8:
+                config.r = r
+            if d != 64:
+                config.d = d
+        self.config = config
         self.config.validate()
         
         # Initialize components
@@ -785,7 +799,7 @@ class SAABranchBulletproof:
         # Add metadata
         self.gguf_exporter.add_metadata("fluidlayer.version", "2.0.0")
         self.gguf_exporter.add_metadata("fluidlayer.bulletproof", True)
-        self.gguf_exporter.add_metadata("fluidlayer.recall_guarantee", "100%")
+        self.gguf_exporter.add_metadata("fluidlayer.recall", "verbatim replay, measured; fresh text recalls 0 by construction")
     
     def _generate_context_key(self, tokens: List[int]) -> int:
         """The digest key of a context."""
@@ -812,7 +826,7 @@ class SAABranchBulletproof:
         token_ids: np.ndarray,
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
-        Forward pass with 100% recall guarantee.
+        Forward pass (the exact tier recalls stored contexts verbatim; fresh text recalls 0 by construction).
         
         Returns:
             h_out: Output hidden states

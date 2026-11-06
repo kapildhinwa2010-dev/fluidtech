@@ -11,7 +11,13 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
-import torch
+
+try:
+    import torch
+    HAVE_TORCH = True
+except ImportError:      # torch is OPTIONAL (the CI runs this suite numpy-only)
+    torch = None
+    HAVE_TORCH = False
 
 print("=" * 80)
 print("FLUIDLAYER REFACTORED - COMPREHENSIVE TEST SUITE")
@@ -297,7 +303,10 @@ except Exception as e:
     sys.exit(1)
 
 # =============================================================================
-# Test 6: Full Layer Integration (PyTorch)
+# Test 6: Full Layer Integration (PyTorch)if not HAVE_TORCH:
+    print("\n   ⏭️  skipped: torch is not installed (numpy-only run)")
+else:
+
 # =============================================================================
 
 print("\n" + "=" * 80)

@@ -41,9 +41,13 @@ try:
         SAABranchBulletproof,
         SecurityLevel,
     )
-    from fluidlayer.torch_graft_bulletproof import SAABranchTorchBulletproof
+    try:
+        from fluidlayer.torch_graft_bulletproof import SAABranchTorchBulletproof
+    except ImportError:          # torch is OPTIONAL (the CI's numpy-only job)
+        SAABranchTorchBulletproof = None
 
-    print("✅ All imports successful")
+    print("✅ All imports successful (torch twin present: "
+          + str(SAABranchTorchBulletproof is not None) + ")")
 except Exception as e:
     print(f"❌ Import failed: {e}")
     sys.exit(1)
@@ -217,77 +221,80 @@ except Exception as e:
 
 # Test 8: PyTorch bulletproof layer test
 print("\n[8/10] Testing PyTorch bulletproof layer...")
-try:
-    V, d = 100, 8
-    emb = torch.randn(V, d) * d**-0.5
+if not HAVE_TORCH or SAABranchTorchBulletproof is None:
+    print("⏭️  skipped: torch is not installed (numpy-only run, as in the CI verify job)")
+else:
+    try:
+        V, d = 100, 8
+        emb = torch.randn(V, d) * d**-0.5
 
-    layer = SAABranchTorchBulletproof(
-        M=16,
-        r=4,
-        d=d,
-        emb=emb,
-        config=BulletproofConfig(
+        layer = SAABranchTorchBulletproof(
             M=16,
             r=4,
             d=d,
-            ctx_len=4,
-            hash_mode=HashMode.DOUBLE_64,
-            security_level=SecurityLevel.STANDARD,
-        ),
-    )
+            emb=emb,
+            config=BulletproofConfig(
+                M=16,
+                r=4,
+                d=d,
+                ctx_len=4,
+                hash_mode=HashMode.DOUBLE_64,
+                security_level=SecurityLevel.STANDARD,
+            ),
+        )
 
-    # Test forward pass
-    h = torch.randn(1, d)
-    content = torch.randn(1, d)
-    token_ids = torch.tensor([12])
+        # Test forward pass
+        h = torch.randn(1, d)
+        content = torch.randn(1, d)
+        token_ids = torch.tensor([12])
 
-    h_out, info = layer(h, content, token_ids)
-    assert h_out.shape == h.shape, "Output shape mismatch"
-    assert "recall_rate" in info, "Missing recall_rate in info"
-    assert "hits" in info, "Missing hits in info"
+        h_out, info = layer(h, content, token_ids)
+        assert h_out.shape == h.shape, "Output shape mismatch"
+        assert "recall_rate" in info, "Missing recall_rate in info"
+        assert "hits" in info, "Missing hits in info"
 
-    # THE RECALL TEST (the same as the numpy one): the torch twin must
-    # recall what the numpy twin recalls.  The old test only printed the
-    # layer's recall rate for a random query -- which was 0.0% -- and
-    # still called it a pass.
-    h = torch.randn(8, d)
-    content = torch.randn(8, d)
-    layer(h, content, torch.arange(1, 9))
-    replay = SAABranchTorchBulletproof(
-        M=16, r=4, d=d, emb=emb,
-        config=BulletproofConfig(
-            M=16, r=4, d=d, ctx_len=4,
-            hash_mode=HashMode.DOUBLE_64,
-            security_level=SecurityLevel.STANDARD,
-        ),
-    )
-    replay.store = layer.store       # the same memory, a fresh context
-    recalled = 0
-    total = 0
-    for t in range(7):
-        ht = torch.randn(1, d)
-        ct = torch.randn(1, d)
-        _, info = replay(ht, ct, torch.tensor([t + 1]))
-        ret = info.get("retrieved")
-        r = int(ret[0]) if ret is not None and len(ret) else -1
-        if t + 1 < layer.config.ctx_len:
-            continue
-        total += 1
-        if r == t + 2:
-            recalled += 1
-    rate = recalled / max(total, 1)
-    assert rate >= 0.99, f"the torch twin's recall broke: {rate:.1%}"
+        # THE RECALL TEST (the same as the numpy one): the torch twin must
+        # recall what the numpy twin recalls.  The old test only printed the
+        # layer's recall rate for a random query -- which was 0.0% -- and
+        # still called it a pass.
+        h = torch.randn(8, d)
+        content = torch.randn(8, d)
+        layer(h, content, torch.arange(1, 9))
+        replay = SAABranchTorchBulletproof(
+            M=16, r=4, d=d, emb=emb,
+            config=BulletproofConfig(
+                M=16, r=4, d=d, ctx_len=4,
+                hash_mode=HashMode.DOUBLE_64,
+                security_level=SecurityLevel.STANDARD,
+            ),
+        )
+        replay.store = layer.store       # the same memory, a fresh context
+        recalled = 0
+        total = 0
+        for t in range(7):
+            ht = torch.randn(1, d)
+            ct = torch.randn(1, d)
+            _, info = replay(ht, ct, torch.tensor([t + 1]))
+            ret = info.get("retrieved")
+            r = int(ret[0]) if ret is not None and len(ret) else -1
+            if t + 1 < layer.config.ctx_len:
+                continue
+            total += 1
+            if r == t + 2:
+                recalled += 1
+        rate = recalled / max(total, 1)
+        assert rate >= 0.99, f"the torch twin's recall broke: {rate:.1%}"
 
-    print(
-        f"✅ PyTorch bulletproof layer test passed "
-        f"(the measured recall: {rate:.1%})"
-    )
-except Exception as e:
-    print(f"❌ PyTorch bulletproof layer test failed: {e}")
-    import traceback
+        print(
+            f"✅ PyTorch bulletproof layer test passed "
+            f"(the measured recall: {rate:.1%})"
+        )
+    except Exception as e:
+        print(f"❌ PyTorch bulletproof layer test failed: {e}")
+        import traceback
 
-    traceback.print_exc()
-    sys.exit(1)
+        traceback.print_exc()
+        sys.exit(1)
 
 # Test 9: 12-gram recall test
 print("\n[9/10] Testing 12-gram recall...")

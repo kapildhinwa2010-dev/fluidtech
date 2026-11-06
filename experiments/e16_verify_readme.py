@@ -76,6 +76,7 @@ def verify_recall(tokens):
             M=64, r=8, d=16,
             config=BulletproofConfig(
                 ctx_len=n,
+                d=16,
                 hash_mode=HashMode.DOUBLE_64,
                 security_level=SecurityLevel.NONE,
                 capacity=50000,
@@ -159,6 +160,7 @@ def verify_perplexity(tokens):
                 M=32, r=8, d=d,
                 config=BulletproofConfig(
                     ctx_len=12,
+                    d=d,
                     security_level=SecurityLevel.NONE,
                     capacity=50000, max_capacity=200000,
                     use_gated_sheaf=True,
@@ -250,7 +252,7 @@ def verify_security():
     record(
         "'Military-grade AES-256 + HMAC' encryption works",
         "CONFIRMED" if mil_ok else "REFUTED",
-        dict(out, note="Fernet is AES-128-CBC even when it works; a raw 32-byte key is not a valid Fernet key"),
+        dict(out, note="Fernet is AES-128-CBC + HMAC-SHA256 (the README says AES-256, which Fernet is not); the raw-32-byte key bug was fixed before this run"),
         "encrypt/decrypt round-trip at each SecurityLevel on fresh sessions",
     )
 
@@ -266,9 +268,9 @@ def verify_isolation():
     pattern = np.arange(100, 112, dtype=np.int64)
 
     l1 = SAABranchBulletproof(M=16, r=4, d=16,
-        config=BulletproofConfig(ctx_len=12, security_level=SecurityLevel.BASIC, session_id="tenant_1"))
+        config=BulletproofConfig(ctx_len=12, d=16, security_level=SecurityLevel.BASIC, session_id="tenant_1"))
     l2 = SAABranchBulletproof(M=16, r=4, d=16,
-        config=BulletproofConfig(ctx_len=12, security_level=SecurityLevel.BASIC, session_id="tenant_2"))
+        config=BulletproofConfig(ctx_len=12, d=16, security_level=SecurityLevel.BASIC, session_id="tenant_2"))
     # tenant 1 writes
     l1.forward(h, c, pattern)
     # tenant 2 replays the same tokens on a FRESH layer
@@ -289,7 +291,7 @@ def verify_isolation():
 def verify_speed():
     from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
     layer = SAABranchBulletproof(M=64, r=8, d=64,
-        config=BulletproofConfig(ctx_len=12, security_level=SecurityLevel.NONE, use_gated_sheaf=True))
+        config=BulletproofConfig(ctx_len=12, d=64, security_level=SecurityLevel.NONE, use_gated_sheaf=True))
     h = np.random.default_rng(4).normal(0, 1, (256, 64))
     c = np.random.default_rng(5).normal(0, 1, (256, 64))
     tid = np.random.default_rng(6).integers(0, 10000, 256)
@@ -339,7 +341,7 @@ def verify_speed():
 def verify_memory():
     from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
     layer = SAABranchBulletproof(M=64, r=8, d=64,
-        config=BulletproofConfig(ctx_len=12, security_level=SecurityLevel.NONE))
+        config=BulletproofConfig(ctx_len=12, d=64, security_level=SecurityLevel.NONE))
     state_bytes = int(layer.state.nbytes)
     for i in range(1000):
         layer.store.put(i, i, signature=i)
@@ -369,7 +371,7 @@ def verify_threads():
     import threading
     from fluidlayer.graft_bulletproof import SAABranchBulletproof, BulletproofConfig, SecurityLevel
     layer = SAABranchBulletproof(M=64, r=8, d=64,
-        config=BulletproofConfig(ctx_len=12, security_level=SecurityLevel.NONE))
+        config=BulletproofConfig(ctx_len=12, d=64, security_level=SecurityLevel.NONE))
     errors = []
 
     def worker(k):
