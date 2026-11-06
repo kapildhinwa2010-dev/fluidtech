@@ -1,0 +1,138 @@
+{
+  "sha": "4c43a3b89f7bc3e10832dacdef0facf1620b5be1",
+  "branch": "main",
+  "status": "complete",
+  "baseline": {
+    "model": "sshleifer/tiny-gpt2",
+    "baseline_loss_nats": 10.8251
+  },
+  "configs": {
+    "base (main)": {
+      "recall_12gram": {
+        "fresh_recall": 0.0,
+        "replay_recall": 0.9945
+      },
+      "overhead_ms_per_256_tokens": 3.9,
+      "thread_errors": [],
+      "memory": {
+        "stores": 1,
+        "torch_param_bytes": 0,
+        "worst_case_store_bytes": 11200000,
+        "worst_case_total_bytes": 11200512,
+        "worst_case_mb": 10.7
+      },
+      "gpt2": {
+        "loss_nats": 10.8251,
+        "delta_nats": 0.0,
+        "finite": true
+      }
+    },
+    "mamba (experiments)": {
+      "recall_12gram": {
+        "fresh_recall": 0.0,
+        "replay_recall": 0.994
+      },
+      "overhead_ms_per_256_tokens": 8.8,
+      "thread_errors": [],
+      "memory": {
+        "stores": 1,
+        "torch_param_bytes": 58904,
+        "worst_case_store_bytes": 11200000,
+        "worst_case_total_bytes": 11258904,
+        "worst_case_mb": 10.7
+      },
+      "gpt2": {
+        "loss_nats": 10.8268,
+        "delta_nats": 0.0017,
+        "finite": true
+      }
+    },
+    "ultra (experiments)": {
+      "recall_12gram": {
+        "fresh_recall": 0.0,
+        "replay_recall": 0.994
+      },
+      "overhead_ms_per_256_tokens": 24.7,
+      "thread_errors": [],
+      "memory": {
+        "stores": 2,
+        "torch_param_bytes": 61040,
+        "worst_case_store_bytes": 22400000,
+        "worst_case_total_bytes": 22461040,
+        "worst_case_mb": 21.4
+      },
+      "gpt2": {
+        "loss_nats": 10.8251,
+        "delta_nats": 0.0001,
+        "finite": true
+      }
+    },
+    "kv (kv_cache)": {
+      "recall_12gram": null,
+      "overhead_ms_per_256_tokens": 5.0,
+      "thread_errors": [],
+      "memory": {
+        "stores": 1,
+        "torch_param_bytes": 0,
+        "worst_case_store_bytes": 11200000,
+        "worst_case_total_bytes": 11232768,
+        "worst_case_mb": 10.7
+      },
+      "kv": {
+        "max_kv_seen": 256,
+        "kv_evictions": 1744,
+        "long_term_tokens": 1744
+      },
+      "kv_bounded": true,
+      "gpt2": {
+        "loss_nats": 10.8251,
+        "delta_nats": 0.0,
+        "finite": true
+      }
+    },
+    "combined (all 4)": {
+      "recall_12gram": {
+        "fresh_recall": 0.0,
+        "replay_recall": 0.9945
+      },
+      "overhead_ms_per_256_tokens": 36.4,
+      "thread_errors": [],
+      "memory": {
+        "stores": 4,
+        "torch_param_bytes": 119944,
+        "worst_case_store_bytes": 44800000,
+        "worst_case_total_bytes": 44953224,
+        "worst_case_mb": 42.9
+      },
+      "kv": {
+        "max_kv_seen": 256,
+        "kv_evictions": 1744,
+        "long_term_tokens": 1744
+      },
+      "kv_bounded": true,
+      "gpt2": {
+        "loss_nats": 10.8251,
+        "delta_nats": 0.0001,
+        "finite": true
+      }
+    }
+  },
+  "winners": {
+    "fastest": "base (main)",
+    "lowest_memory": "base (main)",
+    "best_replay_recall": "base (main)",
+    "smallest_attach_perturbation": "base (main)",
+    "thread_safe": [
+      "base (main)",
+      "mamba (experiments)",
+      "ultra (experiments)",
+      "kv (kv_cache)",
+      "combined (all 4)"
+    ],
+    "bounded_kv": [
+      "kv (kv_cache)",
+      "combined (all 4)"
+    ]
+  },
+  "log": "======================================================================\nLAYER COMPARISON RUN  sha=4c43a3b89f7bc3e10832dacdef0facf1620b5be1\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), mamba (experiments), ultra (experiments), kv (kv_cache), combined (all 4)\n\n--- base (main) ---\n\n--- mamba (experiments) ---\n\n--- ultra (experiments) ---\n\n--- kv (kv_cache) ---\n\n--- combined (all 4) ---\n\n--- real GPT-2 A/B (all layers) ---\n\nWrote e18-out/run.json and e18-out/comparison.md\nCOMPARISON RUN COMPLETE"
+}

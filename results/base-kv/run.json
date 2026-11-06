@@ -1,0 +1,81 @@
+{
+  "sha": "4c43a3b89f7bc3e10832dacdef0facf1620b5be1",
+  "branch": "main",
+  "status": "complete",
+  "baseline": {
+    "model": "sshleifer/tiny-gpt2",
+    "baseline_loss_nats": 10.8251
+  },
+  "configs": {
+    "base (main)": {
+      "recall_12gram": {
+        "fresh_recall": 0.0,
+        "replay_recall": 0.9945
+      },
+      "overhead_ms_per_256_tokens": 3.9,
+      "thread_errors": [],
+      "memory": {
+        "stores": 1,
+        "torch_param_bytes": 0,
+        "worst_case_store_bytes": 11200000,
+        "worst_case_total_bytes": 11200512,
+        "worst_case_mb": 10.7
+      },
+      "gpt2": {
+        "loss_nats": 10.8251,
+        "delta_nats": 0.0,
+        "finite": true
+      }
+    },
+    "base+kv (e19)": {
+      "recall_12gram": {
+        "fresh_recall": 0.0,
+        "replay_recall": 0.9945
+      },
+      "overhead_ms_per_256_tokens": 6.7,
+      "thread_errors": [],
+      "memory": {
+        "stores": 2,
+        "torch_param_bytes": 0,
+        "worst_case_store_bytes": 22400000,
+        "worst_case_total_bytes": 22432768,
+        "worst_case_mb": 21.4
+      },
+      "kv": {
+        "max_kv_seen": 256,
+        "kv_evictions": 1744,
+        "long_term_tokens": 1744
+      },
+      "kv_bounded": true,
+      "gpt2": {
+        "loss_nats": 10.8251,
+        "delta_nats": 0.0,
+        "finite": true
+      }
+    }
+  },
+  "winners": {
+    "fastest": "base (main)",
+    "lowest_memory": "base (main)",
+    "best_replay_recall": "base (main)",
+    "smallest_attach_perturbation": "base (main)",
+    "thread_safe": [
+      "base (main)",
+      "base+kv (e19)"
+    ],
+    "bounded_kv": [
+      "base+kv (e19)"
+    ]
+  },
+  "claims": {
+    "recall_parity_with_base": true,
+    "kv_stays_bounded": true,
+    "evictions_go_to_long_term": true,
+    "memory_under_100mb_ceiling": true,
+    "thread_safe": true,
+    "gpt2_attach_finite": true,
+    "gpt2_delta_small": true,
+    "speed_overhead_vs_base": 1.72
+  },
+  "log": "======================================================================\nBASE + KV WRAPPER RUN (e19)  sha=4c43a3b89f7bc3e10832dacdef0facf1620b5be1\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), base+kv (e19)\n\n--- base (main) ---\n\n--- base+kv (e19) ---\n\n--- real GPT-2 A/B (base vs base+kv) ---\n\nWrote e19-out/run.json and e19-out/basekv.md\nBASE+KV RUN COMPLETE"
+}
