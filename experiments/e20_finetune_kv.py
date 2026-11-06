@@ -117,6 +117,8 @@ class FinetuneKVWrapper:
         self.kv = MiniKVCache(KV_MAX)
         self.kv_enabled = False
 
+    def __call__(self, h, tid):
+        return self.forward(h, tid)
     def forward(self, h, tid):
         h_np = h.detach().cpu().numpy().astype(np.float64)
         tid_np = tid.detach().cpu().numpy().astype(np.int64)
@@ -140,20 +142,35 @@ class FinetuneKVWrapper:
 def load_ids(tokenizer):
     try:
         from datasets import load_dataset
-        ds = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
+        ds = None
+        for repo, cfg_name in (
+            ("wikitext", "wikitext-2-raw-v1"),
+            ("Salesforce/wikitext_wikistext2", "wikitext-2-raw-v1"),
+            ("wikitext", None),
+        ):
+            try:
+                if cfg_name is None:
+                    ds = load_dataset(repo, split="train")
+                else:
+                    ds = load_dataset(repo, cfg_name, split="train")
+                source = "wikitext-2-raw-v1"
+                break
+            except Exception:
+                continue
+        if ds is None:
+            raise RuntimeError("no wikitext variant loaded")
         text = " ".join(x["text"] for x in list(ds)[:3000])
-        source = "wikitext-2-raw-v1"
     except Exception as exc:
         log("datasets/wikitext unavailable: " + str(exc)[:120])
         with open(os.path.join(REPO_ROOT, "corpus.txt"),
                   encoding="utf-8", errors="ignore") as f:
-            text = f.read(12000)
-        source = "corpus.txt fallback"
+            text = f.read(60000)
+        source = "corpus.txt fallback (60k chars)"
     ids = tokenizer(text, return_tensors="pt").input_ids[0]
     return ids, source
 
 
-def make_chunks(ids, n_eval=24):
+def make_chunks(ids, n_eval=12):
     chunks = [ids[i:i + CHUNK]
               for i in range(0, len(ids) - CHUNK, CHUNK)]
     n_train = max(len(chunks) - n_eval, 1)

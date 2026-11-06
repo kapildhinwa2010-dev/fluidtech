@@ -34,7 +34,9 @@ jobs:
           pip install transformers peft datasets numpy
 
       - name: Run e20 (5 min budget)
-        run: python experiments/e20_finetune_kv.py --sha "${{ github.sha }}" --out e20-out --minutes 5 2>&1 | tee e20.log
+        run: |
+          set -o pipefail
+          python experiments/e20_finetune_kv.py --sha "${{ github.sha }}" --out e20-out --minutes 5 2>&1 | tee e20.log
 
       - name: Publish results to verification-results
         if: always()
