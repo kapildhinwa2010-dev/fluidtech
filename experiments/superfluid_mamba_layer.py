@@ -997,7 +997,7 @@ class SuperfluidMambaFluidLayer(nn.Module):
     def _get_Wq(self) -> np.ndarray:
         """Get query projection matrix"""
         if not hasattr(self, '_Wq'):
-            self._Wq = np.random.randn(self.config.d, self.config.M).astype(np.float32) * 0.02
+            self._Wq = np.random.randn(self.config.M, self.config.d).astype(np.float32) * 0.02  # FIX: orientation was (d, M), crashes when M != d
         return self._Wq
     
     def _get_Wv(self) -> np.ndarray:
@@ -1197,7 +1197,7 @@ class SuperfluidMambaFluidLayerNP:
     
     def _get_Wq(self):
         if not hasattr(self, '_Wq'):
-            self._Wq = np.random.randn(self.config.d, self.config.M).astype(np.float32) * 0.02
+            self._Wq = np.random.randn(self.config.M, self.config.d).astype(np.float32) * 0.02  # FIX: orientation was (d, M), crashes when M != d
         return self._Wq
     
     def _get_Wv(self):

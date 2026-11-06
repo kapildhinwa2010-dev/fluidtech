@@ -16,15 +16,19 @@ Honest status:
 - The KV cache stores PROXY K/V tensors projected from the fused
   hidden states (the kv_cache branch stored random tensors); the
   bounded-size behaviour is real, the K/V VALUES are placeholders.
-- Bugs fixed here (found while combining the branches):
-  1. the kv_cache branch passed 3-D hidden states and 2-D token ids
-     straight into the fluid layer (shape mismatch); this module
-     passes correctly shaped tensors.
-  2. the kv_cache branch stored torch.zeros() as the "hidden states"
-     of evicted tokens; this module stores the REAL evicted states.
-  3. ConstantKVCache.update() tracks evicted ids from the NEW chunk
-     instead of the evicted window (kept upstream); this module keeps
-     its own correct eviction bookkeeping.
+- Bugs found while combining the branches (all fixed HERE):
+  1. kv_cache branch: SuperfluidMemory.store() passes numpy arrays into
+     the torch-expecting fluid layer -> AttributeError. This module
+     calls the mamba layer directly with torch tensors.
+  2. experiments branch (both layer files): _get_Wq() projected with
+     the wrong orientation (d, M) and was then transposed, which only
+     works when M == d; it crashes for M != d (seen in the speed and
+     thread-safety runs). Fixed to (M, d) in both files.
+  3. kv_cache branch: ConstantKVSuperfluidModel passes 3-D hidden
+     states / 2-D token ids into the fluid layer; this module passes
+     correctly shaped tensors.
+  4. kv_cache branch: evicted tokens were stored with torch.zeros()
+     as hidden states; this module stores the REAL evicted states.
 - Memory: the four stores share a budget (max_capacity=100000 each);
   100 MB is a hard CEILING, not a target.
 """
@@ -77,7 +81,6 @@ class CombinedFluidConfig:
     def validate(self) -> None:
         assert self.d > 0, "d must be positive"
         assert self.ctx_len > 0, "ctx_len must be positive"
-        assert self.d % self.num_heads == 0, "d must be divisible by num_heads"
         assert self.kv_max_size > 0, "kv_max_size must be positive"
         assert self.ultra_layers >= 1, "ultra_layers must be >= 1"
 
@@ -89,6 +92,14 @@ class CombinedFluidLayer(nn.Module):
         super().__init__()
         self.config = config
         config.validate()
+
+        # effective attention heads for the KV reshape (tiny models like
+        # tiny-gpt2 have n_embd values that 4 does not divide)
+        heads = config.num_heads if config.d % config.num_heads == 0 else 1
+        self._heads = max(1, heads)
+
+        # cross-attention needs d divisible by its 4 hardcoded heads
+        use_xattn = config.d >= 8 and config.d % 4 == 0
 
         # --- main branch: the verified exact-tier memory layer ---
         self.base = SAABranchBulletproof(
@@ -106,8 +117,7 @@ class CombinedFluidLayer(nn.Module):
             ),
         )
 
-        # --- experiments branch: superfluid-mamba (also feeds the
-        #     kv_cache branch's SuperfluidMemory long-term store) ---
+        # --- experiments branch: superfluid-mamba (long-term store) ---
         self.mamba_memory = SuperfluidMambaFluidLayer(
             SuperfluidMambaConfig(
                 M=config.M,
@@ -131,15 +141,16 @@ class CombinedFluidLayer(nn.Module):
                 capacity=config.capacity,
                 max_capacity=config.max_capacity,
                 security_level="STANDARD",
+                use_cross_attention=use_xattn,
             )
         )
 
         # --- kv_cache branch: bounded KV cache + long-term memory ---
-        head_dim = config.d // config.num_heads
+        head_dim = config.d // self._heads
         self.kv_cache = ConstantKVCache(
             KVCacheConfig(
                 max_size=config.kv_max_size,
-                num_heads=config.num_heads,
+                num_heads=self._heads,
                 head_dim=head_dim,
             )
         )
@@ -187,9 +198,9 @@ class CombinedFluidLayer(nn.Module):
         )
 
         # 4) kv_cache branch: bounded KV cache; evictions go to the
-        #    long-term superfluid memory with their REAL hidden states
-        head_dim = d // self.config.num_heads
-        k = fused.detach().reshape(1, seq_len, self.config.num_heads, head_dim)
+        #    long-term memory with their REAL hidden states
+        head_dim = d // self._heads
+        k = fused.detach().reshape(1, seq_len, self._heads, head_dim)
         k = k.permute(0, 2, 1, 3).contiguous()
         v = k.clone()
         evicted_before = len(self.kv_cache.evicted_tokens)
@@ -203,10 +214,14 @@ class CombinedFluidLayer(nn.Module):
                     rows.append(row)
                     ids.append(tok)
             if rows:
-                self.superfluid_memory.store(
-                    torch.stack(rows),
-                    torch.tensor(ids, dtype=torch.long),
-                )
+                hidden_t = torch.stack(rows)
+                ids_t = torch.tensor(ids, dtype=torch.long)
+                # Bug fixed: SuperfluidMemory.store() would pass numpy
+                # arrays into the torch-expecting mamba layer; call the
+                # layer directly with torch tensors and keep the stats.
+                self.mamba_memory(hidden_t, hidden_t.clone(), ids_t)
+                self.superfluid_memory.memory_buffer.extend(ids)
+                self.superfluid_memory.total_tokens += len(ids)
         for t in range(seq_len):
             self._stream.append((fused[t].detach(), int(tid_np[t])))
         while len(self._stream) > self.config.kv_max_size:
