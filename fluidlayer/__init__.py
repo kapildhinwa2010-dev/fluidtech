@@ -70,7 +70,7 @@ from .topology import (
                     unique_edges,
 )
 
-__version__ = "2.3.0"
+__version__ = "2.4.0"
 version = __version__
 
 __all__ = [
@@ -95,6 +95,11 @@ __all__ = [
     "ctx_key", "fnv1a64", "embedding_signature", "SLOT_BYTES",
     # --- the main layer (base + kv cache, needs torch) ------------------
     "BaseKVConfig", "BaseKVLayer",
+    # --- quantization / multi-GPU / acceleration (e21, lazy) -------------
+    "quantize_int8", "dequantize_int8", "quantization_report",
+    "detect_acceleration", "loop_scores", "vectorized_scores",
+    "benchmark_vectorization",
+    "detect_devices", "ShardedKVCache",
 ]
 
 
@@ -108,6 +113,20 @@ def __getattr__(name):
     if name in ("BaseKVConfig", "BaseKVLayer"):
         from .base_kv_layer import BaseKVConfig, BaseKVLayer
         return {"BaseKVConfig": BaseKVConfig, "BaseKVLayer": BaseKVLayer}[name]
+    if name in ("quantize_int8", "dequantize_int8", "quantization_report"):
+        from . import quantization
+        return getattr(quantization, name)
+    if name in (
+        "detect_acceleration",
+        "loop_scores",
+        "vectorized_scores",
+        "benchmark_vectorization",
+    ):
+        from . import acceleration
+        return getattr(acceleration, name)
+    if name in ("detect_devices", "ShardedKVCache"):
+        from . import multi_gpu
+        return getattr(multi_gpu, name)
     raise AttributeError(
         "module " + repr(__name__) + " has no attribute " + repr(name)
     )

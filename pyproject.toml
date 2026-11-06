@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fluidlayer"
-version = "2.3.0"
+version = "2.4.0"
 description = "A research memory layer for language models: base + bounded KV cache (the main layer), with optional mamba/ultra/combined variants and GPT-2/Qwen2 adapters"
 readme = "README.md"
 requires-python = ">=3.9"

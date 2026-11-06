@@ -6,6 +6,8 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-06
+
 ### Added
 
 - The three "coming soon" features, implemented and CI-measured (e21,
@@ -22,6 +24,21 @@ uses [Semantic Versioning](https://semver.org/).
   (max 256, 1280 evictions) and the wrapper loss-neutral (attach delta
   0.0); the train loss stays flat on the ~100k-param model
   (noise-level, as the README notes).
+- The e21 modules are importable from the package root via PEP 562
+  lazy imports: from fluidlayer import quantize_int8, ShardedKVCache,
+  detect_acceleration (the package stays numpy-only at import time;
+  multi_gpu still needs torch, so it loads lazily).
+
+### Changed
+
+- README restructured for readability (44 KB -> ~13 KB): configuration,
+  performance, security, GGUF, usage examples, advanced features and
+  troubleshooting moved to docs/USAGE.md; the 5-step Colab guide moved
+  to docs/COLAB_GUIDE.md. Dynamic CI + PyPI badges added, the install
+  section now leads with the PyPI package, and the file layout is
+  accurate again. Fixed 8 hard line-wraps that broke copy-paste code in
+  the Colab cells (e.g. the SAABranchBulletproof import was split across
+  lines) and one broken table row in the e19 results table.
 
 ## [2.3.0] - 2026-11-06
 
