@@ -28,6 +28,14 @@ jobs:
         run: |
           pip install "numpy>=1.23,<3" cryptography
 
+      - name: Lint check (ruff, log only)
+        run: |
+          pip install ruff
+          set +e
+          ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --output-format=concise 2>&1 | tee ruff.log
+          echo "ruff exit: ${PIPESTATUS[0]}" >> ruff.log
+          exit 0
+
       - name: Run repo test suites (numpy-only)
         run: |
           set +e
@@ -55,7 +63,7 @@ jobs:
           git config user.name "fluidtech-verification-bot"
           git config user.email "actions@github.com"
           mkdir -p results/logs
-          cp -f tests_numpy.log tests_bulletproof.log tests_refactored.log verify.log results/logs/ 2>/dev/null || true
+          cp -f tests_numpy.log tests_bulletproof.log tests_refactored.log verify.log ruff.log results/logs/ 2>/dev/null || true
           git add -f results/ || true
           if git diff --cached --quiet; then
             echo "nothing to commit"
