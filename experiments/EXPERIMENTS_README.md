@@ -14,8 +14,8 @@ experiments/
 ├── superfluid_mamba_layer.py       # Superfluid + Mamba implementation
 ├── test_superfluid_mamba.py        # Test suite (10/10 passing)
 ├── ultra_fluid_layer.py            # Ultra-Fluid layer (NEW!)
-├── test_ultra_fluid.py  
-├── e20_finetune_kv.py            # E20: 5-10 min LoRA fine-tune + KV wrapper (NEW!)           # Test suite (10/10 passing)
+├── test_ultra_fluid.py             # Test suite (10/10 passing)
+├── e20_finetune_kv.py            # E20: 5-10 min LoRA fine-tune + KV wrapper (NEW!)
 └── EXPERIMENTS_README.md           # This file
 ~~~
 
