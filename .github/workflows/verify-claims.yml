@@ -2,8 +2,13 @@ name: Verify README claims
 
 # Codespec (.github/copilot-instructions.md): claims must be MEASURED.
 # This workflow is the executor: it runs the test suites and the claim
-# verification script on every push to main, and publishes the measured
+# verification on every push to main, and publishes the measured
 # results to the 'verification-results' branch.
+#
+# The README claims are now measured by the MAIN layer's own self-test
+# (tests/test_base_kv.py: recall, bounded KV, long-term memory, thread
+# safety, worst-case memory); the retired e16 harness verified the
+# pre-2.3.0 README.
 #
 # It also keeps the tree lint-clean: ruff violations that can be fixed
 # mechanically are fixed and committed to main inside this run.  The
@@ -78,10 +83,11 @@ jobs:
           pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install transformers
 
-      - name: Run claim verification (real model A/B included)
+      - name: Run claim verification (the MAIN layer self-test)
         run: |
           set +e
-          python experiments/e16_verify_readme.py --sha "$VERIFIED_SHA" --out results/verification 2>&1 | tee verify.log
+          python tests/test_base_kv.py 2>&1 | tee verify.log
+          echo "test_base_kv exit: ${PIPESTATUS[0]}" >> verify.log
           exit 0
 
       - name: Push measured results to verification-results branch

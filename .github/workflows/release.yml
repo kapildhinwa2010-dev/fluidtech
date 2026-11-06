@@ -29,7 +29,7 @@ jobs:
       - name: build
         run: python -m build
       - name: publish to PyPI with trusted publishing
-        if: startsWith(github.ref, 'refs/tags/')
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1
       - name: attach Python distributions to the release
         if: startsWith(github.ref, 'refs/tags/')
