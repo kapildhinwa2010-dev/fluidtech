@@ -61,6 +61,6 @@ jobs:
           if [ -f e21-out/features.md ]; then cp -f e21-out/features.md results/e21-features/features.md; fi
           if [ -f features-tests.log ]; then cp -f features-tests.log results/e21-features/tests.log; fi
           if [ -f e21.log ]; then cp -f e21.log results/e21-features/run.log; fi
-          git add results/e21-features
+          git add -f results/e21-features
           git diff --staged --quiet || git commit -m "e21: results for commit ${{ github.sha }}"
           (git push origin verification-results) || (git pull -X theirs origin verification-results && git push origin verification-results)
