@@ -31,7 +31,8 @@ The optional layers are in the repo and importable, but **nothing depends on the
 | fresh recall | 0.0 (by construction) | 0.0 (by construction) |
 | speed (ms / 256 tokens, d=16) | 5.3 | **8.9** (1.68×) |
 | worst-case memory | 10.7 MB | **21.4 MB** (ceiling: 100 MB) |
-| thread errors (8×20) | 0 | **0** |
+| thread er
+rors (8×20) | 0 | **0** |
 | bounded KV | — | **max 256 seen; 1744 evictions → all stored to long-term** |
 | attach Δ loss (tiny-gpt2) | 0.0000 | **0.0000 nats** |
 
@@ -58,21 +59,22 @@ Honest reading:
 
 ## 4. Compression (what is compressed, and how — honestly)
 
-- **KV compression (architectural):** the KV window is bounded at `kv_max_size`, so KV memory is **O(1) with respect to context length** — stream 100 tokens or 1,000,000, the window stays 256. Evicted tokens are stored **once** (token id + one hidden-state row) instead of per-head K and V tensors, which is where the memory saving comes from.
+- **KV compression (architectural):** the KV window is bounded at `kv_max_size`, so KV memory is **O(1) with respect to context length** — stream 100 tokens or 1,000,000, the window stays 256. Evicte
+d tokens are stored **once** (token id + one hidden-state row) instead of per-head K and V tensors, which is where the memory saving comes from.
 - **Exact-tier dedup:** repeated 12-gram contexts collapse to a **single** store entry (digest key). The store evicts by LRU + frequency once `max_capacity` is reached.
 - **Worst-case accounting (measured in e19):** each store entry ≈ 112 B → 2 stores × 100,000 entries ≈ 21.4 MiB, plus the KV window (256 × 2 × d × 4 B) — well under the **100 MiB ceiling**.
 - **What this is NOT:** there is no quantization, no sparsity and no low-rank tensor compression here. The compression is architectural (bounded window + dedup + eviction), and the numbers above are measured, not projected.
 
 ## 5. Repository layout
 
-`text
+~~~text
 fluidlayer/base_kv_layer.py      # THE main layer (base + kv cache) — recommended
 fluidlayer/graft_bulletproof.py  # the base layer (exact-tier store)
 kv_cache/                        # bounded KV + long-term memory (merged from the kv_cache branch)
 experiments/                     # OPTIONAL layers (mamba ssm, ultra) + measurement scripts e1–e19
 combined/                        # OPTIONAL combined layer (all branches fused)
 tests/test_base_kv.py            # quick self-test for the main layer (CPU, ~1 min)
-`
+~~~
 
 ## 6. Tests (updated)
 
@@ -84,7 +86,8 @@ tests/test_base_kv.py            # quick self-test for the main layer (CPU, ~1 m
 - **CI verification history** (all runs publish to the `verification-results` branch):
   - [e17 combined-layer verification](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/combined/run.json) — 9/9 claims CONFIRMED;
   - [e18 five-layer comparison](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/comparison/run.json) — the table in §2;
-  - [e19 base+kv run](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.json) — all 7 claims TRUE (recall parity, bounded KV, evictions→long-term, memory ceiling, threads, finite attach, small attach delta).
+  - [e19 base+kv run](https://github.com/kapildhinwa2010-dev/fluidtech/blob
+/verification-results/results/base-kv/run.json) — all 7 claims TRUE (recall parity, bounded KV, evictions→long-term, memory ceiling, threads, finite attach, small attach delta).
 
 ---
 
@@ -102,7 +105,7 @@ The T4 (16 GB) is free-tier and is enough for a 1.5B model in fp32.
 
 ## Step 2 — load the layer from GitHub
 
-`python
+~~~python
 # Cell 1 — load the layer from GitHub
 !git clone -q https://github.com/kapildhinwa2010-dev/fluidtech.git
 %cd fluidtech
@@ -114,11 +117,11 @@ sys.path.insert(0, os.getcwd())
 
 from fluidlayer.base_kv_layer import BaseKVConfig, BaseKVLayer   # the main layer
 print("layer loaded OK")
-`
+~~~
 
 ## Step 3 — load the model (example: Qwen 1.5B)
 
-`python
+~~~python
 # Cell 2 — load the model (any HuggingFace causal LM works)
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -129,13 +132,13 @@ model = AutoModelForCausalLM.from_pretrained(MODEL, torch_dtype=torch.float32).t
 
 D = model.config.hidden_size
 print("model loaded OK, hidden size:", D)
-`
+~~~
 
 ## Step 4 — (RECOMMENDED) the layer: base + KV cache — full code
 
 Run this cell to build **the main layer**. It sets `LAYER_FWD`, which Step 5 attaches to the model.
 
-`python
+~~~python
 # Cell 3 — (RECOMMENDED) the layer: base + kv cache — FULL CODE
 import numpy as np
 import torch
@@ -143,7 +146,8 @@ from collections import deque
 from dataclasses import dataclass
 
 from fluidlayer.graft_bulletproof import (
-    BulletproofConfig, HashMode, SAABranchBulletproof, SecurityLevel,
+    BulletproofConfig, HashMode, SAA
+BranchBulletproof, SecurityLevel,
 )
 from experiments.superfluid_mamba_layer import (
     SuperfluidMambaConfig, SuperfluidMambaFluidLayerNP,
@@ -192,7 +196,8 @@ class BaseKVLayer:
                 security_level="STANDARD",
             )
         )
-        self.memory = SuperfluidMemory(self.np_layer)
+        self.memory = Super
+fluidMemory(self.np_layer)
         # 3) bounded KV cache — this window NEVER grows past kv_max_size
         self.kv_cache = ConstantKVCache(
             KVCacheConfig(max_size=config.kv_max_size, num_heads=1, head_dim=d)
@@ -240,14 +245,15 @@ layer = BaseKVLayer(BaseKVConfig(d=D))
 def LAYER_FWD(h, tid):
     return layer.forward(h, tid)
 
-print("base + kv cache layer ready (RECOMMENDED)")
-`
+pri
+nt("base + kv cache layer ready (RECOMMENDED)")
+~~~
 
 ### 4.1 — (OPTIONAL) only the base layer
 
 Skip Cell 3 and run this instead if you do NOT want the KV window / long-term memory:
 
-`python
+~~~python
 # Cell 3a — (OPTIONAL) 4.1: only the base layer
 from fluidlayer.graft_bulletproof import (
     BulletproofConfig, HashMode, SAABranchBulletproof, SecurityLevel,
@@ -269,11 +275,11 @@ def LAYER_FWD(h, tid):
     return torch.from_numpy(np.asarray(out, dtype=np.float32))
 
 print("optional layer selected: base only")
-`
+~~~
 
 ### 4.2 — (OPTIONAL) with the mamba SSM layer
 
-`python
+~~~python
 # Cell 3b — (OPTIONAL) 4.2: mamba ssm
 import torch
 from experiments.superfluid_mamba_layer import SuperfluidMambaConfig, SuperfluidMambaFluidLayer
@@ -288,11 +294,11 @@ def LAYER_FWD(h, tid):
     return out.detach().float()
 
 print("optional layer selected: mamba ssm")
-`
+~~~
 
 ### 4.3 — (OPTIONAL) with the KV cache wrapper only
 
-`python
+~~~python
 # Cell 3c — (OPTIONAL) 4.3: kv cache wrapper only
 import numpy as np, torch
 from collections import deque
@@ -308,7 +314,8 @@ np_layer = SuperfluidMambaFluidLayerNP(SuperfluidMambaConfig(
     max_capacity=100000, security_level="STANDARD",
 ))
 memory = SuperfluidMemory(np_layer)
-cache = ConstantKVCache(KVCacheConfig(max_size=256, num_heads=1, head_dim=D))
+cache
+ = ConstantKVCache(KVCacheConfig(max_size=256, num_heads=1, head_dim=D))
 stream = deque()
 
 def LAYER_FWD(h, tid):
@@ -332,11 +339,11 @@ def LAYER_FWD(h, tid):
     return fused
 
 print("optional layer selected: kv cache wrapper")
-`
+~~~
 
 ### 4.4 — (OPTIONAL) with the ultra stack
 
-`python
+~~~python
 # Cell 3d — (OPTIONAL) 4.4: ultra stack
 import torch
 from experiments.ultra_fluid_layer import UltraFluidConfig, UltraFluidStack
@@ -352,11 +359,11 @@ def LAYER_FWD(h, tid):
     return out.detach().float()
 
 print("optional layer selected: ultra stack")
-`
+~~~
 
 ### 4.5 — (OPTIONAL) with the combined layer (all four branches)
 
-`python
+~~~python
 # Cell 3e — (OPTIONAL) 4.5: combined layer
 import torch
 from combined.combined_layer import CombinedFluidConfig, CombinedFluidLayer
@@ -370,15 +377,16 @@ def LAYER_FWD(h, tid):
     return out.detach().float()
 
 print("optional layer selected: combined (all 4 branches)")
-`
+~~~
 
 ## Step 5 — attach the layer on the model + run the tests
 
-`python
+~~~python
 # Cell 4 — attach the layer on the model + run the tests
 import torch, numpy as np
 
-def attach(fwd):
+def att
+ach(fwd):
     state = {"ids": None, "handle": None}
     def hook(module, args, output):
         hs = output                       # (B, S, d) from the embeddings
@@ -428,7 +436,8 @@ if lay is not None:
     for i in range(0, 1200, 128):
         LAYER_FWD(torch.randn(128, D), big[i:i+128])
     st = lay.stats()
-    check("3a. KV stays bounded", st["kv"]["size"] <= st["kv"]["max_size"],
+    check("3a. KV stays bounded", st["kv"]["si
+ze"] <= st["kv"]["max_size"],
           f"kv size={st['kv']['size']}")
     check("3b. evictions -> long-term", st["kv"]["evictions"] > 0
           and st["long_term"]["tokens"] > 0, str(st))
@@ -450,7 +459,7 @@ check("4. attach does not blow up the loss", abs(with_loss - base_loss) < 0.5,
 
 print()
 print("ALL TESTS PASSED" if all(results) else "SOME TESTS FAILED — read the lines above")
-`
+~~~
 
 ---
 
@@ -467,6 +476,7 @@ print("ALL TESTS PASSED" if all(results) else "SOME TESTS FAILED — read the li
 |---|---|---|
 | e17 | combined layer, 9/9 claims | [results/combined/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/combined/run.json) |
 | e18 | all 5 layers, one harness | [results/comparison/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/comparison/run.json) |
-| e19 | base + kv cache (this layer) | [results/base-kv/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.json) |
+| e19 | base + kv cache (this layer) | [results/base-kv/run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/ru
+n.json) |
 
 Reproduce any of them: check out the `combined-layer` branch and look at `experiments/e17_combined.py`, `e18_compare.py`, `e19_base_kv.py` — each is a standalone script that measures, prints, and publishes its own results.
