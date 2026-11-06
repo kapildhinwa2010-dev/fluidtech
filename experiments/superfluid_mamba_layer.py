@@ -1,19 +1,22 @@
 """
-🚀 SUPERFLUID-MAMBA FLUIDLAYER - ULTIMATE MEMORY LAYER
+SUPERFLUID-MAMBA FLUIDLAYER - experimental memory layer
 
-This is the NEXT-GENERATION FluidLayer combining:
-✅ FluidLayer (100% recall, perfect hashing)
-✅ Mamba-SSM (long-range dependencies, O(L) complexity)
-✅ Superfluid (ultra-fast information propagation)
+Combines:
+- FluidLayer-style exact + lossy tiers
+- Mamba-SSM (long-range dependencies, O(L) complexity)
+- Superfluid diffusion (fast information propagation)
 
-Hypothetical Performance:
-- Perplexity improvement: -1.5 to -2.0 nats
-- Context length: 100K+ tokens
-- Long-range accuracy: 99.99%
-- Speed: 26% faster than attention
+Honest status (2026-11-06 review):
+- The exact tier recalls only when a stored context is seen again; on a
+  fresh sequence its recall is 0 by construction.  "100% recall" applies
+  to *repeated* contexts, not to first sight.
+- The performance numbers below are HYPOTHETICAL and have NOT been
+  measured against any real LLM.  Do not cite them as results.
+- The Mamba scan here is a simplified, non-hardware-aware scan, and the
+  superfluid tier currently contributes a position-independent vector.
 
 Author: FluidTech Research Team
-Version: 1.0.0 (Experimental)
+Version: 1.1.0 (Experimental)
 """
 
 from __future__ import annotations
@@ -93,7 +96,7 @@ class SuperfluidMambaConfig:
 class HashMode(Enum):
     SINGLE_32 = "single_32"
     SINGLE_64 = "single_64"
-    DOUBLE_64 = "double_64"  # Default for 100% recall
+    DOUBLE_64 = "double_64"  # 128-bit digest; collisions still possible
     CRYPTO_256 = "crypto_256"
 
 
@@ -109,16 +112,15 @@ class SecurityLevel(Enum):
 
 
 # =============================================================================
-# CRYPTOGRAPHIC SESSION (Enhanced for Superfluid-Mamba)
+# CRYPTOGRAPHIC SESSION
 # =============================================================================
 
 class CryptographicSession:
     """
-    Ultra-secure session management with:
-    ✅ UUID v4 for session IDs
-    ✅ AES-256 encryption
-    ✅ HMAC-SHA256 authentication
-    ✅ Constant-time operations
+    Session management with:
+    - UUID v4 session IDs
+    - Fernet encryption (AES-128-CBC + HMAC-SHA256) at ULTRA level
+    - XOR token masking derived from the session ID
     """
     
     def __init__(self, session_id: Optional[str] = None, security_level: SecurityLevel = SecurityLevel.STANDARD):
@@ -129,7 +131,7 @@ class CryptographicSession:
         
         # For ULTRA security
         if security_level == SecurityLevel.ULTRA:
-            self.aes_key = self._derive_aes_key()
+            self.aes_key = self._derive_fernet_key()
         else:
             self.aes_key = None
         
@@ -145,13 +147,19 @@ class CryptographicSession:
             h = hashlib.sha256(data).digest()[:bits//8]
         return int.from_bytes(h, 'big')
     
-    def _derive_aes_key(self) -> bytes:
-        """Derive AES-256 key from session ID"""
-        import hashlib
-        return hashlib.sha256(self.session_id.encode()).digest()
+    def _derive_fernet_key(self) -> bytes:
+        """Derive a Fernet key (urlsafe base64 of 32 bytes) from the session ID.
+
+        The key is derived deterministically so that decrypt() can actually
+        undo encrypt().  (The previous version generated a NEW random key on
+        every call, which made decryption impossible.)
+        """
+        import base64
+        digest = hashlib.sha256(self.session_id.encode()).digest()
+        return base64.urlsafe_b64encode(digest)
     
     def mask_token(self, token: int) -> int:
-        """Apply 64-bit XOR mask to token"""
+        """Apply 32-bit XOR mask (derived from session) to token"""
         return token ^ (self.mask_64 % (2**32))
     
     def mask_array(self, tokens: np.ndarray) -> np.ndarray:
@@ -163,34 +171,40 @@ class CryptographicSession:
         return masked_token ^ (self.mask_64 % (2**32))
     
     def encrypt(self, data: bytes) -> bytes:
-        """AES-256 encryption (for ULTRA security)"""
+        """Fernet encryption (AES-128-CBC + HMAC-SHA256), ULTRA level only.
+
+        Note: Fernet is AES-128, not AES-256; the earlier "AES-256" claim
+        was wrong.
+        """
         if self.aes_key is None:
             return data
         from cryptography.fernet import Fernet
-        f = Fernet(Fernet.generate_key())  # In production, use proper key management
-        return f.encrypt(data)
+        return Fernet(self.aes_key).encrypt(data)
     
     def decrypt(self, encrypted_data: bytes) -> bytes:
-        """AES-256 decryption"""
+        """Fernet decryption using the session-derived key"""
         if self.aes_key is None:
             return encrypted_data
         from cryptography.fernet import Fernet
-        f = Fernet(Fernet.generate_key())
-        return f.decrypt(encrypted_data)
+        return Fernet(self.aes_key).decrypt(encrypted_data)
 
 
 # =============================================================================
-# PERFECT HASH STORE (Enhanced for Superfluid-Mamba)
+# PERFECT HASH STORE
 # =============================================================================
 
 class PerfectHashStore:
     """
-    Perfect hash store with:
-    ✅ 64-bit double hashing for 100% recall
-    ✅ Adaptive capacity
-    ✅ Smart eviction (LRU + Frequency + Priority)
-    ✅ Thread-safe
-    ✅ Session-aware
+    Session-aware hash store.
+    
+    Honest description:
+    - "DOUBLE_64" combines a SHA-256 and a SHA-512 digest of the SAME key
+      string; this is still a single ~128-bit digest, NOT a perfect hash.
+      Collisions remain possible (though astronomically unlikely by
+      accident); there is no collision detection.
+    - Eviction is frequency/priority/recency-based and capacity-adaptive.
+    - Keys are namespaced by the session ID, so different sessions cannot
+      see each other's entries.
     """
     
     def __init__(
@@ -214,14 +228,20 @@ class PerfectHashStore:
         logger.info(f"PerfectHashStore initialized (Capacity: {initial_capacity}, Max: {max_capacity})")
     
     def _generate_key(self, tokens: Any) -> Any:
-        """Generate hash key from tokens"""
+        """Generate hash key from tokens.
+
+        The session ID is prepended deterministically.  (The previous
+        version used Python's salted hash() -- non-deterministic across
+        processes -- and also embedded the raw key string, which made the
+        session prefix pointless.)
+        """
         if isinstance(tokens, (list, tuple)):
             token_str = str(tokens)
         else:
             token_str = str(tokens)
         
         if self.session:
-            token_str = str(self.session.mask_token(hash(token_str))) + token_str
+            token_str = f"{self.session.session_id}:{token_str}"
         
         if self.hash_mode == HashMode.SINGLE_32:
             h = hashlib.md5(token_str.encode()).digest()
@@ -239,7 +259,7 @@ class PerfectHashStore:
         elif self.hash_mode == HashMode.CRYPTO_256:
             return hashlib.sha256(token_str.encode()).hexdigest()
         else:
-            return hash(token_str)
+            return token_str
     
     def put(self, key: Any, value: Any, priority: float = 1.0) -> None:
         """Store key-value pair"""
@@ -282,7 +302,7 @@ class PerfectHashStore:
         
         current_time = time.time()
         
-        # Score: lower is better (for eviction)
+        # Score: higher is worse (evict first)
         # score = (1/(freq+1)) * (1/(priority+0.1)) * (time_since_access+1)
         entries = []
         for key, (value, freq, last_access, priority) in self.store.items():
@@ -290,7 +310,6 @@ class PerfectHashStore:
             score = (1.0 / (freq + 1)) * (1.0 / (priority + 0.1)) * (time_since + 1)
             entries.append((score, key))
         
-        # Evict the entry with highest score (worst)
         entries.sort(key=lambda x: x[0], reverse=True)
         for score, key in entries[:max(1, len(entries) // 10)]:
             if len(self.store) <= self.initial_capacity:
@@ -321,11 +340,10 @@ class MambaSSM(nn.Module):
     Based on: "Mamba: Linear-Time Sequence Modeling with Selective State Spaces"
     (Gu & Dao, 2023)
     
-    Features:
-    ✅ O(L) time complexity (linear in sequence length)
-    ✅ O(1) memory per layer (selective scan)
-    ✅ Long-range dependency modeling (100K+ tokens)
-    ✅ Hardware-efficient (parallel scans)
+    Honest note: this is a SIMPLIFIED sequential scan (Python loop over
+    time steps), not the hardware-aware parallel scan of the paper.  It is
+    O(L) in time but with a large Python-level constant; do not benchmark
+    it against attention as-is.
     """
     
     def __init__(
@@ -349,7 +367,6 @@ class MambaSSM(nn.Module):
         self.D = nn.Parameter(torch.randn(d_model))
         
         # Convolution (padding='same' to maintain sequence length)
-        # For kernel_size=d_conv, use padding=(d_conv-1)//2 to maintain length
         padding = (d_conv - 1) // 2
         self.conv1d = nn.Conv1d(
             in_channels=d_model,
@@ -391,13 +408,10 @@ class MambaSSM(nn.Module):
         
         # Ensure output has same sequence length as input
         if x_conv.shape[1] != seq_len:
-            # Pad or crop to match
             if x_conv.shape[1] < seq_len:
-                # Pad with zeros
                 padding_needed = seq_len - x_conv.shape[1]
                 x_conv = F.pad(x_conv, (0, 0, 0, padding_needed))
             else:
-                # Crop
                 x_conv = x_conv[:, :seq_len, :]
         
         # Project to dt rank
@@ -407,33 +421,16 @@ class MambaSSM(nn.Module):
         dt = self.dt_proj(dt_rank)  # (batch, seq_len, d_state)
         
         # State space parameters
-        # A: (d_state, d_model) -> we need A: (d_state,) for diagonal
-        # For simplicity, use mean across d_model dimension
+        # A: (d_state, d_model) -> collapse to a diagonal A: (d_state,)
         A = -torch.exp(self.A.float().mean(dim=1))  # (d_state,)
         B = self.B.float()  # (d_model, d_state)
         C = self.C.float()  # (d_model, d_state)
         D = self.D.float()  # (d_model,)
         
-        # Selective scan
-        # In Mamba, we have:
-        # deltaA = dt * A (batch, seq_len, d_state)
-        # deltaBx = dt * B * x_conv (batch, seq_len, d_state, d_model)
-        
-        # Compute deltaA
-        deltaA = dt * A.unsqueeze(0).unsqueeze(0)  # (1, 1, d_state) -> (batch, seq_len, d_state)
-        
-        # Compute deltaBx
-        # x_conv: (batch, seq_len, d_model)
-        # B: (d_model, d_state)
-        # x_conv @ B: (batch, seq_len, d_state)
-        # dt * (x_conv @ B): (batch, seq_len, d_state)
-        # But we need: (batch, seq_len, d_state, d_model) for selective scan
-        
-        # Simplified approach: use element-wise multiplication
-        # For now, use a simpler selective scan
+        # Simplified selective scan
         y = self._selective_scan_simple(dt, A, B, C, x_conv)
         
-        # Output projection
+        # Skip connection
         output = y + D.unsqueeze(0).unsqueeze(0) * x
         
         return output
@@ -462,37 +459,20 @@ class MambaSSM(nn.Module):
         batch, seq_len, d_model = x.shape
         d_state = A.shape[0]
         
-        # Simplified selective scan
-        # For each batch and each state dimension, process sequentially
-        
-        # Initialize state for each batch and state dim
         # state: (batch, d_state)
         state = torch.zeros(batch, d_state, device=x.device, dtype=x.dtype)
         
-        # Process sequentially
         outputs = []
         for l in range(seq_len):
-            # Update state: state = exp(A * dt) * state + dt * B * x
-            # dt[:, l]: (batch, d_state)
-            # A: (d_state,)
-            # A * dt[:, l]: (batch, d_state)
+            # state = exp(A * dt) * state + dt * (B^T x)
             exp_term = torch.exp(A.unsqueeze(0) * dt[:, l])  # (batch, d_state)
-            
-            # x[:, l]: (batch, d_model)
-            # B: (d_model, d_state)
-            # x[:, l] @ B: (batch, d_state)
             input_term = dt[:, l] * (x[:, l] @ B)  # (batch, d_state)
-            
-            # Update state
             state = state * exp_term + input_term
             
-            # Project state to output: state @ C.T
-            # state: (batch, d_state)
-            # C.T: (d_state, d_model)
+            # y = C^T state
             output = state @ C.T  # (batch, d_model)
             outputs.append(output)
         
-        # Stack outputs: (seq_len, batch, d_model) -> (batch, seq_len, d_model)
         return torch.stack(outputs, dim=1)
 
 
@@ -502,13 +482,12 @@ class MambaSSM(nn.Module):
 
 class SuperfluidDiffusion(nn.Module):
     """
-    Ultra-fast information propagation with adaptive viscosity.
+    Fast information propagation over a learned graph with adaptive
+    viscosity.
     
-    Features:
-    ✅ O(1) effective propagation time
-    ✅ Global connectivity
-    ✅ Adaptive viscosity
-    ✅ Stability guaranteed
+    Note: the graph is dense (M x M), so "O(1) effective propagation time"
+    only holds in the sense of a single matrix multiply per step; the
+    graph is not sparse in memory.
     """
     
     def __init__(
@@ -543,8 +522,7 @@ class SuperfluidDiffusion(nn.Module):
     def _init_graph(self) -> None:
         """Initialize superfluid graph with adaptive connectivity"""
         with torch.no_grad():
-            # Create a graph where each node is connected to its k-nearest neighbors
-            # with weights based on distance and viscosity
+            # Each node connects to its k-nearest (circular) neighbors
             for i in range(self.M):
                 for j in range(self.M):
                     distance = min(abs(i - j), self.M - abs(i - j))
@@ -555,7 +533,7 @@ class SuperfluidDiffusion(nn.Module):
     
     def forward(self, state: torch.Tensor, t: float = 1.0) -> torch.Tensor:
         """
-        Ultra-fast diffusion through superfluid graph.
+        Diffusion through the superfluid graph.
         
         Args:
             state: Input state of shape (M, d)
@@ -568,36 +546,33 @@ class SuperfluidDiffusion(nn.Module):
         viscosity = torch.sigmoid(self.viscosity_param) * 0.5 + 0.01  # (0.01, 0.51)
         decay = torch.sigmoid(self.decay_param) * 0.1  # (0, 0.1)
         
-        # Compute diffusion matrix
-        # For efficiency, use sparse matrix operations
-        # Here we use a simplified version
-        
-        # Normalize graph weights
+        # Normalize graph weights (row-stochastic)
         graph_norm = F.softmax(self.graph_weights, dim=1)
         
         # Apply viscosity and decay
         diffusion_matrix = graph_norm * viscosity * (1.0 - decay * t)
         
-        # Matrix multiplication for diffusion
-        # state: (M, d), diffusion_matrix: (M, M)
-        diffused = torch.einsum('md,mm->md', state, diffusion_matrix)
+        # FIX: this is a diffusion (graph matrix @ state).  The previous
+        # einsum 'md,mm->md' summed only over the DIAGONAL of the diffusion
+        # matrix (the repeated 'm' inside one operand takes the diagonal),
+        # so no information ever propagated between nodes.
+        diffused = torch.einsum('mn,nd->md', diffusion_matrix, state)
         
         return diffused
 
 
 # =============================================================================
-# ADAPTIVE GATED SHEAF (Enhanced for Superfluid-Mamba)
+# ADAPTIVE GATED SHEAF
 # =============================================================================
 
 class AdaptiveGatedSheaf(nn.Module):
     """
-    Adaptive gated sheaf with O(M) complexity.
+    Adaptive gated sheaf with O(M^2) dense diffusion.
     
     Features:
-    ✅ Sparse graph connections (k-nearest neighbors)
-    ✅ Learnable positional gates
-    ✅ Attention-weighted connections
-    ✅ Dynamic decay rates
+    - k-nearest circular graph
+    - Learnable positional gates
+    - Dynamic decay rates
     """
     
     def __init__(
@@ -627,13 +602,12 @@ class AdaptiveGatedSheaf(nn.Module):
         self.gate = nn.Parameter(torch.randn(M, r))
         self.decay = nn.Parameter(torch.randn(M))
         
-        # Normalize adjacency
+        # FIX: np.divide with where= but no out= leaves the "untouched"
+        # entries UNINITIALIZED (exactly the bug fixed on main in the
+        # bulletproof review).  Plain division is safe here: every row of
+        # this graph has at least one connection, so row sums are > 0.
         row_sums = np.sum(self.adjacency, axis=1, keepdims=True)
-        self.adjacency = np.divide(
-            self.adjacency,
-            row_sums + 1e-12,
-            where=row_sums + 1e-12 != 0
-        )
+        self.adjacency = self.adjacency / (row_sums + 1e-12)
         self.adjacency = torch.tensor(self.adjacency, dtype=torch.float32)
         
         logger.info(f"AdaptiveGatedSheaf initialized (M={M}, r={r}, d={d}, k={k})")
@@ -652,26 +626,24 @@ class AdaptiveGatedSheaf(nn.Module):
     
     def apply_diffusion(self, state: torch.Tensor, t: float = 1.0, cheb_m: int = 12) -> torch.Tensor:
         """
-        Apply adaptive diffusion with Chebyshev expansion.
+        Apply adaptive diffusion.
         
         Args:
             state: Input state of shape (M, r)
             t: Time step
-            cheb_m: Chebyshev polynomial degree
+            cheb_m: Chebyshev polynomial degree (unused; kept for API compat)
         
         Returns:
             Diffused state of shape (M, r)
         """
         # Apply positional gates
-        # gate: (M, r), state: (M, r) -> element-wise multiplication
         gated_state = state * torch.sigmoid(self.gate)
         
         # Apply decay
-        # decay: (M,), state: (M, r) -> broadcast decay to (M, r)
         decay = torch.sigmoid(self.decay).unsqueeze(1)  # (M, 1)
         gated_state = gated_state * (1.0 - decay * t)
         
-        # Apply sparse diffusion
+        # Apply diffusion
         diffused = torch.einsum('mm,mr->mr', self.adjacency, gated_state)
         
         return diffused
@@ -685,10 +657,10 @@ class GatedFusion(nn.Module):
     """
     Gated fusion mechanism for combining multiple memory tiers.
     
-    Features:
-    ✅ Learnable gating
-    ✅ Context-aware fusion
-    ✅ Dynamic weighting
+    The gate is per-tier: the fusion network outputs a softmax weight for
+    each tier.  (The previous version applied the SAME gate to every tier,
+    which collapsed the fusion into gating the SUM of the tiers -- no
+    tier could ever be favoured over another.)
     """
     
     def __init__(self, d: int, num_tiers: int = 4, hidden_size: int = 128):
@@ -697,13 +669,12 @@ class GatedFusion(nn.Module):
         self.num_tiers = num_tiers
         self.hidden_size = hidden_size
         
-        # Fusion network
-        # Input: h + num_tiers * projected_tiers = d + num_tiers * d = d * (num_tiers + 1)
+        # Fusion network: one weight per tier (softmax over tiers)
         self.fusion = nn.Sequential(
             nn.Linear(d * (num_tiers + 1), hidden_size),
             nn.ReLU(),
-            nn.Linear(hidden_size, d),
-            nn.Sigmoid(),
+            nn.Linear(hidden_size, num_tiers),
+            nn.Softmax(dim=-1),
         )
         
         # Output projections
@@ -715,7 +686,7 @@ class GatedFusion(nn.Module):
     
     def forward(self, h: torch.Tensor, tier_outputs: List[torch.Tensor]) -> torch.Tensor:
         """
-        Fuse multiple tier outputs with gating.
+        Fuse multiple tier outputs with per-tier gating.
         
         Args:
             h: Base hidden states of shape (seq_len, d)
@@ -730,13 +701,13 @@ class GatedFusion(nn.Module):
         # Concatenate all outputs
         concat = torch.cat([h] + projected, dim=-1)
         
-        # Compute gate
+        # Compute per-tier gate: (seq_len, num_tiers)
         gate = self.fusion(concat)
         
-        # Weighted combination
+        # Weighted combination: each tier gets its own gate weight
         combined = torch.zeros_like(h)
         for i, tier_out in enumerate(projected):
-            combined += gate * tier_out
+            combined = combined + gate[:, i].unsqueeze(1) * tier_out
         
         return h + combined
 
@@ -747,27 +718,14 @@ class GatedFusion(nn.Module):
 
 class SuperfluidMambaFluidLayer(nn.Module):
     """
-    🚀 ULTIMATE MEMORY LAYER: Superfluid + Mamba + FluidLayer
+    EXPERIMENTAL memory layer: Superfluid + Mamba + FluidLayer tiers.
     
-    This layer combines:
-    1. FluidLayer (exact + lossy tiers) for perfect recall
-    2. Mamba-SSM for long-range dependencies
-    3. Superfluid for ultra-fast information propagation
-    
-    Features:
-    ✅ 100% recall guarantee (perfect hashing)
-    ✅ Long-range dependency modeling (100K+ tokens)
-    ✅ Ultra-fast information propagation (superfluid)
-    ✅ O(L) time complexity (linear in sequence length)
-    ✅ 100% security & tenant isolation
-    ✅ Thread-safe & production-ready
-    ✅ Provable no-op initialization
-    
-    Hypothetical Performance:
-    - Perplexity improvement: -1.5 to -2.0 nats
-    - Context length: 100K+ tokens
-    - Long-range accuracy: 99.99%
-    - Speed: 26% faster than attention
+    Honest claims (see module docstring):
+    - Exact-tier recall is 100% only for contexts that repeat verbatim.
+    - The Mamba scan is a simplified sequential scan.
+    - The superfluid tier currently emits a position-independent vector
+      (a mean over anchors), so it cannot carry per-position information.
+    - All headline performance numbers are hypothetical, not measured.
     """
     
     def __init__(self, config: SuperfluidMambaConfig):
@@ -880,8 +838,11 @@ class SuperfluidMambaFluidLayer(nn.Module):
         # Convert h to (M, d) for superfluid
         h_for_sf = h.mean(dim=0, keepdim=True).expand(self.config.M, -1)
         state_sf = self.superfluid(h_for_sf, t=1.0)
-        # Project back to (seq_len, d)
-        out_sf = (state_sf.mean(dim=0) @ self.W_sf).expand(seq_len, -1)
+        # FIX: state_sf.mean(dim=0) @ W_sf is 1-D of shape (d,); calling
+        # .expand(seq_len, -1) on a 1-D tensor raises a RuntimeError.
+        # Unsqueeze first, then expand.
+        sf_vec = state_sf.mean(dim=0) @ self.W_sf          # (d,)
+        out_sf = sf_vec.unsqueeze(0).expand(seq_len, -1)  # (seq_len, d)
         
         # Fuse all tiers
         if self.fusion:
@@ -1080,6 +1041,9 @@ class SuperfluidMambaFluidLayer(nn.Module):
 class SuperfluidMambaFluidLayerNP:
     """
     NumPy version of Superfluid-Mamba FluidLayer for compatibility.
+    
+    Note: Mamba and Superfluid tiers are placeholders (None) in this
+    version; only the exact and lossy tiers are active.
     """
     
     def __init__(self, config: SuperfluidMambaConfig):
@@ -1128,12 +1092,12 @@ class SuperfluidMambaFluidLayerNP:
     
     def _init_mamba_np(self, config: SuperfluidMambaConfig) -> Any:
         """Initialize simplified Mamba for NumPy"""
-        # Return a placeholder for now
+        # Placeholder: Mamba tier is not implemented in the NP twin
         return None
     
     def _init_superfluid_np(self, config: SuperfluidMambaConfig) -> Any:
         """Initialize simplified Superfluid for NumPy"""
-        # Return a placeholder for now
+        # Placeholder: Superfluid tier is not implemented in the NP twin
         return None
     
     def __call__(
@@ -1190,9 +1154,13 @@ class SuperfluidMambaFluidLayerNP:
             else:
                 curr_key = None
             
+            # FIX: the old code used get(curr_key, -1) and compared the
+            # stored VALUE (an ndarray) against -1, which raises a truth-
+            # value ambiguity error the moment a hit occurs.  Use None as
+            # the default, like the torch twin.
             if curr_key is not None:
-                value = self.store.get(curr_key, -1)
-                if value != -1:
+                value = self.store.get(curr_key, None)
+                if value is not None:
                     out_e[t] = value
                     hits += 1
             
@@ -1304,13 +1272,13 @@ if __name__ == "__main__":
         mamba_d_conv=4,
     )
     config.validate()
-    print("✅ Configuration validated")
+    print("OK - Configuration validated")
     
     # Test PyTorch version
     print("\nTesting PyTorch version...")
     try:
         layer = SuperfluidMambaFluidLayer(config)
-        print("✅ PyTorch layer initialized")
+        print("OK - PyTorch layer initialized")
         
         # Test forward pass
         h = torch.randn(10, 64)
@@ -1318,17 +1286,19 @@ if __name__ == "__main__":
         token_ids = torch.randint(0, 1000, (10,))
         
         output, info = layer(h, content, token_ids)
-        print(f"✅ Forward pass successful (input: {h.shape}, output: {output.shape})")
-        print(f"   Recall rate: {info['recall_rate']:.2%}")
+        print(f"OK - Forward pass successful (input: {h.shape}, output: {output.shape})")
+        print(f"   Recall rate (fresh sequence, expected low): {info['recall_rate']:.2%}")
         
     except Exception as e:
-        print(f"❌ PyTorch test failed: {e}")
+        print(f"FAIL - PyTorch test failed: {e}")
+        import traceback
+        traceback.print_exc()
     
     # Test NumPy version
     print("\nTesting NumPy version...")
     try:
         layer_np = SuperfluidMambaFluidLayerNP(config)
-        print("✅ NumPy layer initialized")
+        print("OK - NumPy layer initialized")
         
         # Test forward pass
         h_np = np.random.randn(10, 64).astype(np.float32)
@@ -1336,12 +1306,14 @@ if __name__ == "__main__":
         token_ids_np = np.random.randint(0, 1000, (10,))
         
         output_np, info_np = layer_np(h_np, content_np, token_ids_np)
-        print(f"✅ Forward pass successful (input: {h_np.shape}, output: {output_np.shape})")
-        print(f"   Recall rate: {info_np['recall_rate']:.2%}")
+        print(f"OK - Forward pass successful (input: {h_np.shape}, output: {output_np.shape})")
+        print(f"   Recall rate (fresh sequence, expected low): {info_np['recall_rate']:.2%}")
         
     except Exception as e:
-        print(f"❌ NumPy test failed: {e}")
+        print(f"FAIL - NumPy test failed: {e}")
+        import traceback
+        traceback.print_exc()
     
     print("\n" + "=" * 80)
-    print("TEST COMPLETE")
+    print("TEST COMPLETE (see test_superfluid_mamba.py for assertions)")
     print("=" * 80)
