@@ -8,21 +8,22 @@ This branch contains **experimental** implementations that push the boundaries o
 
 ## 📁 Branch Structure
 
-```
+~~~
 experiments/
 ├── SUPERFLUID_MAMBA_ANALYSIS.md    # Detailed analysis of Superfluid-Mamba
 ├── superfluid_mamba_layer.py       # Superfluid + Mamba implementation
 ├── test_superfluid_mamba.py        # Test suite (10/10 passing)
 ├── ultra_fluid_layer.py            # Ultra-Fluid layer (NEW!)
-├── test_ultra_fluid.py             # Test suite (10/10 passing)
+├── test_ultra_fluid.py  
+├── e20_finetune_kv.py            # E20: 5-10 min LoRA fine-tune + KV wrapper (NEW!)           # Test suite (10/10 passing)
 └── EXPERIMENTS_README.md           # This file
-```
+~~~
 
 ---
 
 ## 🎯 Evolution of FluidLayer
 
-```
+~~~
 Base Model
     ↓
 FluidLayer (Original) - 95% recall, +0.81 nats degradation
@@ -34,7 +35,7 @@ FluidLayer (Bulletproof) - 100% recall, -0.30 nats improvement ✅ (main branch)
 Superfluid-Mamba FluidLayer - 100% recall, -1.5 to -2.0 nats (hypothetical)
     ↓
 Ultra-Fluid Layer - 100% recall, -2.0 to -3.0 nats (hypothetical) ✨ NEW!
-```
+~~~
 
 ---
 
@@ -144,7 +145,7 @@ Ultra-Fluid Layer - 100% recall, -2.0 to -3.0 nats (hypothetical) ✨ NEW!
 
 ### Superfluid-Mamba Layer
 
-```python
+~~~python
 from experiments.superfluid_mamba_layer import SuperfluidMambaFluidLayer, SuperfluidMambaConfig
 import torch
 
@@ -168,11 +169,11 @@ token_ids = torch.randint(0, 1000, (10,))
 
 output, info = layer(h, content, token_ids)
 print(f"Recall rate: {info['recall_rate']:.2%}")
-```
+~~~
 
 ### Ultra-Fluid Layer
 
-```python
+~~~python
 from experiments.ultra_fluid_layer import UltraFluidStack, UltraFluidConfig
 import torch
 
@@ -197,33 +198,33 @@ token_ids = torch.randint(0, 1000, (10,))
 
 output, all_info = stack(h, content, token_ids)
 print(f"Output shape: {output.shape}")
-```
+~~~
 
 ---
 
 ## 🧪 Running Tests
 
 ### Test Superfluid-Mamba
-```bash
+~~~bash
 python experiments/test_superfluid_mamba.py
-```
+~~~
 
 ### Test Ultra-Fluid
-```bash
+~~~bash
 python experiments/test_ultra_fluid.py
-```
+~~~
 
 **Expected Output:**
-```
+~~~
 ALL TESTS PASSED! ✅
-```
+~~~
 
 ---
 
 ## 📈 Benchmark Results
 
 ### Superfluid-Mamba Tests
-```
+~~~
 [1/10] Testing configuration... ✅
 [2/10] Testing cryptographic session... ✅
 [3/10] Testing perfect hash store... ✅
@@ -235,10 +236,10 @@ ALL TESTS PASSED! ✅
 [9/10] Testing full NumPy layer... ✅
 [10/10] Testing long-range dependencies... ✅
 ALL TESTS PASSED! ✅
-```
+~~~
 
 ### Ultra-Fluid Tests
-```
+~~~
 [1/10] Testing adaptive router... ✅
 [2/10] Testing cross-attention fusion... ✅
 [3/10] Testing memory compressor... ✅
@@ -250,7 +251,7 @@ ALL TESTS PASSED! ✅
 [9/10] Testing factory function... ✅
 [10/10] Testing long sequence (100 tokens)... ✅
 ALL TESTS PASSED! ✅
-```
+~~~
 
 ---
 
@@ -335,3 +336,39 @@ This experiments branch contains:
 
 *Last updated: 2024*
 *Version: 2.0.0 (Ultra-Experimental)*
+
+---
+
+## 🆕 3. E20: Short-Budget Fine-Tune + KV Wrapper (NEW!)
+
+**The idea (Kapil):** model par base+KV wrapper layer lagao, aur
+sirf 5-10 minute ka LoRA fine-tune karo -- kya hota hai?
+`e20_finetune_kv.py` isko MEASURE karta hai (3 phases: before A/B,
+time-budget train, after A/B + bounded-KV check).
+
+**Design (important):**
+- KV wrapper training ke dauraan **OFF** hai -- bounded-KV
+  evictions training context corrupt karti, isliye wrapper sirf
+  fine-tune ke **baad** attach hota hai
+- LoRA (peft) se fine-tune; peft na mile to tiny model pe
+  full-param fallback
+- Data: wikitext-2 (datasets na mile to corpus.txt fallback)
+- Bounded KV cache **inline** hai (is branch pe kv_cache/ package
+  nahi hai -- wo main par hai), isliye script self-contained hai
+
+**Run:**
+
+~~~bash
+# CI-safe default (tiny-gpt2, CPU)
+python experiments/e20_finetune_kv.py --sha local --out e20-out
+
+# Colab T4 version (Qwen 1.5B, 10 min budget)
+python experiments/e20_finetune_kv.py --model Qwen/Qwen2.5-1.5B \
+    --minutes 10 --lora-r 16 --out e20-out
+~~~
+
+**Outputs:** `run.json` + `finetune.md` (--out dir me) -- eval loss
+before/after, attach delta before/after, train loss curve, KV
+bounded check, wrapper recall rate.
+
+---
