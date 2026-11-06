@@ -1,5 +1,5 @@
 {
-  "sha": "8aa5f0f8e087cb0a7f417f28b50ae05c2a0e243a",
+  "sha": "e539e4ad49c346ec423836cf045e9cdfe59019c6",
   "branch": "experiments",
   "experiment": "e21-features",
   "status": "complete",
@@ -46,9 +46,9 @@
         "dim": 16,
         "protos": 32,
         "reps": 20,
-        "loop_s": 0.000556,
-        "vectorized_s": 1.1e-05,
-        "speedup": 51.18,
+        "loop_s": 0.000668,
+        "vectorized_s": 2e-05,
+        "speedup": 34.24,
         "outputs_match": true
       }
     }
@@ -61,9 +61,9 @@
     "multi_gpu_kv_bounded": true,
     "acceleration_detection_ok": true,
     "acceleration_outputs_match": true,
-    "acceleration_speedup": 51.18,
+    "acceleration_speedup": 34.24,
     "acceleration_speedup_gt_1": true,
     "all_features_positive": true
   },
-  "log": "======================================================================\nE21: FEATURES (quantization + multi-gpu + acceleration)\n======================================================================\n\n--- Feature 1: quantization (int8) ---\nlayer output: 8192 B -> 2048 B\nround-trip error: 0.3936 %\n\n--- Feature 2: multi-gpu sharded KV ---\ndevices: ['cpu']\nkv: size=256 evictions=744 shards=[64, 64, 64, 64]\n\n--- Feature 3: hardware acceleration ---\nbackend: torch=2.15.0+cpu cuda=False mps=False\nbenchmark: loop=0.000556s vector=1.1e-05s speedup=51.18x\n\nWrote e21-out/run.json and e21-out/features.md\nE21 COMPLETE"
+  "log": "======================================================================\nE21: FEATURES (quantization + multi-gpu + acceleration)\n======================================================================\n\n--- Feature 1: quantization (int8) ---\nlayer output: 8192 B -> 2048 B\nround-trip error: 0.3936 %\n\n--- Feature 2: multi-gpu sharded KV ---\ndevices: ['cpu']\nkv: size=256 evictions=744 shards=[64, 64, 64, 64]\n\n--- Feature 3: hardware acceleration ---\nbackend: torch=2.15.0+cpu cuda=False mps=False\nbenchmark: loop=0.000668s vector=2e-05s speedup=34.24x\n\nWrote e21-out/run.json and e21-out/features.md\nE21 COMPLETE"
 }

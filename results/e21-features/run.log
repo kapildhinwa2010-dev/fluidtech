@@ -1,0 +1,25 @@
+======================================================================
+E21: FEATURES (quantization + multi-gpu + acceleration)
+======================================================================
+
+--- Feature 1: quantization (int8) ---
+INFO:fluidlayer.bulletproof:Session initialized: aca159a4... (Level: NONE)
+INFO:fluidlayer.bulletproof:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
+INFO:fluidlayer.bulletproof:PerfectHashStore initialized (Capacity: 64, Max: 128)
+/home/runner/work/fluidtech/fluidtech/fluidlayer/graft_bulletproof.py:431: UserWarning: 'where' used without 'out', expect unitialized memory in output. If this is intentional, use out=None.
+  self.adjacency = np.divide(
+INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=64, r=8, d=8)
+INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
+layer output: 8192 B -> 2048 B
+round-trip error: 0.3936 %
+
+--- Feature 2: multi-gpu sharded KV ---
+devices: ['cpu']
+kv: size=256 evictions=744 shards=[64, 64, 64, 64]
+
+--- Feature 3: hardware acceleration ---
+backend: torch=2.15.0+cpu cuda=False mps=False
+benchmark: loop=0.000668s vector=2e-05s speedup=34.24x
+
+Wrote e21-out/run.json and e21-out/features.md
+E21 COMPLETE

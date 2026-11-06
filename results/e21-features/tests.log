@@ -1,0 +1,20 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /opt/hostedtoolcache/Python/3.11.18/x64/bin/python
+cachedir: .pytest_cache
+rootdir: /home/runner/work/fluidtech/fluidtech
+configfile: pyproject.toml
+collecting ... collected 11 items
+
+tests/test_quantization.py::test_roundtrip_error_bounded PASSED          [  9%]
+tests/test_quantization.py::test_memory_reduction_4x PASSED              [ 18%]
+tests/test_quantization.py::test_zero_array_stable PASSED                [ 27%]
+tests/test_quantization.py::test_report_reasonable PASSED                [ 36%]
+tests/test_multi_gpu.py::test_detect_devices_fallback PASSED             [ 45%]
+tests/test_multi_gpu.py::test_sharding_round_robin_bounded PASSED        [ 54%]
+tests/test_multi_gpu.py::test_gather_preserves_insertion_order PASSED    [ 63%]
+tests/test_multi_gpu.py::test_default_constructor_single_device PASSED   [ 72%]
+tests/test_acceleration.py::test_detection_report_shape PASSED           [ 81%]
+tests/test_acceleration.py::test_vectorized_matches_loop PASSED          [ 90%]
+tests/test_acceleration.py::test_speedup_positive PASSED                 [100%]
+
+============================== 11 passed in 1.74s ==============================

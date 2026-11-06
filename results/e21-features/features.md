@@ -1,6 +1,6 @@
 # E21: quantization + multi-GPU + acceleration (measured)
 
-- commit: 8aa5f0f8e087cb0a7f417f28b50ae05c2a0e243a
+- commit: e539e4ad49c346ec423836cf045e9cdfe59019c6
 
 ## 1. Quantization (int8)
 
@@ -15,7 +15,7 @@
 ## 3. Hardware acceleration
 
 - detected: {'torch': '2.15.0+cpu', 'cuda': False, 'cuda_devices': 0, 'mps': False, 'numba': False, 'cupy': False, 'vectorized_numpy': True}
-- benchmark: loop 0.000556s vs vectorized 1.1e-05s -> 51.18x speedup (measured)
+- benchmark: loop 0.000668s vs vectorized 2e-05s -> 34.24x speedup (measured)
 
 ## Claims (measured in THIS run)
 
@@ -26,7 +26,7 @@
 - **multi_gpu_kv_bounded**: True
 - **acceleration_detection_ok**: True
 - **acceleration_outputs_match**: True
-- **acceleration_speedup**: 51.18
+- **acceleration_speedup**: 34.24
 - **acceleration_speedup_gt_1**: True
 - **all_features_positive**: True
 
@@ -47,5 +47,5 @@ kv: size=256 evictions=744 shards=[64, 64, 64, 64]
 
 --- Feature 3: hardware acceleration ---
 backend: torch=2.15.0+cpu cuda=False mps=False
-benchmark: loop=0.000556s vector=1.1e-05s speedup=51.18x
+benchmark: loop=0.000668s vector=2e-05s speedup=34.24x
 ```
