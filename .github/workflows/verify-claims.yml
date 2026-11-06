@@ -5,15 +5,17 @@ name: Verify README claims
 # verification on every push to main, and publishes the measured
 # results to the 'verification-results' branch.
 #
-# The README claims are now measured by the MAIN layer's own self-test
-# (tests/test_base_kv.py: recall, bounded KV, long-term memory, thread
-# safety, worst-case memory); the retired e16 harness verified the
-# pre-2.3.0 README.
+# Claim measurement:
+#   - tests/test_base_kv.py : the MAIN layer's own self-test
+#   - experiments/e19_base_kv.py  : base+kv claims (results/base-kv/)
+#   - experiments/e18_compare.py  : 5-layer comparison (results/comparison/)
+#
+# The publish step MERGES into verification-results (never --force):
+# the e18/e19 measurements and the historical e10-e15 results live on
+# that branch and must never be wiped by a force push from main's tree.
 #
 # It also keeps the tree lint-clean: ruff violations that can be fixed
-# mechanically are fixed and committed to main inside this run.  The
-# results always describe the code that was ACTUALLY run (VERIFIED_SHA),
-# which may be one style commit ahead of the triggering push.
+# mechanically are fixed and committed to main inside this run.
 
 on:
   push:
@@ -90,16 +92,35 @@ jobs:
           echo "test_base_kv exit: ${PIPESTATUS[0]}" >> verify.log
           exit 0
 
-      - name: Push measured results to verification-results branch
+      - name: Run e19 (base+kv) and e18 (5-layer comparison)
+        run: |
+          set +e
+          python experiments/e19_base_kv.py --sha "$VERIFIED_SHA" --out e19-out 2>&1 | tee e19.log
+          echo "e19 exit: ${PIPESTATUS[0]}" >> e19.log
+          python experiments/e18_compare.py --sha "$VERIFIED_SHA" --out e18-out 2>&1 | tee e18.log
+          echo "e18 exit: ${PIPESTATUS[0]}" >> e18.log
+          exit 0
+
+      - name: Publish measured results to verification-results (merge, never force)
         run: |
           git config user.name "fluidtech-verification-bot"
           git config user.email "actions@github.com"
-          mkdir -p results/logs
-          cp -f tests_numpy.log tests_bulletproof.log tests_refactored.log verify.log ruff.log results/logs/ 2>/dev/null || true
+          git fetch origin verification-results
+          git checkout -B vr origin/verification-results
+          mkdir -p results/logs results/base-kv results/comparison
+          cp -f tests_numpy.log tests_bulletproof.log tests_refactored.log verify.log ruff.log e19.log e18.log results/logs/ 2>/dev/null || true
+          cp -f e19-out/run.json e19-out/basekv.md results/base-kv/ 2>/dev/null || true
+          cp -f e18-out/run.json e18-out/comparison.md results/comparison/ 2>/dev/null || true
           git add -f results/ || true
           if git diff --cached --quiet; then
             echo "nothing to commit"
             exit 0
           fi
-          git commit -m "Verification run: tests + README claims"
-          git push --force origin HEAD:verification-results
+          git commit -m "Verification run: tests + e19 base-kv + e18 comparison"
+          if ! git push origin HEAD:verification-results; then
+            git fetch origin verification-results
+            git -c core.editor=true pull -X theirs origin verification-results || true
+            git add -f results/ || true
+            git commit -m "Verification run (merged)" || true
+            git push origin HEAD:verification-results
+          fi

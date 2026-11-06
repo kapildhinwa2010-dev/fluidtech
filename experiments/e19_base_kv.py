@@ -289,7 +289,7 @@ def main():
     def flush(status, error=None):
         payload = {
             "sha": args.sha,
-            "branch": "combined-layer",
+            "branch": os.environ.get("GITHUB_REF_NAME", "local"),
             "status": status,
             "baseline": {k: v for k, v in BASELINE.items() if k != "per_layer"},
             "configs": CONFIGS,
@@ -407,7 +407,7 @@ def main():
 
     payload = {
         "sha": args.sha,
-        "branch": "combined-layer",
+        "branch": os.environ.get("GITHUB_REF_NAME", "local"),
         "baseline": {k: v for k, v in BASELINE.items() if k != "per_layer"},
         "configs": CONFIGS,
         "winners": WINNERS,

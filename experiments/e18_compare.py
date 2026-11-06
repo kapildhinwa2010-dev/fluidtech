@@ -458,7 +458,7 @@ def main():
     def flush(status, error=None):
         payload = {
             "sha": args.sha,
-            "branch": "combined-layer",
+            "branch": os.environ.get("GITHUB_REF_NAME", "local"),
             "status": status,
             "baseline": {k: v for k, v in BASELINE.items() if k != "per_layer"},
             "configs": CONFIGS,
@@ -540,7 +540,7 @@ def main():
     os.makedirs(args.out, exist_ok=True)
     payload = {
         "sha": args.sha,
-        "branch": "combined-layer",
+        "branch": os.environ.get("GITHUB_REF_NAME", "local"),
         "baseline": {k: v for k, v in BASELINE.items() if k != "per_layer"},
         "configs": CONFIGS,
         "winners": WINNERS,
