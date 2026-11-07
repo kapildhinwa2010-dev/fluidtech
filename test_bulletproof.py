@@ -222,7 +222,10 @@ except Exception as e:
 # Test 8: PyTorch bulletproof layer test
 print("\n[8/10] Testing PyTorch bulletproof layer...")
 if not HAVE_TORCH or SAABranchTorchBulletproof is None:
-    print("⏭️  skipped: torch is not installed (numpy-only run, as in the CI verify job)")
+    print(
+        "⏭️  skipped: torch is not installed "
+        "(numpy-only run, as in the CI verify job)"
+    )
 else:
     try:
         V, d = 100, 8
