@@ -35,7 +35,8 @@ branch and [docs/VERIFICATION.md](docs/VERIFICATION.md).
 | 12-gram replay recall | **0.9945** base-only, **0.9945** base+KV (exact parity) — [e19](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.json) |
 | Fresh (never-seen) recall | 0.0 **by construction** (the exact tier only recalls contexts it has seen) |
 | Bounded KV cache | max 256 seen while 2000 tokens streamed; 1744 evictions, **all** stored to long-term memory (e19) |
-| Attach Δ loss (tiny-gpt2) | **0.0000 nats** with the main layer (e19); ≈ +0.0005 untrained with the base store |
+| Attach Δ loss (tiny-
+gpt2) | **0.0000 nats** with the main layer (e19); ≈ +0.0005 untrained with the base store |
 | Worst-case memory | **21.4 MB** measured (ceiling: 100 MB) — e19 |
 | Thread safety | 8 threads, **0 errors** (e19) |
 | Security | session-masked tenants, **0** cross-session leaks (measured); Fernet (AES-128-CBC + HMAC-SHA256) at MILITARY |
@@ -76,7 +77,8 @@ layer = BaseKVLayer(BaseKVConfig(d=64, kv_max_size=256))
 h   = torch.randn(8, 64)                       # hidden states
 tok = torch.randint(0, 32000, (8,))            # token ids
 out = layer.forward(h, tok)                    # attach inside any forward hook
-print(layer.stats())                           # base recall, KV size, evictions, long-term
+print(layer.stats())                           # base recall, KV size, evic
+tions, long-term
 ~~~
 
 NumPy-only (no torch):
@@ -114,7 +116,8 @@ The optional layers are in the repo and importable, but **nothing depends on the
 
 ### Measured results (honest)
 
-**base + KV cache — CI run [e19](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.json):**
+**base + KV cache — CI run [e19](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/base-kv/run.jso
+n):**
 
 | Metric | base only | **base + KV cache** |
 |---|---|---|
@@ -145,7 +148,8 @@ Honest reading:
 
 1. **base tier** — every 12-gram of token ids becomes a digest key in an exact-tier store; when the same 12-gram context is seen again, the stored token is retrieved and written into the output (verbatim replay recall ≈ 0.9945);
 2. **bounded KV cache** — the fused hidden states enter a fixed-size KV window (`kv_max_size`, default 256). The window **never grows**: when it is full, the oldest entries are evicted;
-3. **long-term memory** — every evicted token is stored in the long-term memory together with its **REAL hidden state** (a sliding stream keeps the last `kv_max_size` states, so an eviction always has its true state available). Nothing is dropped.
+3. **long-term memory** — every evicted token is stored in the long-term memory together with its **REAL hidden state** (a sliding stream keeps the last `kv_max_size` states, so an ev
+iction always has its true state available). Nothing is dropped.
 
 ### Compression (what is compressed, and how — honestly)
 
@@ -167,7 +171,8 @@ Honest reading:
 | [docs/VERIFICATION.md](docs/VERIFICATION.md) | what is measured and how |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | release history |
 | [docs/REPRODUCING.md](docs/REPRODUCING.md) · [docs/COMPARISON.md](docs/COMPARISON.md) · [docs/LIMITATION.md](docs/LIMITATION.md) · [docs/NEGATIVE-RESULTS.md](docs/NEGATIVE-RESULTS.md) | honest deep-dives |
-| [verification-results](https://github.com/kapildhinwa2010-dev/fluidtech/tree/verification-results/results) | the raw measured results (run.json + logs, refreshed on every push) |
+| [verification-results](https://github.com/kapildhinwa2010-dev/flui
+dtech/tree/verification-results/results) | the raw measured results (run.json + logs, refreshed on every push) |
 
 ---
 
@@ -208,6 +213,7 @@ ruff check fluidlayer experiments tools tests examples selftest.py run_without_p
 Every push to main runs: **CI** (Python 3.9-3.12 verify matrix, package
 build + clean-venv install, lint, optional PyTorch parity),
 **verify-claims** (re-measures e19/e18 and publishes to
+
 verification-results), **features-test** (the 11 e21 unit tests + the
 e21 measurement) and **e20-finetune** (on e20 changes).
 
@@ -238,13 +244,11 @@ Reproduce any of them: the scripts live on `main` — `experiments/e18_compare.p
 
 ### e20: short-budget fine-tune + KV wrapper (measured on main)
 
-Idea: model par base+KV wrapper layer lagao, 5-10 min ka LoRA
-fine-tune karo, aur MEASURE karo ki kya badalta hai. Script:
+Idea: attach the base+KV wrapper layer onto a model, run a 5-10 min LoRA
+fine-tune, and MEASURE what changes. Script:
 [e20_finetune_kv.py](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/experiments/e20_finetune_kv.py);
 workflow [e20-finetune.yml](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/.github/workflows/e20-finetune.yml)
-har e20 change par CI par run hota hai. KV wrapper training ke
-dauraan OFF hai (evictions training context corrupt karti) — sirf
-fine-tune ke baad attach hota hai.
+runs on CI on every e20 change. The KV wrapper is OFF during training (evictions would corrupt the training context) — it is attached only after the fine-tune.
 
 **CI measured (GitHub Actions CPU, commit 4912034e):** 840 steps /
 300.3 s (5 min budget, LoRA: 128 of 102842 params trainable), train
@@ -253,7 +257,7 @@ nats = noise-level), attach delta 0.0, KV after fine-tune: max 256 +
 1280 evictions — bounded.
 
 Honest reading: tiny-gpt2 (2-dim hidden, ~100k params) + 128 LoRA
-params me 5 min ka measurable effect nahi — bade model par try karo:
+params shows no measurable effect in 5 min — try it on a bigger model:
 python experiments/e20_finetune_kv.py --model Qwen/Qwen2.5-1.5B
 --minutes 10 (Colab T4). Full results: [run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/run.json)
 + [finetune.md](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e20-finetune/finetune.md).
@@ -262,32 +266,32 @@ python experiments/e20_finetune_kv.py --model Qwen/Qwen2.5-1.5B
 
 ### e21: the 3 "coming soon" features — quantization, multi-GPU, hardware acceleration (MEASURED, merged to main)
 
-Ye 3 features implement + CI-test ho gaye — tests 11/11 PASS,
-sab results positive mile, isliye main me merge kiya. Modules:
+These 3 features are implemented + CI-tested — tests 11/11 PASS,
+all results came back positive, so they were merged to main. Modules:
 [quantization.py](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/fluidlayer/quantization.py),
 [multi_gpu.py](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/fluidlayer/multi_gpu.py),
 [acceleration.py](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/fluidlayer/acceleration.py);
 workflow [features-test.yml](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/.github/workflows/features-test.yml)
-har push par inko re-run + re-publish karta hai.
+re-runs and re-publishes them on every push.
 
 **CI measured (GitHub Actions CPU, commit 4912034e):**
 
 | Feature | Measured |
 |---|---|
 | quantization (int8) | float32 -> int8 = **4.0x smaller**; round-trip error **0.3936%** (theoretical bound < 0.4%) |
-| multi-GPU | device detection (cuda -> mps -> cpu fallback); 4 shards me 1000 inserts -> size 256, 744 evictions, shard sizes [64, 64, 64, 64] balanced, insertion order preserved |
-| hardware acceleration | torch 2.15 (CPU) detected, cuda/mps/numba/cupy flags honest; vectorized fast path loop se **40.34x faster** (0.000674 s -> 0.000017 s), outputs bit-consistent |
+| multi-GPU | device detection (cuda -> mps -> cpu fallback); 1000 inserts into 4 shards -> size 256, 744 evictions, shard sizes [64, 64, 64, 64] balanced, insertion order preserved |
+| hardware acceleration | torch 2.15 (CPU) detected, cuda/mps/numba/cupy flags honest; vectorized fast path **40.34x faster** than the loop path (0.000674 s -> 0.000017 s), outputs bit-consistent |
 
-Honest reading: CI runners par GPU nahi hai — multi-GPU ka
-sharding + eviction logic CPU virtual shards par verify hua
-(placement real GPU machines par automatic badlegi), aur
-acceleration ka measured speedup CPU vectorization ka hai
-(GPU backend detection ready hai, run-to-run speedup thoda
-vary karta hai). Full results:
+Honest reading: CI runners have no GPU — the multi-GPU
+sharding + eviction logic was verified on CPU virtual shards
+(placement switches automatically on real GPU machines), and
+the measured acceleration speedup comes from CPU vectorization
+(GPU backend detection is ready; run-to-run speedup varies a
+bit). Full results:
 [run.json](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json),
 [features.md](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/features.md)
 aur [tests.log](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/tests.log)
-(11/11 PASSED) verification-results branch par.
+(11/11 PASSED) on the verification-results branch.
 
 ---
 
@@ -305,10 +309,9 @@ Questions, issues, contributions:
 **🚀 Every claim in this README is measured — see [docs/VERIFICATION.md](docs/VERIFICATION.md)
 and the [verification-results](https://github.com/kapildhinwa2010-dev/fluidtech/tree/verification-results/results) branch.**
 
->THIS SHOWS THAT TARNING DOEST WORK ON SMALL MODLE 
-SO THIS IS WASTE 
+>Note: this experiment shows that fine-tuning has no measurable effect on very small models.
 
->YOU CAN TRY TRANING OR FINE TUNING ON LARGE MODLES IF YOU ARE INTERESTED 
+> You can try training or fine-tuning on larger models if you are interested. 
 
 
 🌟 STAR IT IF YOU FIND THIS USEFUL
