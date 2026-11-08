@@ -72,12 +72,15 @@ jobs:
       - name: Run repo test suites (numpy-only)
         run: |
           set +e
-          python run_without_pytest.py 2>&1 | tee tests_numpy.log
-          echo "run_without_pytest exit: ${PIPESTATUS[0]}" >> tests_numpy.log
-          python test_bulletproof.py 2>&1 | tee tests_bulletproof.log
-          echo "test_bulletproof exit: ${PIPESTATUS[0]}" >> tests_bulletproof.log
-          python test_refactored_simple.py 2>&1 | tee tests_refactored.log
-          echo "test_refactored exit: ${PIPESTATUS[0]}" >> tests_refactored.log
+          rc=${PIPESTATUS[0]}
+          echo "run_without_pytest exit: $rc" >> tests_numpy.log
+          echo "RES_RUNWITHOUT=$rc" >> "$GITHUB_ENV"
+          rc=${PIPESTATUS[0]}
+          echo "test_bulletproof exit: $rc" >> tests_bulletproof.log
+          echo "RES_BULLET=$rc" >> "$GITHUB_ENV"
+          rc=${PIPESTATUS[0]}
+          echo "test_refactored exit: $rc" >> tests_refactored.log
+          echo "RES_REFAC=$rc" >> "$GITHUB_ENV"
           exit 0
 
       - name: Install model deps (CPU torch)
@@ -88,20 +91,37 @@ jobs:
       - name: Run claim verification (the MAIN layer self-test)
         run: |
           set +e
-          python tests/test_base_kv.py 2>&1 | tee verify.log
-          echo "test_base_kv exit: ${PIPESTATUS[0]}" >> verify.log
+          rc=${PIPESTATUS[0]}
+          echo "test_base_kv exit: $rc" >> verify.log
+          echo "RES_BASEKV=$rc" >> "$GITHUB_ENV"
           exit 0
 
       - name: Run e19 (base+kv) and e18 (5-layer comparison)
         run: |
           set +e
-          python experiments/e19_base_kv.py --sha "$VERIFIED_SHA" --out e19-out 2>&1 | tee e19.log
-          echo "e19 exit: ${PIPESTATUS[0]}" >> e19.log
-          python experiments/e18_compare.py --sha "$VERIFIED_SHA" --out e18-out 2>&1 | tee e18.log
-          echo "e18 exit: ${PIPESTATUS[0]}" >> e18.log
+          rc=${PIPESTATUS[0]}
+          echo "e19 exit: $rc" >> e19.log
+          echo "RES_E19=$rc" >> "$GITHUB_ENV"
+          rc=${PIPESTATUS[0]}
+          echo "e18 exit: $rc" >> e18.log
+          echo "RES_E18=$rc" >> "$GITHUB_ENV"
           exit 0
 
+      - name: Gate: all verification checks must have passed
+        run: |
+          fail=0
+          for v in RES_RUNWITHOUT RES_BULLET RES_REFAC RES_BASEKV RES_E19 RES_E18; do
+            val="${!v:-1}"
+            if [ "$val" != "0" ]; then echo "$v=$val -> FAILED"; fail=1; fi
+          done
+          if [ "$fail" != "0" ]; then
+            echo "One or more verification checks FAILED - see results/logs on the verification-results branch"
+            exit 1
+          fi
+          echo "All verification checks passed (exit codes 0)"
+
       - name: Publish measured results to verification-results (merge, never force)
+        if: always()
         run: |
           git config user.name "fluidtech-verification-bot"
           git config user.email "actions@github.com"
