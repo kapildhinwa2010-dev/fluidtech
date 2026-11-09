@@ -13,7 +13,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](https://github.com/kapildhinwa2010-dev/fluidtech/blob/main/LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
 [![NumPy 1.23+](https://img.shields.io/badge/NumPy-1.23%2B-blue)](https://numpy.org/)
-
+🌟 gave it a star if you find something useful......
 FluidLayer is a **memory layer you can attach on top of any HuggingFace
 causal model** (5 Colab cells — see the
 [Colab guide](docs/COLAB_GUIDE.md)). It remembers what it has seen
