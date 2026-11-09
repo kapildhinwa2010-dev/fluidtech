@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
+    environment:
       name: pypi
       url: https://pypi.org/p/fluidlayer
     permissions:

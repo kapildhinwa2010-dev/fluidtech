@@ -1,146 +1,67 @@
 name: Verify README claims
-
-# Codespec (.github/copilot-instructions.md): claims must be MEASURED.
-# This workflow is the executor: it runs the test suites and the claim
-# verification on every push to main, and publishes the measured
-# results to the 'verification-results' branch.
-#
-# Claim measurement:
-#   - tests/test_base_kv.py : the MAIN layer's own self-test
-#   - experiments/e19_base_kv.py  : base+kv claims (results/base-kv/)
-#   - experiments/e18_compare.py  : 5-layer comparison (results/comparison/)
-#
-# The publish step MERGES into verification-results (never --force):
-# the e18/e19 measurements and the historical e10-e15 results live on
-# that branch and must never be wiped by a force push from main's tree.
-#
-# It also keeps the tree lint-clean: ruff violations that can be fixed
-# mechanically are fixed and committed to main inside this run.
-
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
-      - name: Install base deps
+          python-version: "3.11"
+      - name: Install base test and lint dependencies
         run: |
-          pip install "numpy>=1.23,<3" cryptography
-
-      - name: Lint (ruff, log only)
+          python -m pip install --upgrade pip
+          python -m pip install "numpy>=1.23,<3" cryptography pytest ruff
+      - name: Run repository self-tests and unit tests
         run: |
-          pip install ruff
-          set +e
-          ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --output-format=concise 2>&1 | tee ruff.log
-          echo "ruff exit (before autofix): ${PIPESTATUS[0]}" >> ruff.log
-          exit 0
-
-      - name: Lint autofix (mechanical fixes only)
+          set -o pipefail
+          python selftest.py 2>&1 | tee selftest.log
+          python run_without_pytest.py 2>&1 | tee tests_numpy.log
+          python test_bulletproof.py 2>&1 | tee tests_bulletproof.log
+          python test_refactored_simple.py 2>&1 | tee tests_refactored.log
+          python -m pytest -q tests 2>&1 | tee tests_pytest.log
+      - name: Check lint
+        run: ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py
+      - name: Install CPU model dependencies for measured claims
         run: |
-          set +e
-          for i in 1 2 3; do
-            ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --fix --unsafe-fixes --output-format=concise 2>&1 | tee -a ruff.log
-          done
-          ruff check fluidlayer experiments tools tests examples selftest.py run_without_pytest.py --output-format=concise 2>&1 | tee -a ruff.log
-          echo "ruff exit (after autofix): ${PIPESTATUS[0]}" >> ruff.log
-          exit 0
-
-      - name: Commit lint fixes to main (if any) and record the verified SHA
+          python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install transformers
+      - name: Measure base-plus-KV claims (e19)
         run: |
-          git config user.name "fluidtech-verification-bot"
-          git config user.email "actions@github.com"
-          if ! git diff --quiet; then
-            git add fluidlayer experiments tools tests examples selftest.py run_without_pytest.py
-            git commit -m "style: ruff --fix --unsafe-fixes (keep the CI lint job green)"
-            git push origin HEAD:main
-          fi
-          echo "VERIFIED_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-
-      - name: Run repo test suites (numpy-only)
+          python experiments/e19_base_kv.py --sha "$GITHUB_SHA" --out e19-out 2>&1 | tee e19.log
+      - name: Measure layer-comparison claims (e18)
         run: |
-          set +e
-          rc=${PIPESTATUS[0]}
-          echo "run_without_pytest exit: $rc" >> tests_numpy.log
-          echo "RES_RUNWITHOUT=$rc" >> "$GITHUB_ENV"
-          rc=${PIPESTATUS[0]}
-          echo "test_bulletproof exit: $rc" >> tests_bulletproof.log
-          echo "RES_BULLET=$rc" >> "$GITHUB_ENV"
-          rc=${PIPESTATUS[0]}
-          echo "test_refactored exit: $rc" >> tests_refactored.log
-          echo "RES_REFAC=$rc" >> "$GITHUB_ENV"
-          exit 0
-
-      - name: Install model deps (CPU torch)
-        run: |
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install transformers
-
-      - name: Run claim verification (the MAIN layer self-test)
-        run: |
-          set +e
-          rc=${PIPESTATUS[0]}
-          echo "test_base_kv exit: $rc" >> verify.log
-          echo "RES_BASEKV=$rc" >> "$GITHUB_ENV"
-          exit 0
-
-      - name: Run e19 (base+kv) and e18 (5-layer comparison)
-        run: |
-          set +e
-          rc=${PIPESTATUS[0]}
-          echo "e19 exit: $rc" >> e19.log
-          echo "RES_E19=$rc" >> "$GITHUB_ENV"
-          rc=${PIPESTATUS[0]}
-          echo "e18 exit: $rc" >> e18.log
-          echo "RES_E18=$rc" >> "$GITHUB_ENV"
-          exit 0
-
-      - name: Gate: all verification checks must have passed
-        run: |
-          fail=0
-          for v in RES_RUNWITHOUT RES_BULLET RES_REFAC RES_BASEKV RES_E19 RES_E18; do
-            val="${!v:-1}"
-            if [ "$val" != "0" ]; then echo "$v=$val -> FAILED"; fail=1; fi
-          done
-          if [ "$fail" != "0" ]; then
-            echo "One or more verification checks FAILED - see results/logs on the verification-results branch"
-            exit 1
-          fi
-          echo "All verification checks passed (exit codes 0)"
-
-      - name: Publish measured results to verification-results (merge, never force)
+          python experiments/e18_compare.py --sha "$GITHUB_SHA" --out e18-out 2>&1 | tee e18.log
+      - name: Publish measured results to verification-results (isolated worktree)
         if: always()
         run: |
+          set -e
           git config user.name "fluidtech-verification-bot"
           git config user.email "actions@github.com"
           git fetch origin verification-results
-          git checkout -B vr origin/verification-results
-          mkdir -p results/logs results/base-kv results/comparison
-          cp -f tests_numpy.log tests_bulletproof.log tests_refactored.log verify.log ruff.log e19.log e18.log results/logs/ 2>/dev/null || true
-          cp -f e19-out/run.json e19-out/basekv.md results/base-kv/ 2>/dev/null || true
-          cp -f e18-out/run.json e18-out/comparison.md results/comparison/ 2>/dev/null || true
-          git add -f results/ || true
-          if git diff --cached --quiet; then
+          results_dir="$(mktemp -d)"
+          cleanup() {
+            git worktree remove "$results_dir" --force || true
+            rm -rf "$results_dir"
+          }
+          trap cleanup EXIT
+          git worktree add --detach "$results_dir" origin/verification-results
+          mkdir -p "$results_dir/results/logs" "$results_dir/results/base-kv" "$results_dir/results/comparison"
+          cp -f selftest.log tests_numpy.log tests_bulletproof.log tests_refactored.log tests_pytest.log e19.log e18.log "$results_dir/results/logs/" 2>/dev/null || true
+          cp -f e19-out/run.json e19-out/basekv.md "$results_dir/results/base-kv/" 2>/dev/null || true
+          cp -f e18-out/run.json e18-out/comparison.md "$results_dir/results/comparison/" 2>/dev/null || true
+          git -C "$results_dir" add -f results/
+          if git -C "$results_dir" diff --cached --quiet; then
             echo "nothing to commit"
             exit 0
           fi
-          git commit -m "Verification run: tests + e19 base-kv + e18 comparison"
-          if ! git push origin HEAD:verification-results; then
-            git fetch origin verification-results
-            git -c core.editor=true pull -X theirs origin verification-results || true
-            git add -f results/ || true
-            git commit -m "Verification run (merged)" || true
-            git push origin HEAD:verification-results
-          fi
+          git -C "$results_dir" commit -m "Verification run: tests + e19 base-kv + e18 comparison"
+          git -C "$results_dir" push origin HEAD:verification-results
