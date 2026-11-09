@@ -37,16 +37,22 @@ print("layer loaded OK")
 ### Step 3 — load the model (example: Qwen 1.5B)
 
 ~~~python
-# Cell 2 — load the model (any HuggingFace causal LM works)
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-MODEL = "Qwen/Qwen2.5-1.5B-Instruct"        # example: Qwen 1.5B
+MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
 tok = AutoTokenizer.from_pretrained(MODEL)
-model = AutoModelForCausalLM.from_pretrained(MODEL, torch_dtype=torch.float32).to("cuda").eval()
+
+# Automatically picks "cuda" if available, otherwise "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL, 
+    dtype=torch.float32
+).to(device).eval()
 
 D = model.config.hidden_size
-print("model loaded OK, hidden size:", D)
+print(f"model loaded OK on {device}, hidden size: {D}")
 ~~~
 
 ### Step 4 — (RECOMMENDED) the layer: base + KV cache — full code
