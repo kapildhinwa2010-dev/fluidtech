@@ -1,6 +1,6 @@
 {
-  "sha": "bf7cecbe4b423744dfee6e29f5f7f62f0e55e942",
-  "branch": "22/merge",
+  "sha": "fefb47c38dec4e0d59e7849901b59f5779b36ec8",
+  "branch": "main",
   "status": "complete",
   "baseline": {
     "model": "sshleifer/tiny-gpt2",
@@ -12,7 +12,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.9945
       },
-      "overhead_ms_per_256_tokens": 5.5,
+      "overhead_ms_per_256_tokens": 3.8,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -32,7 +32,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.994
       },
-      "overhead_ms_per_256_tokens": 13.0,
+      "overhead_ms_per_256_tokens": 9.2,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -52,7 +52,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.994
       },
-      "overhead_ms_per_256_tokens": 34.8,
+      "overhead_ms_per_256_tokens": 28.5,
       "thread_errors": [],
       "memory": {
         "stores": 2,
@@ -69,7 +69,7 @@
     },
     "kv (kv_cache)": {
       "recall_12gram": null,
-      "overhead_ms_per_256_tokens": 6.9,
+      "overhead_ms_per_256_tokens": 5.1,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -95,7 +95,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.9945
       },
-      "overhead_ms_per_256_tokens": 54.6,
+      "overhead_ms_per_256_tokens": 39.1,
       "thread_errors": [],
       "memory": {
         "stores": 4,
@@ -134,5 +134,5 @@
       "combined (all 4)"
     ]
   },
-  "log": "======================================================================\nLAYER COMPARISON RUN  sha=bf7cecbe4b423744dfee6e29f5f7f62f0e55e942\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), mamba (experiments), ultra (experiments), kv (kv_cache), combined (all 4)\n\n--- base (main) ---\n\n--- mamba (experiments) ---\n\n--- ultra (experiments) ---\n\n--- kv (kv_cache) ---\n\n--- combined (all 4) ---\n\n--- real GPT-2 A/B (all layers) ---\n\nWrote e18-out/run.json and e18-out/comparison.md\nCOMPARISON RUN COMPLETE"
+  "log": "======================================================================\nLAYER COMPARISON RUN  sha=fefb47c38dec4e0d59e7849901b59f5779b36ec8\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), mamba (experiments), ultra (experiments), kv (kv_cache), combined (all 4)\n\n--- base (main) ---\n\n--- mamba (experiments) ---\n\n--- ultra (experiments) ---\n\n--- kv (kv_cache) ---\n\n--- combined (all 4) ---\n\n--- real GPT-2 A/B (all layers) ---\n\nWrote e18-out/run.json and e18-out/comparison.md\nCOMPARISON RUN COMPLETE"
 }
