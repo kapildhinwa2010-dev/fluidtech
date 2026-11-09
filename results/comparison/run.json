@@ -1,5 +1,5 @@
 {
-  "sha": "d3bac37c4a08aa25ee7d48530c5c0b099e14ed23",
+  "sha": "a78a79dbc87b371c26d03ab4bca74f9a2197655f",
   "branch": "main",
   "status": "complete",
   "baseline": {
@@ -12,7 +12,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.9945
       },
-      "overhead_ms_per_256_tokens": 3.9,
+      "overhead_ms_per_256_tokens": 5.5,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -32,7 +32,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.994
       },
-      "overhead_ms_per_256_tokens": 9.0,
+      "overhead_ms_per_256_tokens": 12.8,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -52,7 +52,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.994
       },
-      "overhead_ms_per_256_tokens": 26.6,
+      "overhead_ms_per_256_tokens": 32.9,
       "thread_errors": [],
       "memory": {
         "stores": 2,
@@ -69,7 +69,7 @@
     },
     "kv (kv_cache)": {
       "recall_12gram": null,
-      "overhead_ms_per_256_tokens": 5.1,
+      "overhead_ms_per_256_tokens": 7.0,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -95,7 +95,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.9945
       },
-      "overhead_ms_per_256_tokens": 37.1,
+      "overhead_ms_per_256_tokens": 54.9,
       "thread_errors": [],
       "memory": {
         "stores": 4,
@@ -134,5 +134,5 @@
       "combined (all 4)"
     ]
   },
-  "log": "======================================================================\nLAYER COMPARISON RUN  sha=d3bac37c4a08aa25ee7d48530c5c0b099e14ed23\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), mamba (experiments), ultra (experiments), kv (kv_cache), combined (all 4)\n\n--- base (main) ---\n\n--- mamba (experiments) ---\n\n--- ultra (experiments) ---\n\n--- kv (kv_cache) ---\n\n--- combined (all 4) ---\n\n--- real GPT-2 A/B (all layers) ---\n\nWrote e18-out/run.json and e18-out/comparison.md\nCOMPARISON RUN COMPLETE"
+  "log": "======================================================================\nLAYER COMPARISON RUN  sha=a78a79dbc87b371c26d03ab4bca74f9a2197655f\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), mamba (experiments), ultra (experiments), kv (kv_cache), combined (all 4)\n\n--- base (main) ---\n\n--- mamba (experiments) ---\n\n--- ultra (experiments) ---\n\n--- kv (kv_cache) ---\n\n--- combined (all 4) ---\n\n--- real GPT-2 A/B (all layers) ---\n\nWrote e18-out/run.json and e18-out/comparison.md\nCOMPARISON RUN COMPLETE"
 }

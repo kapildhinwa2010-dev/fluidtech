@@ -7,10 +7,10 @@ FLUIDLAYER SELFTEST — verifying the proposal's mathematical claims
   [PASS] P1  jam time bound log(1/eps)/lam2 is an upper bound on freezing time  — upper bound=13.64  empirical=11.5  (empirical <= bound ✓)
 
 [3] Chebyshev degree for exp(-tL)
-  [PASS] P2  Chebyshev degree m = O(sqrt(kappa) log(1/eps))  — kappa=14.8 predicted m=16 bound m<=56 errors=[(4, '5.14e-01'), (8, '1.65e-02'), (12, '2.24e-04'), (16, '9.37e-07'), (24, '1.44e-12'), (32, '1.63e-14')]
+  [PASS] P2  Chebyshev degree m = O(sqrt(kappa) log(1/eps))  — kappa=14.8 predicted m=16 bound m<=56 errors=[(4, '5.14e-01'), (8, '1.65e-02'), (12, '2.24e-04'), (16, '9.37e-07'), (24, '1.44e-12'), (32, '1.62e-14')]
 
 [4-5] Linear collapse (P3) and the nonlinearity fix
-  [PASS] P3  pure-linear model CANNOT fit XOR  — accuracy=0.50 mse=0.500  (a hyperplane cannot separate XOR)
+  [PASS] P3  pure-linear model CANNOT fit XOR  — accuracy=0.25 mse=0.500  (a hyperplane cannot separate XOR)
   [PASS] P3  + one pointwise nonlinearity CAN fit XOR  — accuracy=1.00 mse=0.0000
 
 [6-7] The rank-c trap and the band-bank fix

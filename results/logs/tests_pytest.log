@@ -4,4 +4,4 @@ SKIPPED [1] tests/test_kv_cache.py:5: could not import 'torch': No module named 
 SKIPPED [1] tests/test_multi_gpu.py:9: could not import 'torch': No module named 'torch'
 SKIPPED [1] tests/test_qwen2_model.py:3: could not import 'torch': No module named 'torch'
 SKIPPED [1] tests/test_torch_parity.py:10: could not import 'torch': No module named 'torch'
-41 passed, 4 skipped in 1.39s
+41 passed, 4 skipped in 1.91s
