@@ -1,0 +1,97 @@
+==============================================================================
+FLUIDLAYER SELFTEST — verifying the proposal's mathematical claims
+==============================================================================
+
+[1-2] Jamming bound and jam-time prediction
+  [PASS] P1  ||e^{-tL}u|| <= e^{-lam2 t}||u||  — lam2=1.01292  ratios=[0.374039, 0.287331, 0.232716, 0.184967]
+  [PASS] P1  jam time bound log(1/eps)/lam2 is an upper bound on freezing time  — upper bound=13.64  empirical=11.5  (empirical <= bound ✓)
+
+[3] Chebyshev degree for exp(-tL)
+  [PASS] P2  Chebyshev degree m = O(sqrt(kappa) log(1/eps))  — kappa=14.8 predicted m=16 bound m<=56 errors=[(4, '5.14e-01'), (8, '1.65e-02'), (12, '2.24e-04'), (16, '9.37e-07'), (24, '1.44e-12'), (32, '1.62e-14')]
+
+[4-5] Linear collapse (P3) and the nonlinearity fix
+  [PASS] P3  pure-linear model CANNOT fit XOR  — accuracy=0.25 mse=0.500  (a hyperplane cannot separate XOR)
+  [PASS] P3  + one pointwise nonlinearity CAN fit XOR  — accuracy=1.00 mse=0.0000
+
+[6-7] The rank-c trap and the band-bank fix
+  [PASS] W2  frozen state has rank = #components  — rank=6 (expected 6), reconstruction error=0.962
+  [PASS] W2  band bank restores the lost information  — error with bands=2.83e-06 vs frozen-only=0.962
+
+[8] G-balance phase transition (freeze vs evaporate)
+  [PASS] G-balance  balanced signed cycle has a NON-CONSTANT frozen state  — kernel dim=1, kernel vectors are non-constant sign patterns
+  [PASS] G-balance  unbalanced cycle has NO sign-pattern frozen state  — balance residual=2.000 (non-zero => field cannot freeze onto a topology)
+
+[9] Contraction certificate
+  [PASS] contraction  ||e^{-tL}|| on ker^perp <= e^{-t lam2} (t=1.0)  — observed=0.262752 bound=0.262752 lam2=1.3365
+  [PASS] contraction  ||e^{-tL}|| on ker^perp <= e^{-t lam2} (t=2.0)  — observed=0.069038 bound=0.069038 lam2=1.3365
+
+[10] Frame property of the band bank
+  [PASS] frame  sum of bands == e^{-t0 L} - e^{-tB L}  — relative error=1.73e-05 (t0=0e+00, tB=2e+00)
+
+[11-12] Autodiff gradient checks
+  [PASS] autodiff  gradient of (A@B+c).gelu() matches finite differences  — max|err| A=3.03e-07 B=4.09e-07
+  [PASS] autodiff  FluidLayerLM end-to-end gradient matches finite differences  — relative max error on b0.Wmix = 2.90e-07  (loss=2.4099)
+  [PASS] autodiff  restriction-map gradient points the same way as finite differences  — correlation = 0.8683  (magnitude rel.err 7.66e-01; the |alpha| degree term is piecewise-linear)
+
+[13] Persistence descriptor correctness
+  [PASS] persistence  triangle -> beta0=1, beta1=1, 2 finite bars  — beta0=1 beta1=1 bars=[(0.0, 1.0), (0.0, 1.0)]
+
+[14] Block Laplacian == numpy reference, and the fluid is not a no-op
+  [PASS] block Laplacian matches the numpy reference  — max abs diff = 0.00e+00
+  [PASS] the fluid actually moves the field (bands are not identity)  — total band displacement = 2.253e+01
+  [PASS] harmonic branch == per-component mean (the Hodge projection)  — max abs diff = 0.00e+00, components = 10
+
+[15] Filter-bank stability (regression: exp(-alpha) sign error)
+  [PASS] filter bank is numerically stable (no exponential blow-up)  — band energies = ['1.05e+00', '4.25e+00', '9.07e+00', '1.19e+01', '1.76e+06']
+  [PASS] band sum stays on the scale of the input  — ||sum of bands|| = 1.326e+03  vs ||x||^2 = 1.539e+02
+
+[16-20] The frozen register
+  [PASS] M1  a promoted value NEVER changes (append-only invariance)  — slot 0 still holds 4242 after 20 further writes
+  [PASS] M1  the recalled value is bit-exact (integer token id)  — recalled 4242 (expected 4242)
+  [PASS] M1  a signature mismatch FAILS LOUD (returns None, never a wrong value)  — mismatched signature returned None
+  [PASS] M1  promoting the same key appends a slot; the latest wins  — slots 0 and 21 coexist; latest value = 777
+  [PASS] M1  the register survives a to_bytes/from_bytes round-trip  — 1344 B, 22 slots, value 777
+
+[21-22] The logit override and the budget law
+  [PASS] M2  the logit override makes argmax(next token) == the recalled token  — argmax 47 -> 37 (forced 37)
+  [PASS] M2  the batched override forces every row  — argmax per row = [np.int64(1), np.int64(5), np.int64(9), np.int64(31)]
+  [PASS] M2  the logit override accepts a framework Tensor as well as an ndarray  — Tensor input -> argmax 37 (forced 37)
+  [PASS] M2  the budget law never over-commits (M is reduced instead)  — 16KB -> M=1024 fluid=16384B register=0B; asking M=100000 -> M=1024 (reduced=True)
+
+[23] The state is constant size
+  [PASS] M3  the runtime state does NOT grow with the amount written  — state 1792 B before, 1792 B after 5,120 tokens (anchors 32x8 fp16 + register 64 x 20 B)
+  [PASS] M3  the fluid actually absorbed the writes (not inert)  — sum |anchors| = 5.487e+03
+
+[24] The frustration index is the right balance diagnostic
+  [PASS] M3  frustration == 0  <=>  a non-trivial global section exists  — 40/40 random signed cycles agree
+  [PASS] M3  an all-NEGATIVE even cycle freezes onto a non-constant sign pattern  — kernel dim=1, ||L1||inf=4.0 (so ||L1|| does NOT detect this) 
+
+[25] The Hodge edge participation
+  [PASS] M3  Hodge edge participation is 1 on the diagonal and <= 1 elsewhere  — diagonal in [1.0000, 1.0000], off-diagonal max 1.0000
+
+[26] The graft: attaching the layer is a provable no-op
+  [PASS] M3  attaching the layer leaves the logits BIT-IDENTICAL  — max abs diff 0.000e+00
+  [PASS] M3  the layer's state stays bounded while it is used  — state 772 B -> 792 B after 5 writes
+  [PASS] M3  the exact tier stores a token id and returns it bit-exactly  — store[2] = 25 (expected 25)
+
+[27] The gate: the model's own uncertainty
+  [PASS] M3  the layer reports WHAT it retrieved for the query position  — retrieved 25 (expected 25)
+  [PASS] M3  the gate IGNORES the retrieval when the base model is confident  — argmax stayed 5 (the base was sure of 5)
+  [PASS] M3  the gate LETS THE RETRIEVAL WIN when the base model is unsure  — argmax moved 0 -> 25 (the retrieved token)
+  [PASS] M3  the gate is a no-op when the store has no hit  — max abs diff 0.000e+00
+
+[28] The exact memory: the mode tracker and the eviction
+  [PASS] M3  the store keeps the MAJORITY continuation of a context  — store[42] = 7 (5,5,7,7,7 -> the mode is 7)
+  [PASS] M3  the store carries a CONFIDENCE (the corroboration ratio)  — confidence(42) = 0.600
+  [PASS] M3  the stored value follows the majority when it flips  — store[42] = 9 (after 4 more 9s)
+  [PASS] M3  the eviction keeps the CORROBORATED entries, not the newest  — the corroborated key survived: True  (the store holds 4 of 4 allowed)
+  [PASS] M3  by DEFAULT the gate never overrules a confident base model  — argmax stayed 5 (the base was sure of 5); the hard rules are OFF by default
+
+[29] The router tier: the fluid as the address space
+  [PASS] M3  the router tier files the pair under the ANCHOR of the previous position  — 5 anchors hold a majority continuation
+  [PASS] M3  the exact tier wins when it has the context  — exact 25, router 6
+  [PASS] M3  the router tier is the FALLBACK when the exact tier misses  — argmax 9 (the router's answer)
+
+==============================================================================
+RESULT: 50/50 checks passed
+==============================================================================
