@@ -54,6 +54,7 @@ class ConstantKVCache:
         self.config = config
         self.cache: Optional[Tuple[torch.Tensor, torch.Tensor]] = None  # (K, V)
         self.evicted_tokens: List[int] = []  # Track evicted tokens for Superfluid
+        self._cached_token_ids: List[int] = []
         self.token_count = 0
     
     def update(self, k: torch.Tensor, v: torch.Tensor, token_ids: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -69,34 +70,24 @@ class ConstantKVCache:
             Updated (K, V) cache tensors
         """
         if self.cache is None:
-            # First update
-            self.cache = (k, v)
-            self.token_count = token_ids.shape[1]
-            return self.cache
-        
-        # Concatenate new tokens
-        all_k = torch.cat([self.cache[0], k], dim=2)
-        all_v = torch.cat([self.cache[1], v], dim=2)
-        
-        # Check if we need to evict
-        total_tokens = all_k.shape[2]
-        if total_tokens > self.config.max_size:
-            # Calculate how many to evict
-            evict_count = total_tokens - self.config.max_size
-            
-            # Store evicted tokens for Superfluid
-            evicted_token_ids = token_ids[:, :evict_count]
-            self.evicted_tokens.extend(evicted_token_ids[0].tolist())
-            
-            # Keep only the most recent tokens
+            all_k, all_v = k, v
+            all_token_ids = token_ids[0].tolist()
+        else:
+            all_k = torch.cat([self.cache[0], k], dim=2)
+            all_v = torch.cat([self.cache[1], v], dim=2)
+            all_token_ids = self._cached_token_ids + token_ids[0].tolist()
+
+        # Track IDs alongside the cache so evictions include old entries too,
+        # including when the very first update is larger than max_size.
+        evict_count = max(all_k.shape[2] - self.config.max_size, 0)
+        if evict_count:
+            self.evicted_tokens.extend(all_token_ids[:evict_count])
             all_k = all_k[:, :, evict_count:, :]
             all_v = all_v[:, :, evict_count:, :]
-            
-            # Update token count
-            self.token_count = self.config.max_size
-        else:
-            self.token_count = total_tokens
-        
+            all_token_ids = all_token_ids[evict_count:]
+
+        self._cached_token_ids = all_token_ids
+        self.token_count = all_k.shape[2]
         self.cache = (all_k, all_v)
         return self.cache
     
@@ -112,6 +103,7 @@ class ConstantKVCache:
         """Reset the cache"""
         self.cache = None
         self.evicted_tokens = []
+        self._cached_token_ids = []
         self.token_count = 0
     
     def size(self) -> int:
