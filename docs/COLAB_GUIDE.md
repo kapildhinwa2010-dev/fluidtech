@@ -339,9 +339,10 @@ lay = layer if hasattr(layer, "stats") else None
 if lay is None:
     fresh = replay = None
 else:
+    lay.reset()                          # clean slate FIRST: clear TEST 1 leftovers
+    LAYER_FWD(h, tids)                   # fresh pass — nothing stored yet
     fresh = lay.base.get_stats()["recall_rate"]
-    lay.reset()
-    LAYER_FWD(h, tids)                   # replay pass — 12-grams hit the store
+    LAYER_FWD(h, tids)                   # replay pass — 12-grams now hit the store
     replay = lay.base.get_stats()["recall_rate"]
     check("2. replay recall high, fresh ~0", replay > 0.3 and fresh < 0.3,
           f"fresh={fresh:.3f} replay={replay:.3f}")
