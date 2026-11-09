@@ -39,7 +39,7 @@ branch and [docs/VERIFICATION.md](docs/VERIFICATION.md).
 gpt2) | **0.0000 nats** with the main layer (e19); ≈ +0.0005 untrained with the base store |
 | Worst-case memory | **21.4 MB** measured (ceiling: 100 MB) — e19 |
 | Thread safety | 8 threads, **0 errors** (e19) |
-| Security | session-masked tenants, **0** cross-session leaks (measured); Fernet (AES-128-CBC + HMAC-SHA256) at MILITARY |
+| Optional graft security | Session masking is available in optional graft APIs; MILITARY exposes Fernet helpers (AES-128-CBC + HMAC-SHA256). Neither is enabled by the recommended `BaseKVLayer` (`SecurityLevel.NONE`), which provides no tenant isolation or encryption. |
 | GGUF export | valid GGUF container (magic b'GGUF'); llama.cpp execution needs a backend patch |
 | Quantization (e21) | int8: **4.0x smaller**, round-trip error **0.3936%** — [e21](https://github.com/kapildhinwa2010-dev/fluidtech/blob/verification-results/results/e21-features/run.json) |
 | Multi-GPU (e21) | sharded bounded KV: 4 balanced shards [64, 64, 64, 64], order preserved — e21 |
@@ -315,4 +315,3 @@ and the [verification-results](https://github.com/kapildhinwa2010-dev/fluidtech/
 
 
 🌟 STAR IT IF YOU FIND THIS USEFUL
-
