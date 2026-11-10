@@ -1,144 +1,144 @@
 ======================================================================
-BASE + KV WRAPPER RUN (e19)  sha=998c924bb9fbd6e7e79654c31a32bf1d08068a0f
+BASE + KV WRAPPER RUN (e19)  sha=f6ef8fc44c76f65a91940f7dae67d11e3bde4e46
 ======================================================================
 corpus tokens: 2000
 comparing: base (main), base+kv (e19)
 
 --- base (main) ---
-INFO:fluidlayer.bulletproof:Session init: cf61225a... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 7c07fdd8... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 3d1afe03... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 51e4d7cb... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 67ca9364... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: af6e4fc7... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 219afdcf... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: dc45d8a1... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: adafb7ad... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: c116f934... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: a47a06a7... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 4f47f96e... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 88ae1a92... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: a1bdcbaa... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 073b2885... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: a436138f... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 714a28aa... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: d9eeb8be... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
 
 --- base+kv (e19) ---
-INFO:fluidlayer.bulletproof:Session init: ced2ac19... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 17f46335... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 15eb0c28... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 412b4a02... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 93e2eadd... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 086a90fe... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: ab9faf9c... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 1e6d4415... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 412c6e1d... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 5627290e... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: cb0892d5... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 97185560... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 02d3cab1... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 49750771... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: f9b9f06e... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: bcfb7b10... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 95956ad8... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 7f5c0bff... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 3e54367f... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 18b0df5e... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: e39b23a2... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: d45a43d2... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 0ca10ef4... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: ff132d84... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: b36bfe33... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: ffa3b624... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 4386b1f8... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 7fdc5793... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: c1d68570... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: bddcd5c7... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: c24576ee... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 3c5c31eb... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: a886f030... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: af71f46c... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 1afc91db... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 99218a74... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: 72d5bef8... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: b1cf0e2d... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=16)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: e7e22ac8... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 9b1d7f73... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=16, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
@@ -174,9 +174,8 @@ INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolv
 INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/pytorch_model.bin "HTTP/1.1 302 Found"
 INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/xet-read-token/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be "HTTP/1.1 200 OK"
 INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+Loading weights:   0%|          | 0/29 [00:00<?, ?it/s]Loading weights: 100%|██████████| 29/29 [00:00<00:00, 36298.07it/s]
 INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2 "HTTP/1.1 200 OK"
-INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/main "HTTP/1.1 200 OK"
-Loading weights:   0%|          | 0/29 [00:00<?, ?it/s]Loading weights: 100%|██████████| 29/29 [00:00<00:00, 21033.17it/s]
 [transformers] [1mGPT2LMHeadModel LOAD REPORT[0m from: sshleifer/tiny-gpt2
 Key                                   | Status     |  | 
 --------------------------------------+------------+--+-
@@ -191,27 +190,28 @@ transformer.h.{0, 1}.attn.masked_bias | UNEXPECTED |  |
 
 Notes:
 - UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/discussions?p=0 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/main "HTTP/1.1 200 OK"
 INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/5f91d94bd9cd7190a9f3216ff93cd1dd95f2c7be/generation_config.json "HTTP/1.1 404 Not Found"
 [transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (3407 > 1024). Running this sequence through the model will result in indexing errors
 WARNING:transformers.tokenization_utils_base:Token indices sequence length is longer than the specified maximum sequence length for this model (3407 > 1024). Running this sequence through the model will result in indexing errors
-INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/refs%2Fpr%2F2 "HTTP/1.1 200 OK"
 [transformers] `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
 WARNING:transformers.modeling_utils:`loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/discussions?p=0 "HTTP/1.1 200 OK"
+INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/commits/refs%2Fpr%2F2 "HTTP/1.1 200 OK"
 INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors.index.json "HTTP/1.1 404 Not Found"
 INFO:httpx2:HTTP Request: HEAD https://huggingface.co/sshleifer/tiny-gpt2/resolve/refs%2Fpr%2F2/model.safetensors "HTTP/1.1 302 Found"
 INFO:httpx2:HTTP Request: GET https://huggingface.co/api/models/sshleifer/tiny-gpt2/xet-read-token/d1856183d08a67c27a8e4ca1492d1d32b96c7c1a "HTTP/1.1 200 OK"
-INFO:fluidlayer.bulletproof:Session init: 3e4aeab3... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 652c506c... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=2)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:fluidlayer.bulletproof:Session init: a53b6916... (Level: NONE)
+INFO:fluidlayer.bulletproof:Session init: 467f26bf... (Level: NONE)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 25000, Max: 100000)
 INFO:fluidlayer.bulletproof:PerfectHashStore init (Capacity: 16, Max: 32)
 INFO:fluidlayer.bulletproof:AdaptiveGatedSheaf initialized (M=16, r=4, d=2)
 INFO:fluidlayer.bulletproof:SAABranchBulletproof initialized successfully!
-INFO:superfluid_mamba:Session initialized: 86d3d047... (Level: STANDARD)
+INFO:superfluid_mamba:Session initialized: 593c0b0c... (Level: STANDARD)
 INFO:superfluid_mamba:PerfectHashStore initialized (Capacity: 25000, Max: 100000)
 INFO:superfluid_mamba:AdaptiveGatedSheaf initialized (M=16, r=4, d=2, k=8)
 INFO:superfluid_mamba:SuperfluidMambaFluidLayerNP initialized successfully!
