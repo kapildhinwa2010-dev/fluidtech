@@ -1,5 +1,5 @@
 {
-  "sha": "a78a79dbc87b371c26d03ab4bca74f9a2197655f",
+  "sha": "998c924bb9fbd6e7e79654c31a32bf1d08068a0f",
   "branch": "main",
   "status": "complete",
   "baseline": {
@@ -12,7 +12,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.9945
       },
-      "overhead_ms_per_256_tokens": 5.4,
+      "overhead_ms_per_256_tokens": 5.3,
       "thread_errors": [],
       "memory": {
         "stores": 1,
@@ -32,7 +32,7 @@
         "fresh_recall": 0.0,
         "replay_recall": 0.9945
       },
-      "overhead_ms_per_256_tokens": 9.0,
+      "overhead_ms_per_256_tokens": 8.9,
       "thread_errors": [],
       "memory": {
         "stores": 2,
@@ -75,7 +75,7 @@
     "thread_safe": true,
     "gpt2_attach_finite": true,
     "gpt2_delta_small": true,
-    "speed_overhead_vs_base": 1.67
+    "speed_overhead_vs_base": 1.68
   },
-  "log": "======================================================================\nBASE + KV WRAPPER RUN (e19)  sha=a78a79dbc87b371c26d03ab4bca74f9a2197655f\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), base+kv (e19)\n\n--- base (main) ---\n\n--- base+kv (e19) ---\n\n--- real GPT-2 A/B (base vs base+kv) ---\n\nWrote e19-out/run.json and e19-out/basekv.md\nBASE+KV RUN COMPLETE"
+  "log": "======================================================================\nBASE + KV WRAPPER RUN (e19)  sha=998c924bb9fbd6e7e79654c31a32bf1d08068a0f\n======================================================================\ncorpus tokens: 2000\ncomparing: base (main), base+kv (e19)\n\n--- base (main) ---\n\n--- base+kv (e19) ---\n\n--- real GPT-2 A/B (base vs base+kv) ---\n\nWrote e19-out/run.json and e19-out/basekv.md\nBASE+KV RUN COMPLETE"
 }
