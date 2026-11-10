@@ -306,9 +306,17 @@ def attach(fwd):
     state = {"ids": None, "handle": None}
     def hook(module, args, output):
         hs = output                       # (B, S, d) from the embeddings
+        # The token ids come from the embedding call itself (args[0] is
+        # input_ids), so they are ALWAYS aligned with hs - during prefill
+        # and during every decode step. state["ids"] is only a fallback.
+        ids = args[0] if args and args[0] is not None else state["ids"]
+        if ids is None:
+            return None                   # no ids available: pass through unchanged
+        if ids.dim() > 1:
+            ids = ids[0]
         with torch.no_grad():
-            fused = fwd(hs[0].float(), state["ids"])
-        return fused.unsqueeze(0)
+            fused = fwd(hs[0].float(), ids)
+        return fused.unsqueeze(0).to(hs.device)
     state["handle"] = model.get_input_embeddings().register_forward_hook(hook)
     return state
 
