@@ -150,6 +150,18 @@ class BaseKVLayer:
             self._stream.popleft()
         return fused
 
+    def reset(self):
+        """Reset every tier: the exact store, the bounded KV window,
+        the long-term memory and the eviction stream."""
+        self.base.reset()
+        self.kv_cache.reset()
+        if hasattr(self.np_layer, "reset"):
+            self.memory.reset()               # clears the buffer + the fluid layer
+        else:                                 # fluid layer has no reset method:
+            self.memory.memory_buffer = []    # at least drop its token bookkeeping
+            self.memory.total_tokens = 0
+        self._stream.clear()
+
     def stats(self):
         return {
             "base": self.base.get_stats(),
@@ -340,7 +352,7 @@ check("1. attach + generate runs", True)
 
 # ── TEST 2: exact-tier replay recall (same text twice) ────────────
 text = open("corpus.txt", encoding="utf-8", errors="ignore").read(600)
-tids = torch.tensor(tok(text, return_tensors="pt").input_ids[0][:400])
+tids = tok(text, return_tensors="pt").input_ids[0][:400].clone()
 h = torch.randn(len(tids), D)
 LAYER_FWD(h, tids)                       # fresh pass — nothing stored yet
 lay = layer if hasattr(layer, "stats") else None
