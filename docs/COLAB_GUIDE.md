@@ -361,10 +361,18 @@ if lay is None:
 else:
     lay.reset()                          # clean slate FIRST: clear TEST 1 leftovers
     LAYER_FWD(h, tids)                   # fresh pass — nothing stored yet
-    fresh = lay.base.get_stats()["recall_rate"]
+    s0 = lay.base.get_stats()
+    fresh = s0["recall_rate"]            # ~0 by construction (empty store)
     LAYER_FWD(h, tids)                   # replay pass — 12-grams now hit the store
-    replay = lay.base.get_stats()["recall_rate"]
-    check("2. replay recall high, fresh ~0", replay > 0.3 and fresh < 0.3,
+    s1 = lay.base.get_stats()
+    # recall_rate is CUMULATIVE (total_hits / total_tokens), so it also
+    # counts the fresh pass's misses. Measure the replay pass ALONE:
+    d_hits = s1["total_hits"] - s0["total_hits"]
+    d_toks = s1["total_tokens"] - s0["total_tokens"]
+    replay = d_hits / max(d_toks, 1)     # replay-only recall (~0.97 typical)
+    # not 1.000: the first ctx_len-1 tokens of the replay have no full
+    # 12-gram context yet, so they cannot hit by construction.
+    check("2. replay recall high, fresh ~0", replay > 0.5 and fresh < 0.3,
           f"fresh={fresh:.3f} replay={replay:.3f}")
 
 # ── TEST 3: bounded KV + long-term memory ─────────────────────────
