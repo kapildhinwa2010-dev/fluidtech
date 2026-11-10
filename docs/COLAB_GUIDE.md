@@ -371,7 +371,8 @@ else:
 if lay is not None:
     big = torch.randint(0, 30000, (1200,))
     for i in range(0, 1200, 128):
-        LAYER_FWD(torch.randn(128, D), big[i:i+128])
+        chunk = big[i:i+128]          # the LAST chunk is shorter than 128:
+        LAYER_FWD(torch.randn(len(chunk), D), chunk)  # h rows must match the chunk
     st = lay.stats()
     check("3a. KV stays bounded", st["kv"]["size"] <= st["kv"]["max_size"],
           f"kv size={st['kv']['size']}")
